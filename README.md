@@ -108,7 +108,13 @@ AW 车辆、武器、弹药、科技树与解锁资料需要长期维护。
 - Tier 9 / Tier 10 Token 关系
 - AW 团队车辆计划结构与 RPC
 
-后续会把当前数据库真实状态对应的 migration、种子/数据文件和验证脚本逐步补入本仓库，避免重新初始化覆盖已经存在的数据。
+AW 数据库交付采用 **空表结构 SQL + 独立数据文件包**，说明见 [AW 手动导入说明](docs/aw/README.md)。
+
+- [幂等空表 SQL](supabase/sql/003_aw_empty_schema_idempotent.sql)：只建结构，不导入数据，不清空已有表。
+- [数据包](data/aw/AW_catalog_manual_data.zip)：按外键依赖顺序拆成小批次，由维护者手动导入。
+- [数据清单](data/aw/AW_catalog_manual_data.manifest.json)：每批数量、顺序与文件校验。
+
+不通过 migration 或部署任务自动导入资料；已有正式库无需重新初始化。
 
 ## 安全要求
 
@@ -130,6 +136,7 @@ AW 车辆、武器、弹药、科技树与解锁资料需要长期维护。
 
 1. 将最新“提交审核版”微信小程序源码完整纳入 Git。
 2. 固化现有 Supabase / SnowRunner 数据结构基线。
-3. 固化 AW 已执行 migration。
-4. 将 AW 初始化数据与后续维护数据纳入可追踪版本。
+3. 固化 AW 幂等空表结构 SQL。
+4. 将 AW 资料以独立数据包维护，由维护者手动导入。
 5. 开始 AW 小程序页面开发。
+
