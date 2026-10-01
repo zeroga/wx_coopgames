@@ -1,0 +1,22 @@
+{
+  "project": "wx_coopgame",
+  "project_id": "tnprvuglqxugbbmxzjdx",
+  "operation": "production_schema_transaction_test",
+  "transaction_rolled_back": true,
+  "isolated_validation_completed": false,
+  "assessment": "Inappropriate test environment: production DDL can acquire locks even when rolled back. This result is only an operation audit, not sufficient validation.",
+  "observation": {
+    "era": 55,
+    "smoke": 136,
+    "ap_800": 33,
+    "infantry": 22,
+    "top_attack": 4,
+    "public_read": 298,
+    "self_guided": 16,
+    "public_write": false,
+    "schema_passes": 2,
+    "private_plans_select": false,
+    "row_counts_unchanged": true
+  },
+  "next_validation": "Run against an isolated database with the SnowRunner shared-schema dependency and synthetic fixtures. Do not use production to test."
+}

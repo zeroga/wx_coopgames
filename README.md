@@ -108,7 +108,15 @@ AW 车辆、武器、弹药、科技树与解锁资料需要长期维护。
 - Tier 9 / Tier 10 Token 关系
 - AW 团队车辆计划结构与 RPC
 
-后续会把当前数据库真实状态对应的 migration、种子/数据文件和验证脚本逐步补入本仓库，避免重新初始化覆盖已经存在的数据。
+AW 当前结构和交付资料已经固化到仓库，入口见 [AW 数据库说明](docs/aw/README.md)：
+
+- [幂等建表 SQL](supabase/sql/003_aw_catalog_idempotent.sql)：针对当前最终结构，正确存在的对象可重复执行。
+- [只读验证 SQL](supabase/sql/004_aw_catalog_verify.sql)：连接、锁、migration、批次、质量与数量检查。
+- [已执行 migration](supabase/migrations/)：与线上 14 个版本对应的历史记录。
+- [公开数据快照](data/aw/catalog_snapshot.json)、[完整报告](docs/aw/AW_database_report.md)及[原交付包](docs/aw/AW_database_handoff.zip)。
+
+当前共有 298 辆车辆、440 个武器配置、782 个弹药配置、1172 个升级项目。完整科技树的数据尚未核实齐全，缺口见报告。
+已有数据库不要重新初始化；幂等建表与历史 migration 是不同入口，执行前先检查真实状态。
 
 ## 安全要求
 
@@ -133,3 +141,4 @@ AW 车辆、武器、弹药、科技树与解锁资料需要长期维护。
 3. 固化 AW 已执行 migration。
 4. 将 AW 初始化数据与后续维护数据纳入可追踪版本。
 5. 开始 AW 小程序页面开发。
+
