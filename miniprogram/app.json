@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/game/index",
+    "pages/season/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "CoopGame",
+    "navigationBarBackgroundColor": "#1c1a1e",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f1f0f2",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

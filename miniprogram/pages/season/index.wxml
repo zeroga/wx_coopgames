@@ -1,0 +1,27 @@
+<view class="page">
+  <view class="hero card">
+    <view class="title">赛季资料管理</view>
+    <view class="muted">新增 S20、S21 或修正已有赛季资料。这里只改赛季目录，不会覆盖已经加入推进计划的卡片和历史进度。</view>
+    <view class="sync {{cloudStatus==='已同步'?'ok':''}}">● {{cloudStatus}}</view>
+  </view>
+
+  <view class="form card">
+    <input class="input" placeholder="赛季编号，例如 S20" value="{{seasonKeyInput}}" data-field="seasonKeyInput" bindinput="inputField"/>
+    <input class="input" placeholder="地区 / 中文名" value="{{seasonCnInput}}" data-field="seasonCnInput" bindinput="inputField"/>
+    <input class="input" placeholder="英文标题（可选）" value="{{seasonEnInput}}" data-field="seasonEnInput" bindinput="inputField"/>
+    <textarea class="textarea" placeholder="车辆名称：每行一台，也可用逗号分隔" value="{{seasonVehiclesInput}}" data-field="seasonVehiclesInput" bindinput="inputField"></textarea>
+    <view class="actions">
+      <button class="btn btn-primary" bindtap="saveSeasonDefinition">保存资料</button>
+      <button class="btn btn-ghost" bindtap="clearForm">清空</button>
+    </view>
+  </view>
+
+  <view class="catalog card">
+    <view class="catalog-head"><text>现有赛季目录</text><text class="muted">{{catalogList.length}} 项</text></view>
+    <view class="catalog-row" wx:for="{{catalogList}}" wx:key="key" data-key="{{item.key}}" bindtap="editExisting">
+      <view class="catalog-key">{{item.key}}</view>
+      <view class="catalog-main"><view class="catalog-cn">{{item.cn}}</view><view class="catalog-en">{{item.en || '—'}}</view></view>
+      <view class="catalog-count">{{item.vehicleCount}} 车 ›</view>
+    </view>
+  </view>
+</view>

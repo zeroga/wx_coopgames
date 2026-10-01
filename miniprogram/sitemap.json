@@ -1,0 +1,9 @@
+{
+  "desc": "private coop utility",
+  "rules": [
+    {
+      "action": "disallow",
+      "page": "*"
+    }
+  ]
+}

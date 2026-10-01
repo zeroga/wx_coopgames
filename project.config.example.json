@@ -1,0 +1,17 @@
+{
+  "description": "CoopGame review-ready full package v2 - Supabase only",
+  "appid": "YOUR_WECHAT_APPID",
+  "projectname": "coopgame-review-v3-collapse",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "miniprogram/",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": true,
+    "minifyWXML": true,
+    "minifyWXSS": true
+  },
+  "libVersion": "trial"
+}
