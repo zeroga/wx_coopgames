@@ -1,0 +1,3861 @@
+{
+  "columns": [
+    {
+      "type": "text",
+      "table": "private.aw_data_issues",
+      "column": "issue_key",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_data_issues",
+      "column": "entity_type",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "private.aw_data_issues",
+      "column": "entity_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_data_issues",
+      "column": "severity",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_data_issues",
+      "column": "description",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "private.aw_data_issues",
+      "column": "original_data",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_data_issues",
+      "column": "resolved_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_data_issues",
+      "column": "created_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "private.aw_fleet_plan_items",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "private.aw_fleet_plan_items",
+      "column": "workspace_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_fleet_plan_items",
+      "column": "user_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "private.aw_fleet_plan_items",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_fleet_plan_items",
+      "column": "role",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "private.aw_fleet_plan_items",
+      "column": "priority",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_fleet_plan_items",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_fleet_plan_items",
+      "column": "created_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_fleet_plan_items",
+      "column": "updated_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_fleet_plan_items",
+      "column": "status",
+      "default": "'planned'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_import_batches",
+      "column": "batch_key",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_import_batches",
+      "column": "status",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_import_batches",
+      "column": "started_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_import_batches",
+      "column": "completed_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "private.aw_import_batches",
+      "column": "row_counts",
+      "default": "'{}'::jsonb",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_import_batches",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "private.aw_source_snapshots",
+      "column": "entity_type",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "private.aw_source_snapshots",
+      "column": "entity_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "private.aw_source_snapshots",
+      "column": "payload",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "private.aw_source_snapshots",
+      "column": "captured_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_guidance_modes",
+      "column": "ammo_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_guidance_modes",
+      "column": "mode_code",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.ammo_guidance_modes",
+      "column": "lock_time_seconds",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_guidance_modes",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_guidance_modes",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_guidance_modes",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_guidance_modes",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_penetration_samples",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_penetration_samples",
+      "column": "ammo_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_penetration_samples",
+      "column": "sample_key",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.ammo_penetration_samples",
+      "column": "penetration_mm",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.ammo_penetration_samples",
+      "column": "distance_m",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.ammo_penetration_samples",
+      "column": "impact_angle_deg",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_penetration_samples",
+      "column": "condition_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_penetration_samples",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_penetration_samples",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_penetration_samples",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_trait_links",
+      "column": "ammo_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_trait_links",
+      "column": "trait_code",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_trait_links",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_trait_links",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_trait_links",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_traits",
+      "column": "code",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_traits",
+      "column": "name_zh",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_traits",
+      "column": "category",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.ammo_traits",
+      "column": "description",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_upgrade_links",
+      "column": "ammo_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_upgrade_links",
+      "column": "weapon_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_upgrade_links",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.ammo_upgrade_links",
+      "column": "upgrade_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.capabilities",
+      "column": "code",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.capabilities",
+      "column": "name_zh",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.capabilities",
+      "column": "category",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.capabilities",
+      "column": "description",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.capabilities",
+      "column": "parent_code",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.dealers",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.dealers",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.dealers",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.dealers",
+      "column": "sort_order",
+      "default": "0",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.dealers",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.era_coverage",
+      "column": "capability_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.era_coverage",
+      "column": "location",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.era_coverage",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.tech_tree_branches",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.tech_tree_branches",
+      "column": "dealer_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tech_tree_branches",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tech_tree_branches",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tech_tree_branches",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tech_tree_branches",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.tokens",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tokens",
+      "column": "code",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tokens",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.tokens",
+      "column": "dealer_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.tokens",
+      "column": "tier",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tokens",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.tokens",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_paths",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_paths",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_paths",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_paths",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.unlock_paths",
+      "column": "sort_order",
+      "default": "0",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_paths",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_paths",
+      "column": "target_upgrade_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.unlock_paths",
+      "column": "is_complete",
+      "default": "false",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_requirements",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_requirements",
+      "column": "unlock_path_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "requirement_type",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_requirements",
+      "column": "source_vehicle_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_requirements",
+      "column": "dealer_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "operator",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.unlock_requirements",
+      "column": "required_value",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "unit",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "public.unlock_requirements",
+      "column": "scope",
+      "default": "'{}'::jsonb",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "description",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "source_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.unlock_requirements",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.unlock_requirements",
+      "column": "sort_order",
+      "default": "0",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_requirements",
+      "column": "token_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.unlock_requirements",
+      "column": "source_upgrade_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.unlock_requirements",
+      "column": "event_code",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.upgrade_prerequisites",
+      "column": "upgrade_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.upgrade_prerequisites",
+      "column": "prerequisite_upgrade_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.upgrade_prerequisites",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_ammo",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_ammo",
+      "column": "weapon_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_ammo",
+      "column": "sort_order",
+      "default": "0",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "ammo_type",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "ammo_subtype",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_ammo",
+      "column": "requires_research",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "damage",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "penetration",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "penetration_reference_m",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "range",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "velocity",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "source_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_ammo",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_ammo",
+      "column": "created_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_ammo",
+      "column": "updated_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "reload_seconds",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_ammo",
+      "column": "magazine_size",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "intra_clip_reload",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "rate_of_fire",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_ammo",
+      "column": "is_missile",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_ammo",
+      "column": "is_guided",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "explosion_radius_m",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "module_damage",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "accuracy_deg",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_ammo",
+      "column": "magazine_mechanism",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_ammo",
+      "column": "module_damage_bonus_pct",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_armor",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_armor",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_armor",
+      "column": "configuration_key",
+      "default": "'source_summary'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_armor",
+      "column": "location",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_armor",
+      "column": "thickness_mm",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_armor",
+      "column": "effective_ap_mm",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_armor",
+      "column": "effective_heat_mm",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_armor",
+      "column": "composition",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_armor",
+      "column": "upgrade_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_armor",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_armor",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_armor",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_branch_memberships",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_branch_memberships",
+      "column": "branch_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_branch_memberships",
+      "column": "display_order",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_capabilities",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_capabilities",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "capability_code",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "variant_key",
+      "default": "'base'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "availability",
+      "default": "'unknown'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_capabilities",
+      "column": "upgrade_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "effect_description",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "public.vehicle_capabilities",
+      "column": "effect_data",
+      "default": "'{}'::jsonb",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_capabilities",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_capabilities",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_crew_positions",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "position_key",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "role",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.vehicle_crew_positions",
+      "column": "occupant_count",
+      "default": "1",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "location",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_crew_positions",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_era",
+      "column": "capability_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_era",
+      "column": "era_name",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_era",
+      "column": "era_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.vehicle_era",
+      "column": "generation",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.vehicle_era",
+      "column": "layer_count",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_era",
+      "column": "is_special",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_era",
+      "column": "ap_reduction_pct",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_era",
+      "column": "heat_reduction_pct",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_infantry",
+      "column": "capability_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_infantry",
+      "column": "infantry_type",
+      "default": "'unspecified'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.vehicle_infantry",
+      "column": "squad_count",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.vehicle_infantry",
+      "column": "trooper_count",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_infantry",
+      "column": "deployment_cooldown_seconds",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_progression_edges",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_progression_edges",
+      "column": "from_vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_progression_edges",
+      "column": "to_vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_progression_edges",
+      "column": "edge_type",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_progression_edges",
+      "column": "display_order",
+      "default": "0",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_progression_edges",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_progression_edges",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_progression_edges",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_token_rewards",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_token_rewards",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_token_rewards",
+      "column": "quantity",
+      "default": "1",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_token_rewards",
+      "column": "description",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_token_rewards",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_token_rewards",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_token_rewards",
+      "column": "source_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_token_rewards",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_token_rewards",
+      "column": "token_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_token_rewards",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_upgrades",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_upgrades",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "upgrade_type",
+      "default": "'other'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "availability",
+      "default": "'unknown'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_upgrades",
+      "column": "xp_cost",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_upgrades",
+      "column": "credit_cost",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_upgrades",
+      "column": "is_mandatory",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_upgrades",
+      "column": "is_vehicle_prerequisite",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_upgrades",
+      "column": "hp_bonus",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_upgrades",
+      "column": "top_speed_kmh",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_upgrades",
+      "column": "reverse_speed_kmh",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_upgrades",
+      "column": "engine_power_hp",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "effect_description",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "public.vehicle_upgrades",
+      "column": "additional_effects",
+      "default": "'{}'::jsonb",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_upgrades",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_upgrades",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_weapons",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicle_weapons",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_weapons",
+      "column": "sort_order",
+      "default": "0",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "weapon_type",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "rate_of_fire",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "reload_seconds",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_weapons",
+      "column": "magazine_size",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "accuracy",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "aim_time",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "range",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "velocity",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicle_weapons",
+      "column": "burst_size",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "intra_clip_reload",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicle_weapons",
+      "column": "requires_research",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "source_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_weapons",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_weapons",
+      "column": "created_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicle_weapons",
+      "column": "updated_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "configuration_key",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "caliber_mm",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "role",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "depression_deg",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "elevation_deg",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "magazine_mechanism",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicle_weapons",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicle_weapons",
+      "column": "accuracy_deg",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicles",
+      "column": "id",
+      "default": "gen_random_uuid()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "slug",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "name",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "smallint",
+      "table": "public.vehicles",
+      "column": "tier",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicles",
+      "column": "is_legendary",
+      "default": "false",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "vehicle_class",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "nation",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.vehicles",
+      "column": "dealer_id",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "acquisition_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "integer",
+      "table": "public.vehicles",
+      "column": "hp",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "top_speed",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "view_range",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "camouflage",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "reverse_speed",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "hull_traverse",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "turret_traverse",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "jsonb",
+      "table": "public.vehicles",
+      "column": "performance_basis",
+      "default": "'{}'::jsonb",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "summary",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "source_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "source_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "verification_status",
+      "default": "'needs_ingame_check'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicles",
+      "column": "last_checked_at",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicles",
+      "column": "created_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "timestamp with time zone",
+      "table": "public.vehicles",
+      "column": "updated_at",
+      "default": "now()",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "name_zh",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "internal_name",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicles",
+      "column": "is_currently_researchable",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "acquisition_note",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "weight_t",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "engine_power_hp",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "power_to_weight_hp_t",
+      "default": "(engine_power_hp / NULLIF(weight_t, (0)::numeric))",
+      "notnull": false,
+      "identity": "",
+      "generated": "s"
+    },
+    {
+      "type": "numeric",
+      "table": "public.vehicles",
+      "column": "acceleration_0_32_seconds",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicles",
+      "column": "capability_catalog_complete",
+      "default": "false",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "source_type",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "image_url",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "boolean",
+      "table": "public.vehicles",
+      "column": "is_premium",
+      "default": null,
+      "notnull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "text",
+      "table": "public.vehicles",
+      "column": "release_status",
+      "default": "'unknown'::text",
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.weapon_upgrade_links",
+      "column": "weapon_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.weapon_upgrade_links",
+      "column": "upgrade_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "type": "uuid",
+      "table": "public.weapon_upgrade_links",
+      "column": "vehicle_id",
+      "default": null,
+      "notnull": true,
+      "identity": "",
+      "generated": ""
+    }
+  ],
+  "constraints": [
+    {
+      "table": "public.ammo_guidance_modes",
+      "name": "ammo_guidance_modes_lock_time_seconds_check",
+      "type": "c",
+      "definition": "CHECK ((lock_time_seconds >= (0)::numeric))"
+    },
+    {
+      "table": "public.ammo_guidance_modes",
+      "name": "ammo_guidance_modes_mode_code_check",
+      "type": "c",
+      "definition": "CHECK ((mode_code = ANY (ARRAY['self_guided'::text, 'saclos'::text, 'fire_and_forget'::text, 'manual'::text, 'laser_guided'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.ammo_guidance_modes",
+      "name": "ammo_guidance_modes_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_distance_m_check",
+      "type": "c",
+      "definition": "CHECK ((distance_m >= (0)::numeric))"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_impact_angle_deg_check",
+      "type": "c",
+      "definition": "CHECK (((impact_angle_deg >= (0)::numeric) AND (impact_angle_deg <= (90)::numeric)))"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_penetration_mm_check",
+      "type": "c",
+      "definition": "CHECK ((penetration_mm >= (0)::numeric))"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.ammo_trait_links",
+      "name": "ammo_trait_links_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "atgm_guided_consistency",
+      "type": "c",
+      "definition": "CHECK (((ammo_type <> 'atgm'::text) OR ((is_missile IS TRUE) AND (is_guided IS TRUE))))"
+    },
+    {
+      "table": "private.aw_data_issues",
+      "name": "aw_data_issues_severity_check",
+      "type": "c",
+      "definition": "CHECK ((severity = ANY (ARRAY['error'::text, 'warning'::text, 'info'::text])))"
+    },
+    {
+      "table": "private.aw_fleet_plan_items",
+      "name": "aw_fleet_plan_items_status_check",
+      "type": "c",
+      "definition": "CHECK ((status = ANY (ARRAY['planned'::text, 'researching'::text, 'owned'::text, 'abandoned'::text])))"
+    },
+    {
+      "table": "private.aw_import_batches",
+      "name": "aw_import_batches_status_check",
+      "type": "c",
+      "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'running'::text, 'completed'::text, 'failed'::text])))"
+    },
+    {
+      "table": "public.capabilities",
+      "name": "capabilities_check",
+      "type": "c",
+      "definition": "CHECK ((code <> parent_code))"
+    },
+    {
+      "table": "public.era_coverage",
+      "name": "era_coverage_location_check",
+      "type": "c",
+      "definition": "CHECK ((location = ANY (ARRAY['hull_front'::text, 'hull_side'::text, 'hull_rear'::text, 'hull_roof'::text, 'turret_front'::text, 'turret_side'::text, 'turret_rear'::text, 'turret_roof'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.tech_tree_branches",
+      "name": "tech_tree_branches_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "token_requirement_id_required",
+      "type": "c",
+      "definition": "CHECK (((requirement_type <> 'dealer_token'::text) OR (token_id IS NOT NULL)))"
+    },
+    {
+      "table": "public.tokens",
+      "name": "tokens_tier_check",
+      "type": "c",
+      "definition": "CHECK (((tier >= 1) AND (tier <= 10)))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_event_code_required",
+      "type": "c",
+      "definition": "CHECK (((requirement_type <> ALL (ARRAY['event_level'::text, 'event_access'::text, 'event_mission'::text])) OR (event_code IS NOT NULL)))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_operator_check",
+      "type": "c",
+      "definition": "CHECK ((operator = ANY (ARRAY['>='::text, '>'::text, '='::text, '<='::text, '<'::text, 'exists'::text])))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_requirement_type_check",
+      "type": "c",
+      "definition": "CHECK ((requirement_type = ANY (ARRAY['vehicle_progress'::text, 'vehicle_proven'::text, 'vehicle_renowned'::text, 'dealer_token'::text, 'reputation'::text, 'spotting'::text, 'damage'::text, 'kills'::text, 'assists'::text, 'wins'::text, 'battles'::text, 'own_vehicle'::text, 'own_vehicle_count'::text, 'tier_requirement'::text, 'special'::text, 'upgrade'::text, 'event_level'::text, 'event_access'::text, 'event_mission'::text])))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_upgrade_reference_required",
+      "type": "c",
+      "definition": "CHECK (((requirement_type <> 'upgrade'::text) OR (source_upgrade_id IS NOT NULL)))"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_upgrade_requires_vehicle",
+      "type": "c",
+      "definition": "CHECK (((source_upgrade_id IS NULL) OR (source_vehicle_id IS NOT NULL)))"
+    },
+    {
+      "table": "public.upgrade_prerequisites",
+      "name": "upgrade_prerequisites_check",
+      "type": "c",
+      "definition": "CHECK ((upgrade_id <> prerequisite_upgrade_id))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_accuracy_deg_check",
+      "type": "c",
+      "definition": "CHECK ((accuracy_deg >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_ammo_type_check",
+      "type": "c",
+      "definition": "CHECK ((ammo_type = ANY (ARRAY['ap'::text, 'apfsds'::text, 'apds'::text, 'apcr'::text, 'heat'::text, 'he'::text, 'hesh'::text, 'atgm'::text, 'smoke'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_damage_check",
+      "type": "c",
+      "definition": "CHECK ((damage >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_explosion_radius_m_check",
+      "type": "c",
+      "definition": "CHECK ((explosion_radius_m >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_intra_clip_reload_check",
+      "type": "c",
+      "definition": "CHECK ((intra_clip_reload >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_magazine_size_check",
+      "type": "c",
+      "definition": "CHECK ((magazine_size > 0))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_module_damage_check",
+      "type": "c",
+      "definition": "CHECK ((module_damage >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_penetration_check",
+      "type": "c",
+      "definition": "CHECK ((penetration >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_penetration_reference_m_check",
+      "type": "c",
+      "definition": "CHECK ((penetration_reference_m >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_rate_of_fire_check",
+      "type": "c",
+      "definition": "CHECK ((rate_of_fire > (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_reload_seconds_check",
+      "type": "c",
+      "definition": "CHECK ((reload_seconds >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_effective_ap_mm_check",
+      "type": "c",
+      "definition": "CHECK ((effective_ap_mm >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_effective_heat_mm_check",
+      "type": "c",
+      "definition": "CHECK ((effective_heat_mm >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_location_check",
+      "type": "c",
+      "definition": "CHECK ((location = ANY (ARRAY['hull_unspecified'::text, 'turret_unspecified'::text, 'hull_front'::text, 'hull_side'::text, 'hull_rear'::text, 'hull_roof'::text, 'turret_front'::text, 'turret_side'::text, 'turret_rear'::text, 'turret_roof'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_thickness_mm_check",
+      "type": "c",
+      "definition": "CHECK ((thickness_mm >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_availability_check",
+      "type": "c",
+      "definition": "CHECK ((availability = ANY (ARRAY['default'::text, 'research'::text, 'upgrade'::text, 'unknown'::text, 'absent'::text])))"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_check",
+      "type": "c",
+      "definition": "CHECK (((upgrade_id IS NULL) OR (availability = ANY (ARRAY['default'::text, 'research'::text, 'upgrade'::text, 'unknown'::text]))))"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_source_type_check",
+      "type": "c",
+      "definition": "CHECK ((source_type = ANY (ARRAY['official'::text, 'ingame'::text, 'wiki'::text, 'community'::text])))"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_crew_positions",
+      "name": "vehicle_crew_positions_occupant_count_check",
+      "type": "c",
+      "definition": "CHECK ((occupant_count > 0))"
+    },
+    {
+      "table": "public.vehicle_crew_positions",
+      "name": "vehicle_crew_positions_role_check",
+      "type": "c",
+      "definition": "CHECK ((role = ANY (ARRAY['commander'::text, 'driver'::text, 'gunner'::text, 'loader'::text, 'operator'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicle_crew_positions",
+      "name": "vehicle_crew_positions_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_era",
+      "name": "vehicle_era_ap_reduction_pct_check",
+      "type": "c",
+      "definition": "CHECK (((ap_reduction_pct >= (0)::numeric) AND (ap_reduction_pct <= (100)::numeric)))"
+    },
+    {
+      "table": "public.vehicle_era",
+      "name": "vehicle_era_generation_check",
+      "type": "c",
+      "definition": "CHECK ((generation > 0))"
+    },
+    {
+      "table": "public.vehicle_era",
+      "name": "vehicle_era_heat_reduction_pct_check",
+      "type": "c",
+      "definition": "CHECK (((heat_reduction_pct >= (0)::numeric) AND (heat_reduction_pct <= (100)::numeric)))"
+    },
+    {
+      "table": "public.vehicle_era",
+      "name": "vehicle_era_layer_count_check",
+      "type": "c",
+      "definition": "CHECK ((layer_count > 0))"
+    },
+    {
+      "table": "public.vehicle_infantry",
+      "name": "vehicle_infantry_deployment_cooldown_seconds_check",
+      "type": "c",
+      "definition": "CHECK ((deployment_cooldown_seconds >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_infantry",
+      "name": "vehicle_infantry_infantry_type_check",
+      "type": "c",
+      "definition": "CHECK ((infantry_type = ANY (ARRAY['unspecified'::text, 'at_squad'::text, 'sniper'::text, 'mortar_squad'::text, 'assault_squad'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicle_infantry",
+      "name": "vehicle_infantry_squad_count_check",
+      "type": "c",
+      "definition": "CHECK ((squad_count > 0))"
+    },
+    {
+      "table": "public.vehicle_infantry",
+      "name": "vehicle_infantry_trooper_count_check",
+      "type": "c",
+      "definition": "CHECK ((trooper_count > 0))"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_check",
+      "type": "c",
+      "definition": "CHECK ((from_vehicle_id <> to_vehicle_id))"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_edge_type_check",
+      "type": "c",
+      "definition": "CHECK ((edge_type = ANY (ARRAY['normal'::text, 'branch'::text, 'token'::text, 'special'::text])))"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_token_rewards",
+      "name": "vehicle_token_rewards_quantity_check",
+      "type": "c",
+      "definition": "CHECK ((quantity > 0))"
+    },
+    {
+      "table": "public.vehicle_token_rewards",
+      "name": "vehicle_token_rewards_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_availability_check",
+      "type": "c",
+      "definition": "CHECK ((availability = ANY (ARRAY['default'::text, 'research'::text, 'upgrade'::text, 'unknown'::text])))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_credit_cost_check",
+      "type": "c",
+      "definition": "CHECK ((credit_cost >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_engine_power_hp_check",
+      "type": "c",
+      "definition": "CHECK ((engine_power_hp > (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_reverse_speed_kmh_check",
+      "type": "c",
+      "definition": "CHECK ((reverse_speed_kmh >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_source_type_check",
+      "type": "c",
+      "definition": "CHECK ((source_type = ANY (ARRAY['official'::text, 'ingame'::text, 'wiki'::text, 'community'::text])))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_top_speed_kmh_check",
+      "type": "c",
+      "definition": "CHECK ((top_speed_kmh >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_upgrade_type_check",
+      "type": "c",
+      "definition": "CHECK ((upgrade_type = ANY (ARRAY['engine'::text, 'armor'::text, 'era'::text, 'smoke'::text, 'aps'::text, 'weapon'::text, 'ammo'::text, 'infantry'::text, 'optics'::text, 'mobility'::text, 'loading'::text, 'protection'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_xp_cost_check",
+      "type": "c",
+      "definition": "CHECK ((xp_cost >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_accuracy_deg_check",
+      "type": "c",
+      "definition": "CHECK ((accuracy_deg >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_caliber_mm_check",
+      "type": "c",
+      "definition": "CHECK ((caliber_mm > (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_depression_deg_check",
+      "type": "c",
+      "definition": "CHECK ((depression_deg >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_elevation_deg_check",
+      "type": "c",
+      "definition": "CHECK ((elevation_deg >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_magazine_size_check",
+      "type": "c",
+      "definition": "CHECK ((magazine_size > 0))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_rate_of_fire_check",
+      "type": "c",
+      "definition": "CHECK ((rate_of_fire > (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_reload_seconds_check",
+      "type": "c",
+      "definition": "CHECK ((reload_seconds >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_role_check",
+      "type": "c",
+      "definition": "CHECK ((role = ANY (ARRAY['primary'::text, 'secondary'::text, 'remote_station'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_weapon_type_check",
+      "type": "c",
+      "definition": "CHECK ((weapon_type = ANY (ARRAY['cannon'::text, 'autocannon'::text, 'atgm'::text, 'machine_gun'::text, 'rocket'::text, 'mortar'::text, 'howitzer'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_acceleration_0_32_seconds_check",
+      "type": "c",
+      "definition": "CHECK ((acceleration_0_32_seconds >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_acquisition_type_check",
+      "type": "c",
+      "definition": "CHECK ((acquisition_type = ANY (ARRAY['progression'::text, 'premium'::text, 'event'::text, 'special'::text, 'other'::text])))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_camouflage_check",
+      "type": "c",
+      "definition": "CHECK (((camouflage >= (0)::numeric) AND (camouflage <= (100)::numeric)))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_engine_power_hp_check",
+      "type": "c",
+      "definition": "CHECK ((engine_power_hp > (0)::numeric))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_hp_check",
+      "type": "c",
+      "definition": "CHECK ((hp > 0))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_performance_basis_check",
+      "type": "c",
+      "definition": "CHECK ((jsonb_typeof(performance_basis) = 'object'::text))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_release_status_check",
+      "type": "c",
+      "definition": "CHECK ((release_status = ANY (ARRAY['unknown'::text, 'announced'::text, 'released'::text, 'removed'::text])))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_source_type_check",
+      "type": "c",
+      "definition": "CHECK ((source_type = ANY (ARRAY['official'::text, 'ingame'::text, 'wiki'::text, 'community'::text])))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_tier_check",
+      "type": "c",
+      "definition": "CHECK (((tier >= 1) AND (tier <= 10)))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_top_speed_check",
+      "type": "c",
+      "definition": "CHECK ((top_speed >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_vehicle_class_check",
+      "type": "c",
+      "definition": "CHECK ((vehicle_class = ANY (ARRAY['MBT'::text, 'LT'::text, 'AFV'::text, 'TD'::text, 'SPG'::text])))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_verification_status_check",
+      "type": "c",
+      "definition": "CHECK ((verification_status = ANY (ARRAY['public_verified'::text, 'needs_ingame_check'::text, 'ingame_verified'::text])))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_view_range_check",
+      "type": "c",
+      "definition": "CHECK ((view_range >= (0)::numeric))"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_weight_t_check",
+      "type": "c",
+      "definition": "CHECK ((weight_t > (0)::numeric))"
+    },
+    {
+      "table": "public.ammo_guidance_modes",
+      "name": "ammo_guidance_modes_ammo_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ammo_id) REFERENCES vehicle_ammo(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_ammo_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ammo_id) REFERENCES vehicle_ammo(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.ammo_trait_links",
+      "name": "ammo_trait_links_ammo_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ammo_id) REFERENCES vehicle_ammo(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.ammo_trait_links",
+      "name": "ammo_trait_links_trait_code_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (trait_code) REFERENCES ammo_traits(code)"
+    },
+    {
+      "table": "public.ammo_upgrade_links",
+      "name": "ammo_upgrade_links_ammo_id_weapon_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (ammo_id, weapon_id) REFERENCES vehicle_ammo(id, weapon_id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.ammo_upgrade_links",
+      "name": "ammo_upgrade_links_upgrade_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.ammo_upgrade_links",
+      "name": "ammo_upgrade_links_weapon_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (weapon_id, vehicle_id) REFERENCES vehicle_weapons(id, vehicle_id)"
+    },
+    {
+      "table": "private.aw_fleet_plan_items",
+      "name": "aw_fleet_plan_items_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "private.aw_fleet_plan_items",
+      "name": "aw_fleet_plan_items_workspace_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (workspace_id) REFERENCES private.coop_profiles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.capabilities",
+      "name": "capabilities_parent_code_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (parent_code) REFERENCES capabilities(code)"
+    },
+    {
+      "table": "public.era_coverage",
+      "name": "era_coverage_capability_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (capability_id) REFERENCES vehicle_era(capability_id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.tech_tree_branches",
+      "name": "tech_tree_branches_dealer_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (dealer_id) REFERENCES dealers(id)"
+    },
+    {
+      "table": "public.tokens",
+      "name": "tokens_dealer_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (dealer_id) REFERENCES dealers(id)"
+    },
+    {
+      "table": "public.unlock_paths",
+      "name": "unlock_paths_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_dealer_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (dealer_id) REFERENCES dealers(id)"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_source_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (source_vehicle_id) REFERENCES vehicles(id)"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_token_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (token_id) REFERENCES tokens(id)"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_unlock_path_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (unlock_path_id) REFERENCES unlock_paths(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_source_upgrade_same_vehicle",
+      "type": "f",
+      "definition": "FOREIGN KEY (source_upgrade_id, source_vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.unlock_paths",
+      "name": "unlock_target_upgrade_same_vehicle",
+      "type": "f",
+      "definition": "FOREIGN KEY (target_upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.upgrade_prerequisites",
+      "name": "upgrade_prerequisites_prerequisite_upgrade_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (prerequisite_upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.upgrade_prerequisites",
+      "name": "upgrade_prerequisites_upgrade_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_weapon_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (weapon_id) REFERENCES vehicle_weapons(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_upgrade_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_branch_memberships",
+      "name": "vehicle_branch_memberships_branch_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (branch_id) REFERENCES tech_tree_branches(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_branch_memberships",
+      "name": "vehicle_branch_memberships_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_capability_code_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (capability_code) REFERENCES capabilities(code)"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_upgrade_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_crew_positions",
+      "name": "vehicle_crew_positions_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_era",
+      "name": "vehicle_era_capability_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (capability_id) REFERENCES vehicle_capabilities(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_infantry",
+      "name": "vehicle_infantry_capability_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (capability_id) REFERENCES vehicle_capabilities(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_from_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (from_vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_to_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (to_vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_token_rewards",
+      "name": "vehicle_token_rewards_token_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (token_id) REFERENCES tokens(id)"
+    },
+    {
+      "table": "public.vehicle_token_rewards",
+      "name": "vehicle_token_rewards_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_dealer_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (dealer_id) REFERENCES dealers(id)"
+    },
+    {
+      "table": "public.weapon_upgrade_links",
+      "name": "weapon_upgrade_links_upgrade_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (upgrade_id, vehicle_id) REFERENCES vehicle_upgrades(id, vehicle_id)"
+    },
+    {
+      "table": "public.weapon_upgrade_links",
+      "name": "weapon_upgrade_links_weapon_id_vehicle_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (weapon_id, vehicle_id) REFERENCES vehicle_weapons(id, vehicle_id) ON DELETE CASCADE"
+    },
+    {
+      "table": "public.ammo_guidance_modes",
+      "name": "ammo_guidance_modes_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ammo_id, mode_code)"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.ammo_trait_links",
+      "name": "ammo_trait_links_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ammo_id, trait_code)"
+    },
+    {
+      "table": "public.ammo_traits",
+      "name": "ammo_traits_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (code)"
+    },
+    {
+      "table": "public.ammo_upgrade_links",
+      "name": "ammo_upgrade_links_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (ammo_id, upgrade_id)"
+    },
+    {
+      "table": "private.aw_data_issues",
+      "name": "aw_data_issues_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (issue_key)"
+    },
+    {
+      "table": "private.aw_fleet_plan_items",
+      "name": "aw_fleet_plan_items_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "private.aw_import_batches",
+      "name": "aw_import_batches_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (batch_key)"
+    },
+    {
+      "table": "private.aw_source_snapshots",
+      "name": "aw_source_snapshots_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (entity_type, entity_id)"
+    },
+    {
+      "table": "public.capabilities",
+      "name": "capabilities_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (code)"
+    },
+    {
+      "table": "public.dealers",
+      "name": "dealers_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.era_coverage",
+      "name": "era_coverage_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (capability_id, location)"
+    },
+    {
+      "table": "public.tech_tree_branches",
+      "name": "tech_tree_branches_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.tokens",
+      "name": "tokens_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.unlock_paths",
+      "name": "unlock_paths_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.upgrade_prerequisites",
+      "name": "upgrade_prerequisites_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (upgrade_id, prerequisite_upgrade_id)"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicle_branch_memberships",
+      "name": "vehicle_branch_memberships_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (vehicle_id, branch_id)"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicle_crew_positions",
+      "name": "vehicle_crew_positions_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (vehicle_id, position_key)"
+    },
+    {
+      "table": "public.vehicle_era",
+      "name": "vehicle_era_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (capability_id)"
+    },
+    {
+      "table": "public.vehicle_infantry",
+      "name": "vehicle_infantry_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (capability_id, infantry_type)"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicle_token_rewards",
+      "name": "vehicle_token_rewards_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "public.weapon_upgrade_links",
+      "name": "weapon_upgrade_links_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (weapon_id, upgrade_id)"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "ammo_id_weapon_unique",
+      "type": "u",
+      "definition": "UNIQUE (id, weapon_id)"
+    },
+    {
+      "table": "public.ammo_penetration_samples",
+      "name": "ammo_penetration_samples_ammo_id_sample_key_key",
+      "type": "u",
+      "definition": "UNIQUE (ammo_id, sample_key)"
+    },
+    {
+      "table": "private.aw_fleet_plan_items",
+      "name": "aw_fleet_plan_items_workspace_id_user_id_vehicle_id_key",
+      "type": "u",
+      "definition": "UNIQUE (workspace_id, user_id, vehicle_id)"
+    },
+    {
+      "table": "public.dealers",
+      "name": "dealers_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "table": "public.vehicle_token_rewards",
+      "name": "reward_vehicle_token_unique",
+      "type": "u",
+      "definition": "UNIQUE (vehicle_id, token_id)"
+    },
+    {
+      "table": "public.tech_tree_branches",
+      "name": "tech_tree_branches_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "table": "public.tokens",
+      "name": "tokens_code_key",
+      "type": "u",
+      "definition": "UNIQUE (code)"
+    },
+    {
+      "table": "public.unlock_paths",
+      "name": "unlock_paths_vehicle_id_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (vehicle_id, slug)"
+    },
+    {
+      "table": "public.unlock_requirements",
+      "name": "unlock_requirements_unlock_path_id_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (unlock_path_id, slug)"
+    },
+    {
+      "table": "public.vehicle_ammo",
+      "name": "vehicle_ammo_weapon_id_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (weapon_id, slug)"
+    },
+    {
+      "table": "public.vehicle_armor",
+      "name": "vehicle_armor_vehicle_id_configuration_key_location_key",
+      "type": "u",
+      "definition": "UNIQUE (vehicle_id, configuration_key, location)"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_id_vehicle_id_key",
+      "type": "u",
+      "definition": "UNIQUE (id, vehicle_id)"
+    },
+    {
+      "table": "public.vehicle_capabilities",
+      "name": "vehicle_capabilities_vehicle_id_capability_code_variant_key_key",
+      "type": "u",
+      "definition": "UNIQUE (vehicle_id, capability_code, variant_key)"
+    },
+    {
+      "table": "public.vehicle_progression_edges",
+      "name": "vehicle_progression_edges_from_vehicle_id_to_vehicle_id_edg_key",
+      "type": "u",
+      "definition": "UNIQUE (from_vehicle_id, to_vehicle_id, edge_type)"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_id_vehicle_id_key",
+      "type": "u",
+      "definition": "UNIQUE (id, vehicle_id)"
+    },
+    {
+      "table": "public.vehicle_upgrades",
+      "name": "vehicle_upgrades_vehicle_id_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (vehicle_id, slug)"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "vehicle_weapons_vehicle_id_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (vehicle_id, slug)"
+    },
+    {
+      "table": "public.vehicles",
+      "name": "vehicles_slug_key",
+      "type": "u",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "table": "public.vehicle_weapons",
+      "name": "weapon_id_vehicle_unique",
+      "type": "u",
+      "definition": "UNIQUE (id, vehicle_id)"
+    }
+  ]
+}

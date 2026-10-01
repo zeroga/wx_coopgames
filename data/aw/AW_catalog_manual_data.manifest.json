@@ -1,0 +1,713 @@
+{
+  "format_version": 1,
+  "snapshot_at": "2026-10-01T15:44:08.40133+00:00",
+  "automatic_import": false,
+  "conflict_policy": "primary_key_do_nothing",
+  "batch_size": 50,
+  "table_order": [
+    "ammo_traits",
+    "capabilities",
+    "dealers",
+    "tech_tree_branches",
+    "tokens",
+    "vehicles",
+    "vehicle_branch_memberships",
+    "vehicle_crew_positions",
+    "vehicle_progression_edges",
+    "vehicle_token_rewards",
+    "vehicle_upgrades",
+    "vehicle_weapons",
+    "unlock_paths",
+    "upgrade_prerequisites",
+    "vehicle_ammo",
+    "vehicle_armor",
+    "vehicle_capabilities",
+    "weapon_upgrade_links",
+    "ammo_guidance_modes",
+    "ammo_penetration_samples",
+    "ammo_trait_links",
+    "ammo_upgrade_links",
+    "unlock_requirements",
+    "vehicle_era",
+    "vehicle_infantry",
+    "era_coverage"
+  ],
+  "table_counts": {
+    "ammo_traits": 9,
+    "capabilities": 22,
+    "dealers": 6,
+    "tech_tree_branches": 1,
+    "tokens": 6,
+    "vehicles": 298,
+    "vehicle_branch_memberships": 8,
+    "vehicle_crew_positions": 4,
+    "vehicle_progression_edges": 270,
+    "vehicle_token_rewards": 28,
+    "vehicle_upgrades": 1172,
+    "vehicle_weapons": 440,
+    "unlock_paths": 364,
+    "upgrade_prerequisites": 0,
+    "vehicle_ammo": 782,
+    "vehicle_armor": 4,
+    "vehicle_capabilities": 390,
+    "weapon_upgrade_links": 31,
+    "ammo_guidance_modes": 22,
+    "ammo_penetration_samples": 0,
+    "ammo_trait_links": 72,
+    "ammo_upgrade_links": 213,
+    "unlock_requirements": 369,
+    "vehicle_era": 59,
+    "vehicle_infantry": 22,
+    "era_coverage": 0
+  },
+  "excluded": [
+    "private team data",
+    "team codes",
+    "generated columns",
+    "schema changes"
+  ],
+  "offline_validation": {
+    "unique_and_primary_keys": "passed",
+    "foreign_keys": 40,
+    "capability_cycles": "passed"
+  },
+  "database_execution_tested": false,
+  "batches": [
+    {
+      "file": "sql/01_ammo_traits_001.sql",
+      "table": "ammo_traits",
+      "rows": 9,
+      "sha256": "4df1f541a4b70b07182a76ad284337fda0bd27ed463b0f52c92f366f963f5c31"
+    },
+    {
+      "file": "sql/02_capabilities_001.sql",
+      "table": "capabilities",
+      "rows": 22,
+      "sha256": "d28eccc3b00e37e9e3db0a858fd85347d43758433cddd944ae086116bc2a2fb1"
+    },
+    {
+      "file": "sql/03_dealers_001.sql",
+      "table": "dealers",
+      "rows": 6,
+      "sha256": "5ed4826843df5e6ef14e7d5d1915f4ae2aef78ab538fd69068502c6a42d1efbc"
+    },
+    {
+      "file": "sql/04_tech_tree_branches_001.sql",
+      "table": "tech_tree_branches",
+      "rows": 1,
+      "sha256": "bfec38f07e98647afa0dd1c208122fc7153b0b61086e06db71d47b357b65339b"
+    },
+    {
+      "file": "sql/05_tokens_001.sql",
+      "table": "tokens",
+      "rows": 6,
+      "sha256": "4df84a8e48813fba055ae045f8f606342c1ef87921ab940194bfa7ed6c046d23"
+    },
+    {
+      "file": "sql/06_vehicles_001.sql",
+      "table": "vehicles",
+      "rows": 50,
+      "sha256": "67fa45d2bfd6e40c0d19b9b3898841fa94d40405ca0258a716f01fa6b50ddbec"
+    },
+    {
+      "file": "sql/06_vehicles_002.sql",
+      "table": "vehicles",
+      "rows": 50,
+      "sha256": "fea26fc6d8fe7f0999898fc11f61ef54b7595022adcb8ce948b1611602263527"
+    },
+    {
+      "file": "sql/06_vehicles_003.sql",
+      "table": "vehicles",
+      "rows": 50,
+      "sha256": "959cbffb41a78d35f4b8d4508399444b57d07a789e2588f1f4e419b281b66e4c"
+    },
+    {
+      "file": "sql/06_vehicles_004.sql",
+      "table": "vehicles",
+      "rows": 50,
+      "sha256": "931695d47e981d91fc8799359275fcfedb5406e5080d89b0cad3b7413a904d70"
+    },
+    {
+      "file": "sql/06_vehicles_005.sql",
+      "table": "vehicles",
+      "rows": 50,
+      "sha256": "230809006d4f0f421e184e5d4a8cc09658c0b097c166ae6f4dd8b1fdcba1d339"
+    },
+    {
+      "file": "sql/06_vehicles_006.sql",
+      "table": "vehicles",
+      "rows": 48,
+      "sha256": "b8bd94cc76ce52ee49626847fb22425a99e48374f23ef22a2cf2fde4275e967b"
+    },
+    {
+      "file": "sql/07_vehicle_branch_memberships_001.sql",
+      "table": "vehicle_branch_memberships",
+      "rows": 8,
+      "sha256": "bedca8c75ac63f2100fb2b8f8e877c7a1f868614792b7064c6b009f0e7a830c7"
+    },
+    {
+      "file": "sql/08_vehicle_crew_positions_001.sql",
+      "table": "vehicle_crew_positions",
+      "rows": 4,
+      "sha256": "d666850fe0d1e6227022d7fb07009f37e8bae9e2b1e11d4ab62162748d0c2c85"
+    },
+    {
+      "file": "sql/09_vehicle_progression_edges_001.sql",
+      "table": "vehicle_progression_edges",
+      "rows": 50,
+      "sha256": "9aac9a8dbbaf935dd5265b1a410da2de913f0191d1b9bf682d455d1ffe9a069b"
+    },
+    {
+      "file": "sql/09_vehicle_progression_edges_002.sql",
+      "table": "vehicle_progression_edges",
+      "rows": 50,
+      "sha256": "ad1eaf465c518c0cf93d8b441d5bb1068d085ba33419531b21e47efe724d23a8"
+    },
+    {
+      "file": "sql/09_vehicle_progression_edges_003.sql",
+      "table": "vehicle_progression_edges",
+      "rows": 50,
+      "sha256": "babf99e97bbdc5af2d9dc38f99f8d31aa29cf010f614fd313f7f5f7e00bba142"
+    },
+    {
+      "file": "sql/09_vehicle_progression_edges_004.sql",
+      "table": "vehicle_progression_edges",
+      "rows": 50,
+      "sha256": "ec2d723d5e01d7e4e06fba6a608409db5fffdc571100bd75e00a23ffa4016996"
+    },
+    {
+      "file": "sql/09_vehicle_progression_edges_005.sql",
+      "table": "vehicle_progression_edges",
+      "rows": 50,
+      "sha256": "f893e59db644a73b6d07d4878f4c895175872a614c089ff75ef0ef4005b45427"
+    },
+    {
+      "file": "sql/09_vehicle_progression_edges_006.sql",
+      "table": "vehicle_progression_edges",
+      "rows": 20,
+      "sha256": "97a70df80527c6133af347e16721b83174671644af7f0fba1defe712acb9b593"
+    },
+    {
+      "file": "sql/10_vehicle_token_rewards_001.sql",
+      "table": "vehicle_token_rewards",
+      "rows": 28,
+      "sha256": "36585c9428cb22a409347ea259583456197c9b7a0821da5b05936c569ffe0da8"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_001.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "ea5f18b6baf7416673e79242a6d79a66c1eb3bd8c9588f9e15aca40072536ec8"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_002.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "d499f4c15cf6e7642781501a78119c786dbe2e85fd3a68562e5eefbf399f8b50"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_003.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "d823c393652eb31f6f6940cf71f5940392d14330633a470bb33195ed608daaec"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_004.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "b1f483b9c4f98426fc8cd3b3914d951cf986825e74d948a50876da933c6af2de"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_005.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "543ec41cdc01f7bc4f21a35d5340b41afe78953186203276d10a3ef85776567f"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_006.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "0e988db2d78211c739354a3dcf7d5771e2e584553f89fba6815c36ff94af6cec"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_007.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "9133a23b873c76f34049ede2c4a2986f35e3e9d0f9a1ec06d949c136f25e2968"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_008.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "efb50add7a8f2f6fffb70085f05359e3151ece801d6374306a6eabf08dfdfe65"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_009.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "115bad384ea1acf445d7c9044afbb85580b1a4512d0f5edb1d90d25eefc16ad6"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_010.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "03436abb702e5f868dd2b635bc2ac0c88d4d76be29dfbed20485ab631a7cc0fc"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_011.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "7d236594135f17f5ad47b6b0b4df35c469b386328160ddf65640bd1408266c21"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_012.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "0939b18ebaa8d461da3f8d5bafc794854b5ead227c166542bc2635e482b865ac"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_013.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "4d2cf7620d442a62e148707b411fab382b8bf23c3590592fc4e4683bbb4ab3e3"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_014.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "1630225fe21f3cac5d0ef513927169033bf7295d3522332ce1ebd4fd7cfef07e"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_015.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "c318bc031c68402b82fdc5814b315891aacc68d4010b03b01351593ada6cd5ce"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_016.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "fd9b48fc819b7b142e2f4e6318911fdd6e65a0378b36ed5afa5759e79b4f5897"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_017.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "aa80cdedbae9f13b388cf6f1fdbdd925d7c144820bb5fc7fb2ec9f41d6c0f776"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_018.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "e0b9e49d54726b5fd564d1c8512a6bacc9fb5e92f550516fcf048751b407bd9c"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_019.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "119be0a4bd4fc61884dac39a9cacb9788f15cf8138654ee0ee85246daabe0043"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_020.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "bbe790c283b457e28e22b68a73959cc57c31eb8562939cc57edbde6a0f0620ac"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_021.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "431df501cc0c5a8acff910381c52a9c4617212e6720ada7dd67ef2c59582a9d0"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_022.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "c646f8b2f7402ce2fe88528640ae24369d3f64e3292cbdff524978ec3710a7ea"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_023.sql",
+      "table": "vehicle_upgrades",
+      "rows": 50,
+      "sha256": "2f75f19d009d2e26946d047dbcbe66695f146026c9ea391a2b68a3e69fef1b23"
+    },
+    {
+      "file": "sql/11_vehicle_upgrades_024.sql",
+      "table": "vehicle_upgrades",
+      "rows": 22,
+      "sha256": "a2d99a7af8a75cb7d26f84e3427be07a7779b10630129a9ddd5a831a598b6dff"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_001.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "f0a718d3e6f28147778f9574c18c6c942fb480ee82ff85612e760f6566b6868c"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_002.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "a0646981727d173279b8e63be417cb7fbe63964743d27735d790328860ada753"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_003.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "48c228b2801292bedfacb62b1d12c56cc7d54a52d92e3fb41b1eb5dfd1ce7328"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_004.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "1dedf93097c79978bf70ac7adbdf3288a704bcf0d8bf648d7d7ccabb20f74f8d"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_005.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "8ee07bed128b77f5e230f244d820be459e5494ff28f58bebbab6c4f0b43da39e"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_006.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "62fd487ba2af1edecf9be65d5f027459f3b50a1cdee3dbae708e32761213b50d"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_007.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "b8a50df1128f2dc3394286fca01a5c0a13f067c3f8a28ef740e44c8f99de4723"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_008.sql",
+      "table": "vehicle_weapons",
+      "rows": 50,
+      "sha256": "5060dac5c43c992bae26b0b39d2033939876d7468fadb1abed4f6b1645d45a06"
+    },
+    {
+      "file": "sql/12_vehicle_weapons_009.sql",
+      "table": "vehicle_weapons",
+      "rows": 40,
+      "sha256": "cf40b9a688b386612877ce5920e8d8c6b0c1cf9b7159f12c5e1d9af01443f3a8"
+    },
+    {
+      "file": "sql/13_unlock_paths_001.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "f31c6eae9458dcacd554309251405e6e27bfe52c891ceabd7f08c225d6372d62"
+    },
+    {
+      "file": "sql/13_unlock_paths_002.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "3eba0ad432ad38e16328651273eb10d128423b45c60e2ad058f50389299ad757"
+    },
+    {
+      "file": "sql/13_unlock_paths_003.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "64418fa8e1e5fff4fa4f9d9cbd905b30e425e3273e376ce4a715b3bca2b4f736"
+    },
+    {
+      "file": "sql/13_unlock_paths_004.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "19710fa5a3b5da36f2023a04e86e418a157b320d9fa9a5666683ad9c9ea4c062"
+    },
+    {
+      "file": "sql/13_unlock_paths_005.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "f005717073e20ca7d2c4f016bea948e95f513969f3e0e398489d57bcb9e0d3ab"
+    },
+    {
+      "file": "sql/13_unlock_paths_006.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "45edfd163066a1f996bfb8c5e116c7d883fac39deb78f190f51d93327bc14f35"
+    },
+    {
+      "file": "sql/13_unlock_paths_007.sql",
+      "table": "unlock_paths",
+      "rows": 50,
+      "sha256": "946b98125fa3025653a98e52734e98a9595dd4efd42d083156576eb3539a8ffa"
+    },
+    {
+      "file": "sql/13_unlock_paths_008.sql",
+      "table": "unlock_paths",
+      "rows": 14,
+      "sha256": "5e5b3363e78a794a53e1431a373780ccafe7c3bbd7eb82f16a7e44b3aaedc2f0"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_001.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "eb0e7e43dea51f5a1f1c082a105dd26614a92ff35e3850b7bae653b45694d7a2"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_002.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "3dab36c15db9b49fde470f86b505e30099c56ef3353a54e00f530e6cae07fe6e"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_003.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "dad1c4dfc879983939d54b42d76593f93ae6ecf3e4c2c9bcf266fa6ad5389386"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_004.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "0406ed58c09aaee0bac2ee0960ec060494f080e037fc8ab1f7eb1466d4d14625"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_005.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "a6989e79c11d5474c7e3cbfdc5d183dd45685a84f76ce8e98dbaf294c999f15f"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_006.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "b179559a013bbce4ec4a78eca6ca0acf9189a46a46267938cc1ae13be026afea"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_007.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "ed02a647ef3761df108cf610fd9a3af895e5f801bb32edb908b159d8e345a4c9"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_008.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "c2571751137f7e0b09b0ea6ec91cd0e470be8c2b096317f5e62788b1ab604649"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_009.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "86af60404d9a3945259b0c53b6d49e35be93a4908761fd63c454efefaf80385d"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_010.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "f83b70109d90a9bcac9251f63b6c42e1f1289c6e097fb6e799a8ac21dc81d62e"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_011.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "26b4a13316977011485810190c40c22fb89a49a55ca6ab7dcdba546cecefa921"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_012.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "e69b572158edd0e75db8a565532469598cae3604a8381639118dbd3e12de579b"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_013.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "2d352b1e32bb80fca6d1a4f372fc1d2eb55b83de3980a6fd0d781e55b0240f24"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_014.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "73bb8674e39f880f37c5d56666302fcb484504fc1a038e1a51df3add910c8939"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_015.sql",
+      "table": "vehicle_ammo",
+      "rows": 50,
+      "sha256": "154af1960033d1afbbb7a4b8ea3bcc8388b9a34522bc78ec9df31d63f1cc83dc"
+    },
+    {
+      "file": "sql/15_vehicle_ammo_016.sql",
+      "table": "vehicle_ammo",
+      "rows": 32,
+      "sha256": "42dee0a251fe275265807006e6f624fe474c690613411596b55123d73e7d2613"
+    },
+    {
+      "file": "sql/16_vehicle_armor_001.sql",
+      "table": "vehicle_armor",
+      "rows": 4,
+      "sha256": "22a608e3583505c81b230cdfeb658bf127c6ca06566d8b544806fd8caa9faad7"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_001.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "1fcb35008c6903b228ee74f1e6d7046eaf6ed818bce06de6e31dce8852820b69"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_002.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "d99f0612e1c448a969ff34ac1da3abec2a7fe00a91479205d5a01f8ae3433832"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_003.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "9824a2215371e0f568b70b9781aa2d308e0e29332b06d08b45c4cc7591f48f35"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_004.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "bbb40bdf478dde74f3efe7a1a82e571203e66584f125a5f9c7c76f8c8ce13a78"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_005.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "b81245bfdee58bab9ec75ceeeb6a4b3fefc6cad6dac9bf7eb98fc7e7c629a0a0"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_006.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "2fb3a68674638c1abd8d2c288b3f8ddf21262f28f82abb6fdc9a7568e822a23f"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_007.sql",
+      "table": "vehicle_capabilities",
+      "rows": 50,
+      "sha256": "250d7f7cada2225a25ff763ce3a5404fa378bc1dce345e34127f7515ff5cb964"
+    },
+    {
+      "file": "sql/17_vehicle_capabilities_008.sql",
+      "table": "vehicle_capabilities",
+      "rows": 40,
+      "sha256": "bb71557898e2750c26f5a96e999ace0e1121850efb687f5dafe4a2f37d35dc78"
+    },
+    {
+      "file": "sql/18_weapon_upgrade_links_001.sql",
+      "table": "weapon_upgrade_links",
+      "rows": 31,
+      "sha256": "207a2002d380f62c5bbbd3f6778b33b2eb0c86c5337a9d69f0a1519a087c041b"
+    },
+    {
+      "file": "sql/19_ammo_guidance_modes_001.sql",
+      "table": "ammo_guidance_modes",
+      "rows": 22,
+      "sha256": "21d287e9b63369c596c36ae54000027bc0a3ac7e2cb9cb17798080b2c456af8f"
+    },
+    {
+      "file": "sql/21_ammo_trait_links_001.sql",
+      "table": "ammo_trait_links",
+      "rows": 50,
+      "sha256": "b0de665e79dfe5604f1ef316ac85be760e4b72cadf69bfd56c614d3c9747ebb4"
+    },
+    {
+      "file": "sql/21_ammo_trait_links_002.sql",
+      "table": "ammo_trait_links",
+      "rows": 22,
+      "sha256": "752709bcaccf4c186f01297fd8a5a6f6c65e234e6a46f06a5bc2b39ebcc2bcd5"
+    },
+    {
+      "file": "sql/22_ammo_upgrade_links_001.sql",
+      "table": "ammo_upgrade_links",
+      "rows": 50,
+      "sha256": "3cc32ef8b299de51a4114334f0cbe95495a21f749a469d64b8373810e5b913e1"
+    },
+    {
+      "file": "sql/22_ammo_upgrade_links_002.sql",
+      "table": "ammo_upgrade_links",
+      "rows": 50,
+      "sha256": "2e426dbb6d462c928786a5ea7dcde1e396aa3ce5c93fb438afb47afffc4332e4"
+    },
+    {
+      "file": "sql/22_ammo_upgrade_links_003.sql",
+      "table": "ammo_upgrade_links",
+      "rows": 50,
+      "sha256": "9db48b0995e43eb1fa30ca5b8e287f1b28ae577a839a6d8718e4ed3bd006844c"
+    },
+    {
+      "file": "sql/22_ammo_upgrade_links_004.sql",
+      "table": "ammo_upgrade_links",
+      "rows": 50,
+      "sha256": "6cfb5b7efc5ca564164c15505d50881850709cdb363bc877f61ab8fb135d7fe4"
+    },
+    {
+      "file": "sql/22_ammo_upgrade_links_005.sql",
+      "table": "ammo_upgrade_links",
+      "rows": 13,
+      "sha256": "4c9b619e517068237277764e9888daf5e37aea4623a2c9709438bb274952c3da"
+    },
+    {
+      "file": "sql/23_unlock_requirements_001.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "5b4b3658cc7169d1ed9af2a0043f8f7eb6b1f627df839df916b9984130870122"
+    },
+    {
+      "file": "sql/23_unlock_requirements_002.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "d5a2321830e9753f5b52a26aeba4a91a3f8cc32f233b572845e2ad2c5f28b440"
+    },
+    {
+      "file": "sql/23_unlock_requirements_003.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "b4ee187bbfc7a0945c5be47894de135099ce769012cfb5dbd9b4f0a2a14d8f01"
+    },
+    {
+      "file": "sql/23_unlock_requirements_004.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "1596c1265099afc074a5a4cac7fa07916e22f54952ac2b035df120ce03b38c78"
+    },
+    {
+      "file": "sql/23_unlock_requirements_005.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "35b1816d95dd4004c6d8acb15732abdfb89ce014644f9f856a77a8c92a334900"
+    },
+    {
+      "file": "sql/23_unlock_requirements_006.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "3533e6778fb0271ad4f353d35541c457be81fd6ac1287584d4081a96e81ca2b9"
+    },
+    {
+      "file": "sql/23_unlock_requirements_007.sql",
+      "table": "unlock_requirements",
+      "rows": 50,
+      "sha256": "cf7310e866852c99c4ee1ea5f4d28a46565f5fa8bc606085129b9c6423d1ccdf"
+    },
+    {
+      "file": "sql/23_unlock_requirements_008.sql",
+      "table": "unlock_requirements",
+      "rows": 19,
+      "sha256": "8f8adf73d9877778276352270795b15c2ee64e7b6e11b11e8ff404f9aa94769b"
+    },
+    {
+      "file": "sql/24_vehicle_era_001.sql",
+      "table": "vehicle_era",
+      "rows": 50,
+      "sha256": "e84b50d4ad534bb0f87877e82044935c851b726bccfb1d640f57d8d6720f5e07"
+    },
+    {
+      "file": "sql/24_vehicle_era_002.sql",
+      "table": "vehicle_era",
+      "rows": 9,
+      "sha256": "dade69a8d6c1a027ed453aa9b76281a089441aefbe3d5aeed4398d8bf23dda7e"
+    },
+    {
+      "file": "sql/25_vehicle_infantry_001.sql",
+      "table": "vehicle_infantry",
+      "rows": 22,
+      "sha256": "efcc8e1af7b751fcd8c76213dae04208b56b9044c824a2c69ba356955f985bd8"
+    }
+  ]
+}
