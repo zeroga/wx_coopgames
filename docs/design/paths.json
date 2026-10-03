@@ -1,0 +1,84 @@
+{
+  "format_version": 1,
+  "figma": {
+    "file_name": "AW 小程序原型（main）",
+    "file_key": "sBc3jQ6u01vDWLbGZQB7qM",
+    "url": "https://www.figma.com/design/sBc3jQ6u01vDWLbGZQB7qM"
+  },
+  "working": {
+    "page_name": "Working · GitHub main",
+    "page_node_id": "0:1",
+    "purpose": "latest editable design",
+    "screens": [
+      {
+        "name": "01 · 首页",
+        "node_id": "2:8",
+        "source_paths": [
+          "miniprogram/pages/home/index.wxml",
+          "miniprogram/pages/home/index.wxss",
+          "miniprogram/data/games.js",
+          "miniprogram/app.wxss"
+        ]
+      },
+      {
+        "name": "02 · SnowRunner 推进清单",
+        "node_id": "2:24",
+        "source_paths": [
+          "miniprogram/pages/game/index.wxml",
+          "miniprogram/pages/game/index.wxss",
+          "miniprogram/pages/game/index.js",
+          "miniprogram/data/snowrunner.js",
+          "miniprogram/app.wxss"
+        ]
+      },
+      {
+        "name": "03 · 赛季资料管理",
+        "node_id": "2:565",
+        "source_paths": [
+          "miniprogram/pages/season/index.wxml",
+          "miniprogram/pages/season/index.wxss",
+          "miniprogram/pages/season/index.js",
+          "miniprogram/data/snowrunner.js",
+          "miniprogram/app.wxss"
+        ]
+      }
+    ]
+  },
+  "snapshots": [
+    {
+      "version": "2026-10-03-main-e660d7e-baseline",
+      "label": "baseline",
+      "created_at": "2026-10-03",
+      "git_ref": "main",
+      "git_commit": "e660d7efdef3b8db024395f7799321f6e1368aee",
+      "page_name": "v2026-10-03 · main@e660d7e · baseline",
+      "page_node_id": "5:9",
+      "screens": [
+        {
+          "name": "01 · 首页",
+          "node_id": "5:38"
+        },
+        {
+          "name": "02 · SnowRunner 推进清单",
+          "node_id": "5:54"
+        },
+        {
+          "name": "03 · 赛季资料管理",
+          "node_id": "5:595"
+        }
+      ]
+    }
+  ],
+  "comparison_policy": {
+    "default_design_target": "working",
+    "do_not_auto_fix": true,
+    "difference_classes": [
+      "design-ahead",
+      "code-ahead",
+      "visual-drift",
+      "behavior-only",
+      "data-only",
+      "intentional"
+    ]
+  }
+}
