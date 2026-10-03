@@ -1,0 +1,27 @@
+<view class="aw-page">
+  <view class="title">车辆资料库</view><view class="subtitle">Armored Warfare · 找车、查配置、记录车队</view>
+  <view class="nav"><button class="active">车辆资料库</button><button data-page="tree" bindtap="nav">科技树</button><button data-page="fleet" bindtap="nav">车队</button></view>
+  <view class="sticky"><input placeholder="搜索车辆名称" value="{{filters.query}}" data-key="query" bindinput="input"/>
+    <view class="filters"><text wx:for="{{selected}}" wx:key="name" class="tag selected" data-key="{{item.key}}" data-value="{{item.value}}" bindtap="remove">{{item.name}} ×</text><text wx:if="selected.length" class="link" bindtap="clear">重置</text></view>
+    <view class="filter-buttons"><button data-tab="base" bindtap="showFilters">等级 / 车型</button><button data-tab="cap" bindtap="showFilters">能力</button><button data-tab="ammo" bindtap="showFilters">武器 / 弹药</button><button data-tab="perf" bindtap="showFilters">性能</button><button data-tab="get" bindtap="showFilters">获取方式</button></view>
+  </view>
+  <view wx:if="filterTab" class="card">
+    <block wx:if="filterTab === 'base'"><view wx:for="{{groups}}" wx:key="key" wx:for-item="group"><view class="label">{{group.name}} · 组内多选 OR</view><text wx:for="{{group.options}}" wx:key="value" class="tag {{selection[group.key + ':' + item.value] ? 'selected' : ''}}" data-key="{{group.key}}" data-value="{{item.value}}" bindtap="toggle">{{item.name}}</text></view></block>
+    <block wx:if="filterTab === 'cap'"><view class="row between"><text>出厂即有</text><switch checked="{{filters.factory}}" color="#504060" bindchange="factory"/></view><view class="muted">关闭时按满配可获得；多个能力同时满足。未知能力不命中。</view><view wx:for="{{capabilityGroups}}" wx:key="name" wx:for-item="group"><view class="label">{{group.name}}</view><text wx:for="{{group.options}}" wx:key="value" class="tag {{selection['capabilities:' + item.value] ? 'selected' : ''}}" data-key="capabilities" data-value="{{item.value}}" bindtap="toggle">{{item.name}}</text></view></block>
+    <block wx:if="filterTab === 'ammo'"><view class="label">弹种 · 多选 OR</view><text wx:for="{{ammoTypes}}" wx:key="value" class="tag {{selection['ammoTypes:' + item.value] ? 'selected' : ''}}" data-key="ammoTypes" data-value="{{item.value}}" bindtap="toggle">{{item.name}}</text><view class="label">弹药特性 · 多选 AND</view><text wx:for="{{ammoTraits}}" wx:key="value" class="tag {{selection['ammoTraits:' + item.value] ? 'selected' : ''}}" data-key="ammoTraits" data-value="{{item.value}}" bindtap="toggle">{{item.name}}</text><view class="label">最高穿深 ≥ mm</view><input type="digit" value="{{filters.penetration}}" data-key="penetration" bindinput="input" placeholder="不限"/><view class="muted">弹种、特性、穿深必须由同一枚弹药满足。</view></block>
+    <block wx:if="filterTab === 'perf'"><view class="label">最高速度 ≥ km/h</view><input type="digit" value="{{filters.speed}}" data-key="speed" bindinput="input" placeholder="不限"/><view class="label">视野 ≥ m</view><input type="digit" value="{{filters.view}}" data-key="view" bindinput="input" placeholder="不限"/><view class="label">隐蔽 ≥ %</view><input type="digit" value="{{filters.camo}}" data-key="camo" bindinput="input" placeholder="不限"/></block>
+    <block wx:if="filterTab === 'get'"><view class="label">获取方式</view><text wx:for="{{acquisitions}}" wx:key="value" class="tag {{selection['acquisition:' + item.value] ? 'selected' : ''}}" data-key="acquisition" data-value="{{item.value}}" bindtap="toggle">{{item.name}}</text><view class="label">Premium</view><picker range="{{booleanOptions}}" value="{{premiumIndex}}" data-key="premium" bindchange="bool"><view class="picker">{{booleanOptions[premiumIndex]}} ▾</view></picker><view class="label">当前可研发</view><picker range="{{booleanOptions}}" value="{{researchIndex}}" data-key="researchable" bindchange="bool"><view class="picker">{{booleanOptions[researchIndex]}} ▾</view></picker></block>
+  </view>
+  <view class="row between"><text class="muted">找到 {{count}} 辆车辆</text><text class="link" bindtap="refreshCloud">{{loading ? '刷新中…' : '刷新云端资料'}}</text></view>
+  <view wx:if="error" class="warning">{{error}}</view>
+  <view wx:for="{{results}}" wx:key="id" class="card" data-id="{{item.id}}" bindtap="open">
+    <view class="row between"><text class="card-title">{{item.displayName}}</text><text class="tag">{{item.is_legendary ? '传奇' : 'T' + item.tier}} · {{item.vehicle_class}}</text></view>
+    <view><text wx:for="{{item.caps}}" wx:key="*this" class="tag">{{item}}</text></view>
+    <view wx:if="item.performance" class="muted">{{item.performance}}</view><view wx:if="item.ammoSummary" class="line">{{item.ammoSummary}}</view>
+    <view wx:for="{{item.team}}" wx:for-item="member" wx:key="id" class="line"><view>{{member.memberName}} · {{member.statusText}}</view><view class="muted">{{member.roleText}}</view><view wx:if="member.planText" class="muted">{{member.planText}}</view></view>
+    <view wx:if="item.extra" class="link">+{{item.extra}} 条车队记录</view><view class="muted">{{item.quality}}</view>
+  </view>
+  <view wx:if="!results.length" class="empty">没有符合条件的车辆。可减少筛选条件；资料未知也会影响命中。</view>
+  <view class="muted">{{source}} · 缺少记录不代表没有该能力</view>
+  <view wx:if="results.length &lt; count" class="empty">继续向下滚动加载</view>
+</view>

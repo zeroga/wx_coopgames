@@ -19,7 +19,8 @@ function request(path, method, data) {
       data: data === undefined ? undefined : data,
       header: {
         apikey: config.supabasePublishableKey,
-        Authorization: 'Bearer ' + config.supabasePublishableKey,
+        // Publishable keys are opaque API keys, not session JWTs.
+        ...(String(config.supabasePublishableKey).startsWith('sb_publishable_') ? {} : { Authorization: 'Bearer ' + config.supabasePublishableKey }),
         'Content-Type': 'application/json'
       },
       success(res) {
@@ -47,6 +48,13 @@ function normalizeCode(value) {
 }
 
 module.exports = {
+  readCatalog(table, offset, limit) {
+    if (!/^[a-z_]+$/.test(table)) return Promise.reject(new Error("资料表名无效"))
+    return request("/rest/v1/" + table + "?select=*&order=" + (["ammo_guidance_modes", "ammo_trait_links", "ammo_upgrade_links"].includes(table) ? "ammo_id" : ["weapon_upgrade_links"].includes(table) ? "weapon_id" : ["vehicle_era", "vehicle_infantry", "era_coverage"].includes(table) ? "capability_id" : ["vehicle_branch_memberships", "vehicle_crew_positions", "upgrade_prerequisites"].includes(table) ? "vehicle_id" : ["capabilities", "ammo_traits"].includes(table) ? "code" : "id") + "&offset=" + offset + "&limit=" + limit)
+  },
+  getLegacyAwPlan(profileId, inviteCode) {
+    return rpc("get_aw_fleet_plan", { p_workspace_id: profileId, p_invite_code: normalizeCode(inviteCode) })
+  },
   normalizeCode,
 
   createProfile(profileData) {

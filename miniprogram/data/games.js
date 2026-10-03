@@ -8,7 +8,7 @@ module.exports = [
   {
     key: 'aw',
     name: 'Armored Warfare',
-    subtitle: '车辆分配 · 入口已预留',
-    enabled: false
+    subtitle: '车辆资料库 · 科技树 · 车队',
+    enabled: true
   }
 ]

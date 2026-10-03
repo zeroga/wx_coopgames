@@ -1,0 +1,4 @@
+@import "../../utils/aw/theme.wxss";
+.filters { margin:12rpx 0; }
+.filter-buttons button { font-size:24rpx; margin:0; padding:0 18rpx; line-height:64rpx; }
+.filter-buttons { display:flex; flex-wrap:wrap; gap:10rpx; }

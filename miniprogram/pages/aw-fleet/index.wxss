@@ -1,0 +1,6 @@
+@import "../../utils/aw/theme.wxss";
+.form-backdrop { position:fixed; inset:0; background:rgba(30,20,40,.45); z-index:20; }
+.form { position:fixed; bottom:0; left:0; right:0; padding:32rpx 28rpx calc(32rpx + env(safe-area-inset-bottom)); border-radius:28rpx 28rpx 0 0; background:white; z-index:21; }
+.player.selected { border-color:#806096; background:#f7f2fa; }
+.role-sort.dragging { border-color:#806096; background:#f7f2fa; }
+.drag-handle { padding:24rpx; color:#806096; font-size:34rpx; }

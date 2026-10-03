@@ -1,0 +1,5 @@
+@import "../../utils/aw/theme.wxss";
+.backdrop { position:fixed; inset:0; background:rgba(30,20,40,.45); z-index:20; }
+.sheet { position:fixed; bottom:0; left:0; right:0; background:white; border-radius:28rpx 28rpx 0 0; padding:28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom)); z-index:21; }
+.sheet-content { max-height:65vh; margin:20rpx 0; }
+.target { display:block; margin:14rpx 0; font-size:26rpx; }

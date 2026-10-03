@@ -113,7 +113,7 @@ Figma 是以下内容的设计工作区：
 
 ## Work 核对代码与原型时的规则
 
-1. 先读取 `docs/design/paths.json`；若原型状态为 `paused`，只在明确要求历史比较时读取 Figma，不阻塞小程序开发。
+1. 先读取 `docs/design/paths.json`；若 `design_workflow.status` 为 `prototype-paused`，只在明确要求历史比较时读取 Figma，不阻塞小程序开发。
 2. 明确比较的是 `working` 还是某个 `snapshot`，不要默认使用旧截图。
 3. 代码侧读取目标分支 / commit 的真实文件。
 4. 原型侧读取 JSON 指向的 Figma page 和 screen node。

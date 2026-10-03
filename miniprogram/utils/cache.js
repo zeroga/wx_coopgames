@@ -8,7 +8,7 @@ module.exports = {
     try { return wx.getStorageSync(key(gameKey)) || null } catch (e) { return null }
   },
   set(gameKey, state) {
-    try { wx.setStorageSync(key(gameKey), state) } catch (e) {}
+    try { wx.setStorageSync(key(gameKey), state); return true } catch (e) { return false }
   },
   getRemote() {
     try {
