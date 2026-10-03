@@ -8,7 +8,7 @@
   "working": {
     "page_name": "Working · GitHub main",
     "page_node_id": "0:1",
-    "purpose": "latest editable design",
+    "purpose": "editable content and interaction reference",
     "screens": [
       {
         "name": "01 · 首页",
@@ -70,7 +70,7 @@
     }
   ],
   "comparison_policy": {
-    "default_design_target": "working",
+    "default_design_target": "code",
     "do_not_auto_fix": true,
     "difference_classes": [
       "design-ahead",
@@ -79,6 +79,28 @@
       "behavior-only",
       "data-only",
       "intentional"
-    ]
+    ],
+    "acceptance_basis": "content-and-interaction",
+    "pixel_perfect_required": false,
+    "prototype_usage": "paused; clarify interactions directly in the mini-program",
+    "acceptance_focus": [
+      "page content and information relationships",
+      "operation targets and scope",
+      "navigation and user-visible state changes",
+      "rules affecting operation results"
+    ],
+    "visual_drift_action": "report only unless it obscures content or causes interaction ambiguity",
+    "unrepresented_behavior_policy": "consult code and issue descriptions; missing prototype states do not imply missing functionality",
+    "snapshot_trigger": "meaningful content or interaction change; preserve a recoverable version before editing"
+  },
+  "design_workflow": {
+    "status": "prototype-paused",
+    "reason": "Figma pricing and tool quota cost",
+    "effective_date": "2026-10-03",
+    "design_surface": "wechat-miniprogram",
+    "requirements_source": "GitHub issues",
+    "validation": "local WeChat developer tools testing",
+    "version_control": "Git commits and pull requests",
+    "figma_role": "historical reference; synchronization paused"
   }
 }
