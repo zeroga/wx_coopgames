@@ -8,7 +8,7 @@
   "working": {
     "page_name": "Working · GitHub main",
     "page_node_id": "0:1",
-    "purpose": "latest editable design",
+    "purpose": "editable content and interaction reference",
     "screens": [
       {
         "name": "01 · 首页",
@@ -79,6 +79,18 @@
       "behavior-only",
       "data-only",
       "intentional"
-    ]
+    ],
+    "acceptance_basis": "content-and-interaction",
+    "pixel_perfect_required": false,
+    "prototype_usage": "clarify interactions when text is insufficient",
+    "acceptance_focus": [
+      "page content and information relationships",
+      "operation targets and scope",
+      "navigation and user-visible state changes",
+      "rules affecting operation results"
+    ],
+    "visual_drift_action": "report only unless it obscures content or causes interaction ambiguity",
+    "unrepresented_behavior_policy": "consult code and issue descriptions; missing prototype states do not imply missing functionality",
+    "snapshot_trigger": "meaningful content or interaction change; preserve a recoverable version before editing"
   }
 }
