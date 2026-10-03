@@ -4,7 +4,7 @@ set local statement_timeout='15s';
 set local role anon;
 do $$
 declare
-  m jsonb;t jsonb;t2 jsonb;linked jsonb;opened jsonb;
+  m jsonb;t jsonb;t2 jsonb;linked jsonb;opened jsonb;other_member jsonb;bad_team jsonb;
   mc text;tc text;tc2 text;mid text;ok boolean;
   personal jsonb := '{"assets":{"synthetic-vehicle":{"status":"owned","note":"test","explicit":true}},"tokens":{"synthetic-token":2},"routes":{},"confirmedRewards":{},"confirmedRequirements":{}}';
   team jsonb;
@@ -20,10 +20,10 @@ begin
   if linked::text like '%'||mc||'%' then raise exception 'TEST leaked member code';end if;
   t2:=public.aw_archive('link_member',tc2,jsonb_build_object('memberCode',mc),(t2->>'version')::integer);
   team:=jsonb_build_object('roles','[{"id":"r","name":"抗线","order":0}]'::jsonb,'assignments',jsonb_build_object(mid||'~synthetic-vehicle~r',jsonb_build_object('id',mid||'~synthetic-vehicle~r','assetId',mid||'~synthetic-vehicle','roleId','r','level','primary','source','manual')),'dependencies','[]'::jsonb,'legacyAudit','[]'::jsonb);
-  t:=public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',team),(linked->>'version')::integer);
+  t:=public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',team,'memberCode',mc,'members',jsonb_build_array(jsonb_build_object('id',mid,'active',true,'order',0))),(linked->>'version')::integer);
   if jsonb_array_length(t2->'data'->'roles')<>0 then raise exception 'TEST cross team responsibilities';end if;
   ok:=false;
-  begin perform public.aw_archive('put_team',tc,jsonb_build_object('name','stale','data',team),(linked->>'version')::integer);exception when others then if sqlerrm like '%AW_VERSION_CONFLICT%' then ok:=true;else raise;end if;end;
+  begin perform public.aw_archive('put_team',tc,jsonb_build_object('name','stale','data',team,'memberCode',mc),(linked->>'version')::integer);exception when others then if sqlerrm like '%AW_VERSION_CONFLICT%' then ok:=true;else raise;end if;end;
   if not ok then raise exception 'TEST stale team write allowed';end if;
   ok:=false;
   begin perform public.aw_archive('put_member',tc,jsonb_build_object('name','wrong type','data',personal),(m->>'version')::integer);exception when others then if sqlerrm like '%MEMBER_CODE_REQUIRED%' then ok:=true;else raise;end if;end;
@@ -40,13 +40,29 @@ begin
   ok:=false;
   begin perform public.aw_archive('put_member',mc,jsonb_build_object('name','stale','data',personal),(m->>'version')::integer-1);exception when others then if sqlerrm like '%AW_VERSION_CONFLICT%' then ok:=true;else raise;end if;end;
   if not ok then raise exception 'TEST stale member write';end if;
-  t:=public.aw_archive('unlink_member',tc,jsonb_build_object('memberId',mid),(t->>'version')::integer);
-  if jsonb_array_length(t->'members')<>0 or t->'data'->'assignments'<>'{}'::jsonb then raise exception 'TEST unlink';end if;
+  -- Another member can join, but cannot edit or remove the first member.
+  other_member:=public.aw_archive('create_member',null,'{"name":"Synthetic other member"}');
+  t:=public.aw_archive('link_member',tc,jsonb_build_object('memberCode',other_member->>'code'),(t->>'version')::integer);
+  ok:=false;
+  begin perform public.aw_archive('unlink_member',tc,jsonb_build_object('memberId',mid,'memberCode',other_member->>'code'),(t->>'version')::integer);exception when others then if sqlerrm like '%SELF_ONLY%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST removing teammate allowed';end if;
+  ok:=false;
+  begin perform public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',team),(t->>'version')::integer);exception when others then if sqlerrm like '%MEMBER_CODE_REQUIRED%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST team code alone wrote duties';end if;
+  bad_team:=jsonb_set(team,'{assignments}','{}'::jsonb);
+  ok:=false;
+  begin perform public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',bad_team,'memberCode',other_member->>'code'),(t->>'version')::integer);exception when others then if sqlerrm like '%SELF_ONLY%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST teammate duties overwritten';end if;
+  ok:=false;
+  begin perform public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',team,'memberCode',mc,'members','[]'::jsonb),(t->>'version')::integer);exception when others then if sqlerrm like '%SELF_ONLY%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST team members changed by put';end if;
+  t:=public.aw_archive('unlink_member',tc,jsonb_build_object('memberId',mid,'memberCode',mc),(t->>'version')::integer);
+  if jsonb_array_length(t->'members')<>1 or t->'data'->'assignments'<>'{}'::jsonb then raise exception 'TEST unlink';end if;
   opened:=public.aw_archive('open_member',mc);
   if opened->'data'->'assets'->'synthetic-vehicle'->>'status'<>'owned' then raise exception 'TEST unlink deleted personal data';end if;
   if has_table_privilege('anon','private.aw_member_saves','SELECT') or has_table_privilege('anon','private.aw_team_saves','UPDATE') then raise exception 'TEST direct table permission';end if;
 end;
 $$;
 reset role;
-select 'AW v2 synthetic RPC tests passed; no existing data modified' as result;
+select 'AW self-only synthetic RPC tests passed; existing records untouched' as result;
 rollback;

@@ -2,7 +2,7 @@
   <view class="hero"><view class="eyebrow">ARMORED WARFARE · VEHICLES</view><view class="title">车辆资料库</view><view class="subtitle">查车辆、比配置、安排车队职责</view></view>
   <view class="search-row"><input placeholder="搜索车辆名称" value="{{filters.query}}" data-key="query" bindinput="input"/><button class="ghost small" data-tab="base" bindtap="showFilters">筛选{{selected.length ? ' · ' + selected.length : ''}} ▾</button></view>
   <view class="filters"><text wx:for="{{selected}}" wx:key="name" class="tag selected" data-key="{{item.key}}" data-value="{{item.value}}" bindtap="remove">{{item.name}} ×</text><text wx:if="{{selected.length}}" class="link" bindtap="clear">重置</text></view>
-  <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="link" bindtap="refreshCloud">{{loading ? '刷新中…' : '刷新云端资料'}}</text></view>
+  <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="muted">随包本地资料</text></view>
   <view wx:if="{{error}}" class="warning">{{error}}</view>
   <view wx:for="{{results}}" wx:key="id" class="card vehicle-card" data-id="{{item.id}}" bindtap="open">
     <view class="row between"><text class="vehicle-name">{{item.displayName}}</text><text class="tag">{{item.is_legendary ? '传奇' : 'T' + item.tier}} · {{item.vehicle_class}}</text></view>

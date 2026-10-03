@@ -18,8 +18,8 @@ beforeEach(()=>{
     if(action==='open_team')return snapshot(t)
     if(version!==t.version)throw Error('AW_VERSION_CONFLICT')
     if(action==='link_member'){const m=Object.values(members).find(m=>m.code===payload.memberCode);if(!t.members.some(x=>x.id===m.id))t.members.push({id:m.id,active:true,order:t.members.length});t.version++;return snapshot(t)}
-    if(action==='unlink_member'){t.members=t.members.filter(m=>m.id!==payload.memberId);t.version++;return snapshot(t)}
-    if(action==='put_team'){t.data=fleet.clone(payload.data);t.name=payload.name;t.members=payload.members;t.version++;return snapshot(t)}
+    if(action==='unlink_member'){const actor=Object.values(members).find(m=>m.code===payload.memberCode);if(!actor||actor.id!==payload.memberId)throw Error('SELF_ONLY');t.members=t.members.filter(m=>m.id!==payload.memberId);t.version++;return snapshot(t)}
+    if(action==='put_team'){const actor=Object.values(members).find(m=>m.code===payload.memberCode);if(!actor)throw Error('MEMBER_CODE_REQUIRED');t.data=fleet.clone(payload.data);t.name=payload.name;t.members=payload.members;t.version++;return snapshot(t)}
     throw Error('UNKNOWN_ACTION')
   }
 })
@@ -38,7 +38,7 @@ test('publishing remaps every stable relation and separates member vehicles from
 test('member attachment is idempotent and one member can belong to independent teams',async()=>{
  localMember();await store.createTeam('Team A');const id=store.load().members[0].id,mc=store.memberInfo(id).code,first=Object.values(teams)[0]
  await store.attachMember(mc);await store.push();assert.equal(store.load().members.length,1)
- store.localTeam();store.save(fleet.empty({}));await store.attachMember(mc);await store.createTeam('Team B');const second=Object.values(teams)[1]
+ store.localTeam();memory.delete('coopgame.state.aw.v2.local');memory.delete('coopgame.state.aw.v2.local.current');store=freshStore();await store.attachMember(mc);await store.createTeam('Team B');const second=Object.values(teams)[1]
  assert.equal(first.members[0].id,second.members[0].id);assert.equal(second.data.roles.length,0);assert.equal(first.data.roles[0].name,'抗线')
 })
 test('wrong code type fails before any remote request',async()=>{
@@ -54,13 +54,13 @@ test('member version conflict does not overwrite data or upload subsequent team 
  localMember();await store.createTeam('Team');const id=store.load().members[0].id,s=fleet.clone(store.load());s.members[0].name='本地';store.save(s);members[id].version++
  await assert.rejects(store.push(),/云端存档已更新/);assert.equal(store.load().members[0].name,'本地');assert.equal(members[id].name,'Zero');assert(store.memberInfo(id).dirty)
 })
-test('joining via team code gives read-only personal data but permits responsibility edits',async()=>{
+test('team code stays read-only until the player code identifies self',async()=>{
  localMember();await store.createTeam('Team');const tc=store.remoteInfo().teamCode,id=store.load().members[0].id
  memory.delete('coopgame.state.aw.v2.members');memory.delete('coopgame.state.aw.v2.session');store=freshStore();await store.openTeam(tc)
  assert.equal(store.canEdit(id),false)
- const next=fleet.clone(store.load());next.members[0].name='不允许';assert.throws(()=>store.save(next),/只读/);assert.equal(store.load().members[0].name,'Zero')
- const duties=fleet.clone(store.load());duties.roles[0].name='车队职责';store.save(duties);await store.push();assert.equal(Object.values(teams)[0].data.roles[0].name,'车队职责')
- await store.attachMember(members[id].code);assert.equal(store.canEdit(id),true)
+ const next=fleet.clone(store.load());next.members[0].name='不允许';assert.throws(()=>store.save(next),/自己的玩家码/);assert.equal(store.load().members[0].name,'Zero')
+ const duties=fleet.clone(store.load());duties.roles[0].name='车队职责';assert.throws(()=>store.save(duties),/自己的玩家码/)
+ await store.attachMember(members[id].code);assert.equal(store.canEdit(id),true);store.save(duties);await store.push();assert.equal(Object.values(teams)[0].data.roles[0].name,'车队职责')
 })
 test('unlink preserves the independent member archive and another team link',async()=>{
  localMember();await store.createTeam('A');const id=store.load().members[0].id,mc=store.memberInfo(id).code
@@ -86,4 +86,23 @@ test('team projection excludes auto prerequisite assets and personal-only data',
  const s=localMember(),implicit=fleet.ensureAsset(s,'local',catalog.tables.vehicles[1].id)
  const personal=archives.personal(s,'local'),team=archives.team(s)
  assert(!personal.assets[implicit.vehicleId]);assert(!team.assets);assert(!team.tokens);assert.equal(Object.values(personal.assets).length,1)
+})
+test('entering a non-member code requires confirmation; cancellation makes no link',async()=>{
+ localMember();await store.createTeam('Team');const tc=store.remoteInfo().teamCode,originalId=store.currentMember(),originalVersion=Object.values(teams)[0].version
+ const other=await remote.awArchive('create_member',null,{name:'另一个测试者'})
+ await store.openTeam(tc);assert.equal(store.currentMember(),'')
+ const pending=await store.attachMember(other.code);assert.equal(pending.needsJoin,true)
+ assert.equal(store.currentMember(),'');assert.equal(Object.values(teams)[0].members.length,1);assert.equal(Object.values(teams)[0].version,originalVersion)
+ const joined=await store.attachMember(other.code,true);assert.equal(joined.needsJoin,false);assert.equal(store.currentMember(),other.id)
+ assert.equal(store.canEdit(originalId),false);assert.equal(store.memberInfo(originalId).code,'')
+ const version=Object.values(teams)[0].version;await store.attachMember(other.code);assert.equal(Object.values(teams)[0].version,version)
+})
+test('own identity cannot alter teammate duties, delete an occupied role or exit for teammate',async()=>{
+ localMember();await store.createTeam('Team');const tc=store.remoteInfo().teamCode,first=store.currentMember(),other=await remote.awArchive('create_member',null,{name:'队友'})
+ await store.openTeam(tc);await store.attachMember(other.code,true)
+ const before=store.exportText(),next=fleet.clone(store.load());fleet.deleteRole(next,'role')
+ assert.throws(()=>store.save(next),/其他成员/);assert.equal(store.exportText(),before)
+ await assert.rejects(store.unlinkMember(first),/自己的车队/)
+ await store.unlinkMember(other.id);assert.equal(store.currentMember(),'');assert.equal(store.dirty,false)
+ assert.equal(Object.values(teams)[0].members[0].id,first);assert(members[other.id])
 })

@@ -2,6 +2,7 @@ const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
+const identity = require('../../utils/aw/identity')
 function error(e) { wx.showModal({title:'操作未完成',content:e.message||String(e),showCancel:false}) }
 Page({
   data:{tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:''},
@@ -32,7 +33,7 @@ Page({
       const picked=s.routes[fleet.assetKey(memberId,step.id)]
       return {vehicleId:step.id,name:step.name,paths:ps,index:ps.findIndex(p=>p.id===picked)}
     }).filter(Boolean).filter(c=>!choices.some(x=>x.vehicleId===c.vehicleId)):[]
-    this.setData({archive:store.remoteInfo(),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),memberChoices:members.map(m=>({id:m.id,name:m.name,code:store.memberInfo(m.id).code,editable:store.canEdit(m.id)})),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,choices,routeOptions,
+    this.setData({archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,choices,routeOptions,
       memberTokens:catalog.tables.tokens.map(t=>({id:t.id,name:t.name,quantity:s.tokens[fleet.assetKey(memberId,t.id)]||0})),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
   },
   mutate(fn){try{if(store.busy)throw new Error('正在同步，请稍后编辑');const s=fleet.clone(store.load());fn(s);store.save(s);this.refresh();return true}catch(e){error(e);return false}},
@@ -40,19 +41,15 @@ Page({
   awHome(){navigation.visit('pages/aw-home/index')},
   selectMember(e){this.setData({memberId:e.currentTarget.dataset.id,targetId:''});this.refresh()},
   pickMember(e){const m=this.data.members[Number(e.detail.value)];this.setData({memberId:m.id,targetId:''});this.refresh()},
-  setCurrent(){if(!this.data.member||!this.data.member.active)return;store.setCurrentMember(this.data.memberId);this.refresh();wx.showToast({title:'已设为当前玩家',icon:'success'})},
-  newMember(){this.setData({memberForm:{id:'',name:''}})},
-  renameMember(){if(!store.canEdit(this.data.memberId))return error(new Error('请先关联成员存档码'));if(this.data.member)this.setData({memberForm:{id:this.data.member.id,name:this.data.member.name}})},
+  newMember(){if(store.currentMember())return error(new Error('已经有自己的玩家档'));this.setData({memberForm:{id:'',name:''}})},
+  renameMember(){if(!store.canEdit(this.data.memberId))return error(new Error('只能修改自己的玩家信息'));if(this.data.member)this.setData({memberForm:{id:this.data.member.id,name:this.data.member.name}})},
   memberName(e){this.setData({'memberForm.name':e.detail.value})},
   cancelForm(){this.setData({memberForm:null,roleForm:null})},
-  saveMember(){
+  async saveMember(){
     const form=this.data.memberForm,name=form.name.trim();if(!name)return error(new Error('请填写成员名称'))
-    let newId=''
-    const saved=this.mutate(s=>{if(form.id){s.members.find(m=>m.id===form.id).name=name}else{newId=fleet.id('member');s.members.push({id:newId,name,active:true,order:s.members.length})}})
-    if(saved){if(newId){this.setData({memberId:newId});store.setCurrentMember(newId);this.refresh()}this.cancelForm()}
+    if(form.id){if(!store.canEdit(form.id))return error(new Error('只能修改自己的名字'));if(this.mutate(s=>{s.members.find(m=>m.id===form.id).name=name}))this.cancelForm();return}
+    return this.runArchive(async()=>{if(await identity.create(name)){this.setData({memberId:store.currentMember()});this.cancelForm()}})
   },
-  activeMember(){const m=this.data.member;if(!m)return;wx.showModal({title:m.active?'停用玩家？':'恢复玩家？',content:m.active?'保留所有车辆和历史关系，停用后不能新增车辆编辑。':'恢复后可继续编辑车辆。',success:r=>{if(r.confirm)this.mutate(s=>{s.members.find(x=>x.id===m.id).active=!m.active})}})},
-  moveMember(e){this.reorder('members',e.currentTarget.dataset.id,Number(e.currentTarget.dataset.dir))},
   reorder(key,id,dir){this.mutate(s=>{const items=s[key].slice().sort((a,b)=>a.order-b.order),i=items.findIndex(x=>x.id===id),j=i+dir;if(i<0||j<0||j>=items.length)return;[items[i],items[j]]=[items[j],items[i]];items.forEach((x,k)=>{x.order=k});s[key]=items})},
   newRole(){this.setData({roleForm:{id:'',name:'',description:''}})},
   editRole(e){const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);this.setData({roleForm:fleet.clone(r)})},
@@ -73,7 +70,7 @@ Page({
   editAsset(e){const member=e.currentTarget.dataset.member||this.data.memberId;if(member!==store.currentMember())return wx.showToast({title:'只能登记自己的车辆',icon:'none'});this.setData({editor:true,editVehicleId:e.currentTarget.dataset.id})},
   cancel(){this.setData({editor:false})},
   saved(){this.setData({editor:false});this.refresh()},
-  removeAsset(e){const id=e.currentTarget.dataset.asset;wx.showModal({title:'移除玩家车辆？',content:'移除该车辆及手工职责。若仍被目标路线引用，将重新建立计划前置。',success:r=>{if(r.confirm)this.mutate(s=>fleet.removeAsset(s,id))}})},
+  removeAsset(e){const id=e.currentTarget.dataset.asset;if((store.load().assets[id]||{}).memberId!==store.currentMember())return error(new Error('只能移除自己的车辆'));wx.showModal({title:'移除我的车辆？',content:'移除该车辆及手工职责。若仍被目标路线引用，将重新建立计划前置。',success:r=>{if(r.confirm)this.mutate(s=>fleet.removeAsset(s,id))}})},
   tree(e){navigation.visit('pages/aw-tree/index',{id:e.currentTarget.dataset.id})},
   detail(e){navigation.visit('pages/aw-vehicle/index',{id:e.currentTarget.dataset.id})},
   addVehicle(){navigation.visit('pages/aw-catalog/index')},
@@ -84,18 +81,18 @@ Page({
   confirmRequirement(e){this.mutate(s=>{s.confirmedRequirements[fleet.assetKey(this.data.memberId,e.currentTarget.dataset.id)]=e.detail.value})},
   confirmReward(e){this.mutate(s=>{s.confirmedRewards[fleet.assetKey(this.data.memberId,e.currentTarget.dataset.id)]=e.detail.value})},
   archiveField(e){this.setData({[e.currentTarget.dataset.key]:e.detail.value})},
-  async runArchive(fn){this.setData({busy:true});try{await fn();wx.showToast({title:'操作完成',icon:'success'})}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}},
+  async runArchive(fn){this.setData({busy:true});try{const result=await fn();if(result!==false)wx.showToast({title:'操作完成',icon:'success'})}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}},
   createTeam(){return this.runArchive(()=>store.createTeam(this.data.teamNameInput||'我的车队'))},
-  joinTeam(){return this.runArchive(()=>store.openTeam(this.data.teamCodeInput))},
-  joinMember(){return this.runArchive(()=>store.attachMember(this.data.memberCodeInput))},
-  publishMember(){return this.runArchive(async()=>{const code=await store.publishMember(this.data.memberId),m=store.load().members.find(x=>store.memberInfo(x.id).code===code);if(m)this.setData({memberId:m.id})})},
+  joinTeam(){return this.runArchive(async()=>{await store.openTeam(this.data.teamCodeInput);this.setData({memberId:'',memberCodeInput:'',tab:'players'})})},
+  joinMember(){return this.runArchive(async()=>{const joined=await identity.connect(this.data.memberCodeInput);if(joined)this.setData({memberId:store.currentMember(),memberCodeInput:''});return joined})},
+  publishMember(){return this.runArchive(async()=>{await store.publishMember(store.currentMember());this.setData({memberId:store.currentMember()})})},
   copyTeam(){wx.setClipboardData({data:store.remoteInfo().teamCode})},
-  copyMember(){const code=store.memberInfo(this.data.memberId).code;if(code)wx.setClipboardData({data:code})},
+  copyMember(){const code=store.memberInfo(store.currentMember()).code;if(code)wx.setClipboardData({data:code})},
   switchLocal(){wx.showModal({title:'切换到本地车队？',content:'当前车队及未上传改动会留在本机缓存中，个人存档不会删除。',success:r=>{if(r.confirm){store.localTeam();this.setData({memberId:'',targetId:''});this.refresh()}}})},
-  unlinkMember(){const id=this.data.memberId;wx.showModal({title:'解除成员关联？',content:'移除此车队的职责安排，保留成员独立存档和车辆资料。',success:r=>{if(r.confirm)this.runArchive(()=>store.unlinkMember(id))}})},
+  unlinkMember(){const id=store.currentMember();if(!id)return;wx.showModal({title:'退出车队？',content:'移除你在此车队的职责安排，保留自己的玩家码、车辆和其他车队记录。',success:r=>{if(r.confirm)this.runArchive(async()=>{await store.unlinkMember(id);this.setData({memberId:'',memberCodeInput:''})})}})},
   async push(){this.setData({busy:true});try{await store.push();wx.showToast({title:'已同步',icon:'success'})}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}},
   async pull(){this.setData({busy:true});try{await store.pull()}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}},
   replaceCloud(){wx.showModal({title:'重新载入云端？',content:'备份包含存档码，请妥善保存。继续将用云端替换当前车队及成员资料的本地未同步版本。',success:async r=>{if(!r.confirm)return;this.setData({busy:true});try{await store.discardAndPull()}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}}})},
   backup(){wx.setClipboardData({data:store.exportText()})},
-  async importLegacy(){wx.showModal({title:'读取旧车队计划？',content:'只复制有效资产状态，保留全部原始记录。不修改旧表；旧职责与优先级留待人工映射。',success:async r=>{if(!r.confirm)return;this.setData({busy:true});try{await store.importOld()}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}}})}
+
 })

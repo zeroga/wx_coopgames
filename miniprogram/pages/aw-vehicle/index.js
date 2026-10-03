@@ -3,7 +3,7 @@ const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
 const navigation = require('../../utils/aw/navigation')
 Page({
-  data: { id: '', vehicle: null, team: [], extra: 0, showTeam: false, showMore: false, showBasis: false, sections: { basic:true, performance:true, team:false, weapons:false, abilities:false, upgrades:false, acquisition:false, armor:false, sources:false }, expandedWeapons: {}, editor: false, editMemberId: '', currentId:'' },
+  data: { id: '', vehicle: null, team: [], extra: 0, showTeam: false, showMore: false, showBasis: false, sections: { performance:true, weapons:false, abilities:false, upgrades:false, acquisition:false, armor:false, sources:false }, expandedAmmo: {}, editor: false, editMemberId: '', currentId:'' },
   onLoad(o) { this.setData({ id: o.id || '' }); this.refresh() },
   onShow() { this.refresh() },
   refresh() {
@@ -16,11 +16,11 @@ Page({
     wx.setNavigationBarTitle({title:v.displayName})
   },
   section(e) { const key=e.currentTarget.dataset.section;if(Object.prototype.hasOwnProperty.call(this.data.sections,key))this.setData({['sections.'+key]:!this.data.sections[key]}) },
-  receiveNavigation(o) { this.setData({id:o.id||this.data.id,expandedWeapons:{}});this.refresh() },
+  receiveNavigation(o) { this.setData({id:o.id||this.data.id,expandedAmmo:{}});this.refresh() },
   more() { this.setData({showMore:!this.data.showMore}) },
   basis() { this.setData({showBasis:!this.data.showBasis}) },
   allTeam() { this.setData({showTeam:!this.data.showTeam});this.refresh() },
-  weapon(e) { const id=e.currentTarget.dataset.id;this.setData({['expandedWeapons.'+id]:!this.data.expandedWeapons[id]}) },
+  ammo(e) { const id=e.currentTarget.dataset.id;this.setData({['expandedAmmo.'+id]:!this.data.expandedAmmo[id]}) },
   edit() { this.setData({ editor:true, editMemberId:store.currentMember() }) },
   cancel() { this.setData({editor:false}) },
   saved() { this.setData({editor:false});this.refresh() },

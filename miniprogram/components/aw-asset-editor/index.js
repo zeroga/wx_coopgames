@@ -2,6 +2,7 @@ const store = require('../../utils/aw/store')
 const fleet = require('../../utils/aw/fleet')
 const catalog = require('../../utils/aw/catalog')
 const navigation = require('../../utils/aw/navigation')
+const identity = require('../../utils/aw/identity')
 Component({
   properties: { vehicleId: String },
   data: { members: [], playerIndex: 0, statusIndex: 0, statuses: ['已拥有', '计划'], levels: ['不分配', '主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null },
@@ -31,16 +32,16 @@ Component({
       this.setData({ editable: store.canEdit(m.id), vehicleName: (catalog.byId[this.properties.vehicleId] || {}).displayName || (catalog.byId[this.properties.vehicleId] || {}).name || '', rows, statusIndex: asset && asset.status === 'planned' ? 1 : 0, note: asset && asset.note || '' })
     },
     identityField(e) { this.setData({[e.currentTarget.dataset.key]:e.detail.value}) },
-    createSelf() {
+    async createSelf() {
+      this.setData({identityBusy:true})
       try {
-        const name=this.data.identityName.trim();if(!name)throw new Error('请填写自己的名字')
-        const next=fleet.clone(store.load()),id=fleet.id('member')
-        next.members.push({id,name,active:true,order:next.members.length});store.save(next);store.setCurrentMember(id);this.prepare()
+        await identity.create(this.data.identityName);this.prepare()
       } catch(e) { wx.showModal({title:'无法建立个人档',content:e.message,showCancel:false}) }
+      finally{this.setData({identityBusy:false})}
     },
     async associateSelf() {
       this.setData({identityBusy:true})
-      try{await store.attachMember(this.data.memberCode);this.prepare()}
+      try{await identity.connect(this.data.memberCode);this.prepare()}
       catch(e){wx.showModal({title:'无法关联个人档',content:e.message,showCancel:false})}
       finally{this.setData({identityBusy:false})}
     },

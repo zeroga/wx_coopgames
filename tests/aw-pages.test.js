@@ -10,8 +10,8 @@ function hydrate(def, component=false) {
 function page(name){let def;global.Page=d=>{def=d};const script='../miniprogram/pages/'+name+'/index';delete require.cache[require.resolve(script)];require(script);const p=hydrate(def);p.options={};p.route='pages/'+name+'/index';return p}
 function event(dataset,value){return {currentTarget:{dataset},detail:{value}}}
 const c=require('../miniprogram/utils/aw/catalog'),s=require('../miniprogram/utils/aw/store')
-test('create member and role, edit asset with two roles, cancel without mutation, reload every AW page',()=>{
-  const p=page('aw-fleet');p.onLoad({});p.newMember();p.memberName(event({},'测试玩家'));p.saveMember()
+test('create member and role, edit asset with two roles, cancel without mutation, reload every AW page',async()=>{
+  const p=page('aw-fleet');p.onLoad({});p.newMember();p.memberName(event({},'测试玩家'));await p.saveMember()
   assert.equal(s.load().members.length,1)
   p.newRole();p.roleField(event({key:'name'},'抗线'));p.saveRole()
   p.newRole();p.roleField(event({key:'name'},'侦察'));p.saveRole()
@@ -23,12 +23,12 @@ test('create member and role, edit asset with two roles, cancel without mutation
   const asset=s.load().assets[Object.keys(s.load().assets)[0]];assert.equal(asset.status,'planned');assert.equal(asset.note,'测试备注')
   const before=s.exportText();editor.prepare();editor.note(event({},'不保存'));editor.cancel();assert.equal(s.exportText(),before)
   p.refresh();assert.equal(p.data.playerAssets[0].roles.length,2)
-  p.renameMember();p.memberName(event({},'改名玩家'));p.saveMember();assert.equal(p.data.playerAssets[0].memberName,'改名玩家')
+  p.renameMember();p.memberName(event({},'改名玩家'));await p.saveMember();assert.equal(p.data.playerAssets[0].memberName,'改名玩家')
   const catalogPage=page('aw-catalog');catalogPage.onLoad();assert.equal(catalogPage.data.count,298)
   catalogPage.input(event({key:'query'},'Boxer'));assert(catalogPage.data.results.length>0)
   catalogPage.toggle(event({key:'classes',value:'AFV'}));assert(catalogPage.data.results.every(v=>v.vehicle_class==='AFV'))
   const vpage=page('aw-vehicle');vpage.onLoad({id:vid});assert.equal(vpage.data.vehicle.configs.length,5)
-  vpage.weapon(event({id:vpage.data.vehicle.configs[0].weapons[0].id}));vpage.allTeam();assert.equal(vpage.data.team.length,1)
+  vpage.section(event({section:'weapons'}));vpage.allTeam();assert.equal(vpage.data.team.length,1)
   const tree=page('aw-tree');tree.onLoad({id:vid});assert.equal(tree.data.vehicle.id,vid)
   p.setData({tab:'plans'});p.refresh();assert.equal(p.data.targets.length,2);assert.equal(p.data.plan.complete,false)
   assert.equal(messages.filter(r=>r.title==='操作未完成'||r.title==='无法保存').length,0)
@@ -129,7 +129,7 @@ test('AW navigation returns to existing pages without losing filters or stacking
     const home=page('aw-home');home.open(event({page:'catalog'}));assert.deepEqual(calls.pop(),{back:1})
   }finally{wx.navigateBack=oldBack;wx.navigateTo=oldTo;if(oldPages)global.getCurrentPages=oldPages;else delete global.getCurrentPages}
 })
-test('all detail sections and weapons fold independently and survive refresh',()=>{
+test('detail sections fold while basic/team stay visible and each ammo expands independently',()=>{
   const p=page('aw-vehicle'),id=c.tables.vehicles[0].id;p.onLoad({id})
   assert.equal(p.data.sections.upgrades,false)
   for(const name of Object.keys(p.data.sections)){
@@ -138,15 +138,18 @@ test('all detail sections and weapons fold independently and survive refresh',()
     p.section(event({section:name}));assert.equal(JSON.stringify(p.data.sections),previous)
   }
   p.section(event({section:'weapons'}));const ws=p.data.vehicle.weaponGroups.flatMap(g=>g.weapons)
-  assert(ws.length>0);p.weapon(event({id:ws[0].id}));p.refresh()
-  assert.equal(p.data.expandedWeapons[ws[0].id],true);assert.equal(p.data.sections.weapons,true)
-  for(const w of ws.slice(1))assert.equal(p.data.expandedWeapons[w.id],undefined)
+  const ammos=ws.flatMap(w=>w.ammo);assert(ammos.length>0)
+  p.ammo(event({id:ammos[0].id}));p.refresh()
+  assert.equal(p.data.expandedAmmo[ammos[0].id],true);assert.equal(p.data.sections.weapons,true)
+  for(const a of ammos.slice(1))assert.equal(p.data.expandedAmmo[a.id],undefined)
+  p.ammo(event({id:ammos[0].id}));assert.equal(p.data.expandedAmmo[ammos[0].id],false)
+  assert(!('basic' in p.data.sections));assert(!('team' in p.data.sections))
   const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/pages/aw-vehicle/index.wxml'),'utf8')
   assert(markup.indexOf('wx:for="{{weapon.ammo}}"')<markup.indexOf('武器说明'))
 })
 test('personal editor ignores other-member selection and supports tag duties with inline management',()=>{
   const fleet=require('../miniprogram/utils/aw/fleet'),current=s.currentMember(),next=fleet.clone(s.load())
-  next.members.push({id:'other-test',name:'队友',active:true,order:next.members.length});s.save(next)
+  assert.throws(()=>{next.members.push({id:'other-test',name:'队友',active:true,order:next.members.length});s.save(next)},/只能建立自己的/)
   let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
   const p=hydrate(def,true);p.properties={vehicleId:c.tables.vehicles[0].id,memberId:'other-test'};p.prepare()
   assert.deepEqual(p.data.members.map(x=>x.id),[current])
@@ -173,14 +176,28 @@ test('weapons remain listed without explicit exclusion evidence and known colors
   assert.equal(c.ammoColor('heat'),'heat');assert.equal(c.ammoColor('he'),'he')
   assert.equal(c.ammoColor('atgm'),'unknown');assert.equal(c.ammoColor('other'),'unknown')
 })
-test('first personal registration creates its own identity instead of falling back to a teammate',()=>{
+test('first personal registration creates its own identity instead of falling back to a teammate',async()=>{
   const previous=s.currentMember();s.setCurrentMember('')
   let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
   const p=hydrate(def,true);p.properties={vehicleId:c.tables.vehicles[0].id};p.prepare()
   assert.equal(p.data.members.length,0)
-  p.identityField(event({key:'identityName'},'我的成员档'));p.createSelf()
+  p.identityField(event({key:'identityName'},'我的成员档'));await p.createSelf()
   assert.equal(p.data.members.length,1);assert.equal(p.data.members[0].name,'我的成员档')
   assert.notEqual(s.currentMember(),previous);assert.equal(p.data.editable,true)
   const f=page('aw-fleet');f.onLoad({});f.editAsset(event({id:p.properties.vehicleId,member:previous}))
   assert.equal(f.data.editor,false)
+})
+test('vehicle browsing and tech tree use local resources without making a request',()=>{
+  const old=wx.request;wx.request=()=>{throw Error('vehicle catalog must stay offline')}
+  try{const cp=page('aw-catalog');cp.onLoad();assert.equal(cp.data.count,298);assert.match(cp.data.source,/本地资料/)
+    const id=cp.data.results[0].id,vp=page('aw-vehicle');vp.onLoad({id});vp.section(event({section:'weapons'}));const tree=page('aw-tree');tree.onLoad({id});assert(vp.data.vehicle);assert(tree.data.vehicle)
+    assert.equal(typeof s.loadCatalog,'undefined');assert.equal(typeof require('../miniprogram/utils/supabase').readCatalog,'undefined')
+  }finally{wx.request=old}
+})
+test('identity join dialog cancellation preserves the currently loaded team',async()=>{
+  const identity=require('../miniprogram/utils/aw/identity'),attach=s.attachMember,modal=wx.showModal,calls=[]
+  try{s.attachMember=async(code,confirmed)=>{calls.push(confirmed);return {needsJoin:!confirmed,name:'我'}};wx.showModal=r=>{assert.equal(r.title,'加入车队？');r.success({confirm:false})}
+    assert.equal(await identity.connect('test'),false);assert.deepEqual(calls,[undefined])
+    calls.length=0;wx.showModal=r=>r.success({confirm:true});assert.equal(await identity.connect('test'),true);assert.deepEqual(calls,[undefined,true])
+  }finally{s.attachMember=attach;wx.showModal=modal}
 })

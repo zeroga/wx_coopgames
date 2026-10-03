@@ -31,7 +31,7 @@ Page({
     this.setData({ count: all.length, selected, selection, results: all.slice(0,this.data.limit).map(v=>{
       const c = catalog.card(v,f), summaries = s.members.length ? fleetSummary(s,v.id) : []
       return Object.assign(c,{ team: summaries.slice(0,2), extra: Math.max(0,summaries.length-2) })
-    }), source: '资料时间：'+catalog.checkedAt.slice(0,10) })
+    }), source: '本地资料 · 核对时间：'+catalog.checkedAt.slice(0,10) })
   },
   input(e) { const key=e.currentTarget.dataset.key; this.setData({ ['filters.'+key]:e.detail.value, limit:30 }); this.refresh() },
   toggle(e) { const {key,value}=e.currentTarget.dataset, values=this.data.filters[key].slice(), i=values.indexOf(value); if(i>=0) values.splice(i,1); else values.push(value); this.setData({['filters.'+key]:values,limit:30});this.refresh() },
@@ -45,6 +45,6 @@ Page({
   open(e) { wx.navigateTo({url:'/pages/aw-vehicle/index?id='+e.currentTarget.dataset.id}) },
   awHome(){navigation.visit('pages/aw-home/index')},
   onReachBottom() { this.setData({limit:this.data.limit+30});this.refresh() },
-  async refreshCloud() { this.setData({loading:true,error:''});try{await store.loadCatalog();this.buildFilterOptions();this.refresh()}catch(e){this.setData({error:'刷新失败，已保留随包资料：'+e.message})}finally{this.setData({loading:false})} }
+
 })
 function fleetSummary(s,id) { return require('../../utils/aw/fleet').summary(s,id) }
