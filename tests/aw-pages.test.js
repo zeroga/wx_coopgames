@@ -43,6 +43,29 @@ test('all AW event bindings and referenced routes resolve',()=>{
   }
   const app=require('../miniprogram/app.json');for(const route of app.pages)assert(fs.existsSync(path.join(__dirname,'../miniprogram',route+'.wxml')))
 })
+test('WXML bindings use raw operators and pagination/plan conditions evaluate correctly',()=>{
+  const vm=require('node:vm'),mini=path.join(__dirname,'../miniprogram')
+  for(const dir of ['pages','components'])for(const name of fs.readdirSync(path.join(mini,dir)).filter(x=>x.startsWith('aw-'))){
+    const markup=fs.readFileSync(path.join(mini,dir,name,'index.wxml'),'utf8')
+    for(const binding of markup.matchAll(/{{([\s\S]*?)}}/g)){
+      assert.doesNotMatch(binding[1], /&(?:[a-zA-Z]+|#\d+|#x[0-9a-fA-F]+);/, name+' binding contains XML entity')
+      new vm.Script('('+binding[1]+')')
+    }
+  }
+  function condition(markup,contains){const bindings=[...markup.matchAll(/wx:if="{{([^"\n]+)}}"/g)];return bindings.find(x=>x[1].includes(contains))[1]}
+  const catalog=fs.readFileSync(path.join(mini,'pages/aw-catalog/index.wxml'),'utf8')
+  const more=condition(catalog,'count')
+  assert.equal(vm.runInNewContext(more,{count:31,results:new Array(30)}),true)
+  assert.equal(vm.runInNewContext(more,{count:30,results:new Array(30)}),false)
+  const fleet=fs.readFileSync(path.join(mini,'pages/aw-fleet/index.wxml'),'utf8')
+  const assignment=condition(fleet,'assignment.roleId')
+  assert.equal(!!vm.runInNewContext(assignment,{assignment:{roleId:'A',targetNames:'车'},role:{id:'A'}}),true)
+  assert.equal(!!vm.runInNewContext(assignment,{assignment:{roleId:'B',targetNames:'车'},role:{id:'A'}}),false)
+  const confirm=condition(fleet,"item.requirement_type")
+  assert.equal(vm.runInNewContext(confirm,{step:{owned:false},item:{requirement_type:'mission'}}),true)
+  assert.equal(vm.runInNewContext(confirm,{step:{owned:true},item:{requirement_type:'mission'}}),false)
+  assert.equal(vm.runInNewContext(confirm,{step:{owned:false},item:{token_id:'T',requirement_type:'mission'}}),false)
+})
 test('vehicle editor visibility follows open/cancel events and member empty state',()=>{
   const vm=require('node:vm')
   function visible(expression,data){

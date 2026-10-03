@@ -14,7 +14,7 @@
   </view>
   <view wx:if="{{!results.length}}" class="empty">没有符合条件的车辆。可减少筛选条件；资料未知也会影响命中。</view>
   <view class="muted">{{source}} · 缺少记录不代表没有该能力</view>
-  <view wx:if="{{results.length &lt; count}}" class="empty">继续向下滚动加载</view>
+  <view wx:if="{{count > results.length}}" class="empty">继续向下滚动加载</view>
 </view>
 
 <block wx:if="{{filterTab}}">

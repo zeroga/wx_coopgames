@@ -1,5 +1,6 @@
 """Static structural and reproducibility checks; not a native WeChat compiler."""
 import json, re, subprocess, zipfile
+from html import escape
 from pathlib import Path
 from xml.etree import ElementTree as ET
 root = Path(__file__).resolve().parent.parent
@@ -7,7 +8,13 @@ mini = root / 'miniprogram'
 for p in mini.rglob('*.js'):
     subprocess.run(['node', '--check', str(p)], check=True, capture_output=True)
 for p in list((mini / 'pages').glob('aw-*/index.wxml')) + list((mini / 'components').glob('aw-*/index.wxml')):
-    tree = ET.fromstring('<root xmlns:wx="urn:wx" xmlns:bind="urn:bind">' + p.read_text() + '</root>')
+    markup = p.read_text()
+    for binding in re.finditer(r'{{([\s\S]*?)}}', markup):
+        assert not re.search(r'&(?:[a-zA-Z]+|#\d+|#x[0-9a-fA-F]+);', binding[1]), f'{p}: WXML expressions must use raw operators, not XML entities: {binding[0]}'
+    # WXML preserves operators in bindings. Escape them only for our XML
+    # structure check, after validating the original source above.
+    xml_markup = re.sub(r'{{([\s\S]*?)}}', lambda m: '{{' + escape(m[1], quote=False) + '}}', markup)
+    tree = ET.fromstring('<root xmlns:wx="urn:wx" xmlns:bind="urn:bind">' + xml_markup + '</root>')
     for node in tree.iter():
         for directive in ['if', 'elif']:
             condition = node.get('{urn:wx}' + directive)
