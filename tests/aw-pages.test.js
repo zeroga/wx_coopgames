@@ -13,8 +13,8 @@ const c=require('../miniprogram/utils/aw/catalog'),s=require('../miniprogram/uti
 test('create member and role, edit asset with two roles, cancel without mutation, reload every AW page',async()=>{
   const p=page('aw-fleet');p.onLoad({});p.newMember();p.memberName(event({},'测试玩家'));await p.saveMember()
   assert.equal(s.load().members.length,1)
-  p.newRole();p.roleField(event({key:'name'},'抗线'));p.saveRole()
-  p.newRole();p.roleField(event({key:'name'},'侦察'));p.saveRole()
+  p.newRole();p.roleField(event({key:'name'},'抗线'));await p.saveRole()
+  p.newRole();p.roleField(event({key:'name'},'侦察'));await p.saveRole()
   assert.equal(s.load().roles.length,2)
   const vid=c.tables.vehicles.find(v=>v.name==='Boxer RIWP').id
   let def;global.Component=d=>{def=d};require('../miniprogram/components/aw-asset-editor/index')
@@ -147,13 +147,13 @@ test('detail sections fold while basic/team stay visible and each ammo expands i
   const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/pages/aw-vehicle/index.wxml'),'utf8')
   assert(markup.indexOf('wx:for="{{weapon.ammo}}"')<markup.indexOf('武器说明'))
 })
-test('personal editor ignores other-member selection and supports tag duties with inline management',()=>{
+test('personal editor ignores other-member selection and supports tag duties with inline management',async()=>{
   const fleet=require('../miniprogram/utils/aw/fleet'),current=s.currentMember(),next=fleet.clone(s.load())
   assert.throws(()=>{next.members.push({id:'other-test',name:'队友',active:true,order:next.members.length});s.save(next)},/只能建立自己的/)
   let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
   const p=hydrate(def,true);p.properties={vehicleId:c.tables.vehicles[0].id,memberId:'other-test'};p.prepare()
   assert.deepEqual(p.data.members.map(x=>x.id),[current])
-  p.note(event({},'暂未保存的车辆备注'));p.roleManager();p.newRole();p.roleField(event({key:'name'},'新增标签'));p.saveRole()
+  p.note(event({},'暂未保存的车辆备注'));p.roleManager();p.newRole();p.roleField(event({key:'name'},'新增标签'));await p.saveRole()
   const index=p.data.rows.findIndex(r=>r.name==='新增标签');assert(index>=0)
   assert.equal(p.data.note,'暂未保存的车辆备注')
   p.toggleRole(event({index}));assert.equal(p.data.rows[index].index,1)
@@ -200,4 +200,21 @@ test('identity join dialog cancellation preserves the currently loaded team',asy
     assert.equal(await identity.connect('test'),false);assert.deepEqual(calls,[undefined])
     calls.length=0;wx.showModal=r=>r.success({confirm:true});assert.equal(await identity.connect('test'),true);assert.deepEqual(calls,[undefined,true])
   }finally{s.attachMember=attach;wx.showModal=modal}
+})
+
+test('ammo warheads, colors and filters share evidence while unknown ATGM stays neutral',()=>{
+ const ammo=c.tables.vehicles.flatMap(v=>c.ammoFor(v.id)),named=n=>ammo.filter(a=>a.name===n)
+ for(const a of named('9M123F ATGM')){assert.equal(a.classification.warhead_type,'thermobaric');assert.equal(c.ammoColor(a),'he');assert(c.ammoMatch(a,{ammoTypes:['atgm'],ammoTraits:['thermobaric']}))}
+ for(const a of named('9M123 ATGM')){assert.equal(a.classification.warhead_type,'tandem_heat');assert.equal(c.ammoColor(a),'heat');assert(!c.ammoMatch(a,{ammoTraits:['thermobaric']}))}
+ for(const a of named('Brimstone ATGM')){assert.equal(c.ammoColor(a),'heat');assert(a.traits.includes('tandem'))}
+ for(const a of named('Starstreak ATGM'))assert.equal(c.ammoColor(a),'ap')
+ for(const a of named('HJ-13 ATGM'))assert.equal(c.ammoColor(a),'heat')
+ assert(ammo.some(a=>a.classification?.warhead_type==='unknown'));for(const a of ammo.filter(a=>a.classification?.warhead_type==='unknown'))assert.equal(c.ammoColor(a),'unknown')
+ for(const a of ammo.filter(a=>a.classification&&a.classification.warhead_type!=='unknown'))assert.match(a.classification.source_url,/^https:\/\//)
+ const raw=c.tables.vehicle_ammo.find(a=>a.name==='9M123F ATGM');assert.equal(raw.ammo_type,'atgm');assert.equal(raw.ammo_subtype,'ATGM')
+})
+test('AW page onShow reads shared team before rendering final duties',async()=>{
+ const original=s.refreshIfClean;let calls=0
+ try{s.refreshIfClean=async()=>{calls++;return true};for(const name of ['aw-fleet','aw-vehicle','aw-catalog']){const p=page(name);p.onLoad(name==='aw-vehicle'?{id:c.tables.vehicles[0].id}:{});await p.onShow();assert.equal(p.data.syncError,'')}assert.equal(calls,3)}
+ finally{s.refreshIfClean=original}
 })

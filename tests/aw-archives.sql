@@ -43,6 +43,11 @@ begin
   -- Another member can join, but cannot edit or remove the first member.
   other_member:=public.aw_archive('create_member',null,'{"name":"Synthetic other member"}');
   t:=public.aw_archive('link_member',tc,jsonb_build_object('memberCode',other_member->>'code'),(t->>'version')::integer);
+  -- A teammate may maintain shared role definitions and a subsequent open must return them.
+  team:=jsonb_set(team,'{roles,0,name}',to_jsonb('共同维护职责'::text));
+  t:=public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',team,'memberCode',other_member->>'code'),(t->>'version')::integer);
+  opened:=public.aw_archive('open_team',tc);
+  if opened->'data'->'roles'->0->>'name'<>'共同维护职责' or opened->'data'->'assignments' is distinct from team->'assignments' then raise exception 'TEST shared role roundtrip';end if;
   ok:=false;
   begin perform public.aw_archive('unlink_member',tc,jsonb_build_object('memberId',mid,'memberCode',other_member->>'code'),(t->>'version')::integer);exception when others then if sqlerrm like '%SELF_ONLY%' then ok:=true;else raise;end if;end;
   if not ok then raise exception 'TEST removing teammate allowed';end if;

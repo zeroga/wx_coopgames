@@ -106,3 +106,32 @@ test('own identity cannot alter teammate duties, delete an occupied role or exit
  await store.unlinkMember(other.id);assert.equal(store.currentMember(),'');assert.equal(store.dirty,false)
  assert.equal(Object.values(teams)[0].members[0].id,first);assert(members[other.id])
 })
+
+// Swap persisted device storage; the two store modules retain independent state.
+function snapshotMemory(){return new Map([...memory].map(([k,v])=>[k,fleet.clone(v)]))}
+function useMemory(values){memory.clear();for(const [k,v] of values)memory.set(k,fleet.clone(v))}
+test('shared roles autosave and same-player second device reads add, rename, order and delete',async()=>{
+ localMember();await store.createTeam('Shared');const a=store,tc=a.remoteInfo().teamCode,mc=a.memberInfo(a.currentMember()).code
+ let am=snapshotMemory();memory.clear();const b=freshStore();await b.openTeam(tc);await b.attachMember(mc);let bm=snapshotMemory()
+ useMemory(am);const added=fleet.clone(a.load());added.roles.push({id:'new',name:'支援',description:'描述',order:1});await a.saveSharedRoles(added);am=snapshotMemory()
+ assert.equal(a.dirty,false);assert.equal(Object.values(teams)[0].data.roles.length,2)
+ useMemory(bm);assert(await b.refreshIfClean());assert.equal(b.load().roles[1].name,'支援');assert.equal(b.currentMember(),a.currentMember());bm=snapshotMemory()
+ useMemory(am);const changed=fleet.clone(a.load());changed.roles[1].name='远程支援';changed.roles[1].order=0;changed.roles[0].order=1;await a.saveSharedRoles(changed);am=snapshotMemory()
+ useMemory(bm);await b.refreshIfClean();assert.equal(b.load().roles.find(r=>r.id==='new').name,'远程支援');assert.equal(b.load().roles.find(r=>r.id==='new').order,0);bm=snapshotMemory()
+ useMemory(am);const removed=fleet.clone(a.load());fleet.deleteRole(removed,'new');await a.saveSharedRoles(removed)
+ useMemory(bm);await b.refreshIfClean();assert(!b.load().roles.some(r=>r.id==='new'))
+})
+test('a different member maintains common role names without altering teammate duties',async()=>{
+ localMember();await store.createTeam('Shared');const a=store,tc=a.remoteInfo().teamCode;let am=snapshotMemory()
+ const other=await remote.awArchive('create_member',null,{name:'队友'});memory.clear();const b=freshStore();await b.openTeam(tc);await b.attachMember(other.code,true)
+ const next=fleet.clone(b.load()),before=JSON.stringify(next.assignments);next.roles[0].name='共同职责';await b.saveSharedRoles(next)
+ assert.equal(JSON.stringify(b.load().assignments),before)
+ useMemory(am);await a.refreshIfClean();assert.equal(a.load().roles[0].name,'共同职责');assert.equal(JSON.stringify(a.load().assignments),before)
+})
+test('automatic refresh protects pending edits and failed role uploads retain retryable changes',async()=>{
+ localMember();await store.createTeam('Shared');const original=remote.awArchive,next=fleet.clone(store.load());next.roles[0].name='离线改名'
+ remote.awArchive=async(...args)=>{if(args[0]==='put_team')throw Error('offline');return original(...args)}
+ await assert.rejects(store.saveSharedRoles(next),/offline/);assert(store.dirty);assert.equal(store.load().roles[0].name,'离线改名')
+ remote.awArchive=async()=>{throw Error('refresh should not issue a request')};assert.equal(await store.refreshIfClean(),false);assert.equal(store.load().roles[0].name,'离线改名')
+ remote.awArchive=original;await store.push();assert.equal(Object.values(teams)[0].data.roles[0].name,'离线改名');assert.equal(store.dirty,false)
+})

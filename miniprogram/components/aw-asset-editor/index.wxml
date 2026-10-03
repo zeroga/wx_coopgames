@@ -14,7 +14,7 @@
       <view class="tags"><text wx:for="{{rows}}" wx:key="id" class="tag {{item.index ? 'selected' : ''}}" data-index="{{index}}" bindtap="toggleRole">{{item.index ? '✓ ' : '+ '}}{{item.name}}</text></view>
       <view wx:if="{{!rows.length}}" class="muted">还没有职责，可在“管理职责”中添加，也可以只保存车辆状态。</view>
       <view wx:if="{{showRoleManager}}" class="role-manager"><view class="muted">点标签编辑职责；职责变更单独保存。</view><view class="tags"><text wx:for="{{rows}}" wx:key="id" class="tag" data-id="{{item.id}}" bindtap="editRole">{{item.name}} · 编辑</text><text class="tag" bindtap="newRole">+ 新增职责</text></view>
-        <view wx:if="{{roleForm}}"><input class="field" value="{{roleForm.name}}" data-key="name" bindinput="roleField" maxlength="60" placeholder="职责名称"/><input class="field" value="{{roleForm.description}}" data-key="description" bindinput="roleField" maxlength="500" placeholder="职责说明（可选）"/><view class="actions"><button class="btn ghost" bindtap="cancelRole">取消</button><button class="btn primary" bindtap="saveRole">保存职责</button><button wx:if="{{roleForm.id}}" class="btn danger" data-id="{{roleForm.id}}" bindtap="deleteRole">删除</button></view></view>
+        <view wx:if="{{roleForm}}"><input class="field" value="{{roleForm.name}}" data-key="name" bindinput="roleField" maxlength="60" placeholder="职责名称"/><input class="field" value="{{roleForm.description}}" data-key="description" bindinput="roleField" maxlength="500" placeholder="职责说明（可选）"/><view class="actions"><button class="btn ghost" bindtap="cancelRole">取消</button><button class="btn primary" disabled="{{saving}}" bindtap="saveRole">保存职责</button><button wx:if="{{roleForm.id}}" class="btn danger" data-id="{{roleForm.id}}" disabled="{{saving}}" bindtap="deleteRole">删除</button></view></view>
       </view>
       <view wx:for="{{rows}}" wx:key="id" wx:if="{{item.index || item.automatic}}" class="line">
         <view class="role-name">{{item.name}}</view><picker range="{{levels}}" value="{{item.index}}" data-index="{{index}}" bindchange="pickLevel"><view class="picker">{{levels[item.index]}} ▾</view></picker>
@@ -24,5 +24,5 @@
       <view class="label">备注</view><textarea class="field notes" value="{{note}}" bindinput="note" maxlength="1000" placeholder="我的车辆备注"/>
     </block>
   </scroll-view>
-  <view class="actions"><button class="btn ghost" bindtap="cancel">取消</button><button class="btn primary {{!members.length || !editable ? 'is-disabled' : ''}}" disabled="{{!members.length || !editable}}" bindtap="save">保存</button></view>
+  <view class="actions"><button class="btn ghost" bindtap="cancel">取消</button><button class="btn primary {{!members.length || !editable ? 'is-disabled' : ''}}" disabled="{{saving || !members.length || !editable}}" bindtap="save">保存</button></view>
 </view>

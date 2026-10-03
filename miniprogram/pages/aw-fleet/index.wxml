@@ -1,4 +1,5 @@
 <view class="aw-page">
+  <view wx:if="{{syncError}}" class="warning">{{syncError}}</view>
   <view class="hero"><view class="eyebrow">ARMORED WARFARE · TEAM</view><view class="title">车队管理</view><view class="subtitle">{{members.length}} 名成员 · 职责安排与获取规划</view></view>
   <view class="card"><view class="row between"><text class="card-title">{{connected ? archive.name : '本地车队'}}</text><text class="muted">{{dirty ? '有未上传改动' : '已保存'}}</text></view>
     <block wx:if="{{connected}}"><view class="label code-type">车队码 · AW-T</view><view class="code">{{archive.teamCode}}</view><view class="actions"><button class="ghost small" bindtap="copyTeam">复制车队码</button><button class="primary small" disabled="{{busy}}" bindtap="push">上传改动</button><button class="ghost small" disabled="{{busy}}" bindtap="pull">刷新</button></view><view class="actions"><button class="ghost small" bindtap="switchLocal">切换存档</button><button class="ghost small" bindtap="backup">备份</button><button wx:if="{{dirty}}" class="danger small" disabled="{{busy}}" bindtap="replaceCloud">载入云端</button></view></block>

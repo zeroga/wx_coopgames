@@ -5,9 +5,9 @@ const store = require('../../utils/aw/store')
 const identity = require('../../utils/aw/identity')
 function error(e) { wx.showModal({title:'操作未完成',content:e.message||String(e),showCancel:false}) }
 Page({
-  data:{tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:''},
+  data:{syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:''},
   onLoad(o){this.setData({tab:o.tab||'overview',memberId:o.member||store.currentMember(),targetId:o.target||''});this.refresh()},
-  onShow(){this.refresh()},
+  async onShow(){this.refresh();this.setData({busy:store.connected});try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}finally{this.setData({busy:false});this.refresh()}},
   receiveNavigation(o){this.setData({tab:o.tab||this.data.tab,memberId:o.member||this.data.memberId,targetId:o.target||''});this.refresh()},
   refresh(){
     const s=store.load(), members=s.members.slice().sort((a,b)=>a.order-b.order).map(m=>{
@@ -37,6 +37,12 @@ Page({
       memberTokens:catalog.tables.tokens.map(t=>({id:t.id,name:t.name,quantity:s.tokens[fleet.assetKey(memberId,t.id)]||0})),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
   },
   mutate(fn){try{if(store.busy)throw new Error('正在同步，请稍后编辑');const s=fleet.clone(store.load());fn(s);store.save(s);this.refresh();return true}catch(e){error(e);return false}},
+  async mutateRoles(fn){
+    if(store.busy)return error(new Error('正在同步，请稍后编辑'));const next=fleet.clone(store.load());this.setData({busy:true})
+    try{fn(next);await store.saveSharedRoles(next);wx.showToast({title:store.connected?'职责已同步':'职责已保存本地',icon:'success'});return true}
+    catch(e){error(new Error((e.localSaved?'职责已保存本地，尚未同步：':'')+e.message));return !!e.localSaved}
+    finally{this.setData({busy:false});this.refresh()}
+  },
   tab(e){this.setData({tab:e.currentTarget.dataset.tab});this.refresh()},
   awHome(){navigation.visit('pages/aw-home/index')},
   selectMember(e){this.setData({memberId:e.currentTarget.dataset.id,targetId:''});this.refresh()},
@@ -50,20 +56,20 @@ Page({
     if(form.id){if(!store.canEdit(form.id))return error(new Error('只能修改自己的名字'));if(this.mutate(s=>{s.members.find(m=>m.id===form.id).name=name}))this.cancelForm();return}
     return this.runArchive(async()=>{if(await identity.create(name)){this.setData({memberId:store.currentMember()});this.cancelForm()}})
   },
-  reorder(key,id,dir){this.mutate(s=>{const items=s[key].slice().sort((a,b)=>a.order-b.order),i=items.findIndex(x=>x.id===id),j=i+dir;if(i<0||j<0||j>=items.length)return;[items[i],items[j]]=[items[j],items[i]];items.forEach((x,k)=>{x.order=k});s[key]=items})},
+  reorder(key,id,dir){return this.mutateRoles(s=>{const items=s[key].slice().sort((a,b)=>a.order-b.order),i=items.findIndex(x=>x.id===id),j=i+dir;if(i<0||j<0||j>=items.length)return;[items[i],items[j]]=[items[j],items[i]];items.forEach((x,k)=>{x.order=k});s[key]=items})},
   newRole(){this.setData({roleForm:{id:'',name:'',description:''}})},
   editRole(e){const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);this.setData({roleForm:fleet.clone(r)})},
   roleField(e){this.setData({['roleForm.'+e.currentTarget.dataset.key]:e.detail.value})},
-  saveRole(){const f=this.data.roleForm,name=f.name.trim();if(!name)return error(new Error('请填写职责名称'));const saved=this.mutate(s=>{if(f.id){Object.assign(s.roles.find(x=>x.id===f.id),{name,description:f.description.trim()})}else{s.roles.push({id:fleet.id('role'),name,description:f.description.trim(),order:s.roles.length})}});if(saved)this.cancelForm()},
-  deleteRole(e){const id=e.currentTarget.dataset.id,count=Object.values(store.load().assignments).filter(a=>a.roleId===id).length;wx.showModal({title:'删除职责？',content:'将移除 '+count+' 条职责关联，玩家车辆仍保留。',success:r=>{if(r.confirm)this.mutate(s=>fleet.deleteRole(s,id))}})},
-  moveRole(e){this.reorder('roles',e.currentTarget.dataset.id,Number(e.currentTarget.dataset.dir))},
+  async saveRole(){const f=this.data.roleForm,name=f.name.trim();if(!name)return error(new Error('请填写职责名称'));const saved=await this.mutateRoles(s=>{if(f.id){Object.assign(s.roles.find(x=>x.id===f.id),{name,description:f.description.trim()})}else{s.roles.push({id:fleet.id('role'),name,description:f.description.trim(),order:s.roles.length})}});if(saved)this.cancelForm()},
+  deleteRole(e){const id=e.currentTarget.dataset.id,count=Object.values(store.load().assignments).filter(a=>a.roleId===id).length;wx.showModal({title:'删除职责？',content:'将移除 '+count+' 条职责关联，玩家车辆仍保留。',success:r=>{if(r.confirm)this.mutateRoles(s=>fleet.deleteRole(s,id))}})},
+  moveRole(e){return this.reorder('roles',e.currentTarget.dataset.id,Number(e.currentTarget.dataset.dir))},
   roleDragStart(e){this.dragRole=e.currentTarget.dataset.id;this.setData({draggingRole:this.dragRole})},
   roleDragEnd(e){
     const id=this.dragRole;this.dragRole='';this.setData({draggingRole:''});if(!id)return
     const y=e.changedTouches[0].clientY
     this.createSelectorQuery().selectAll('.role-sort').boundingClientRect(rects=>{
       const index=rects.findIndex(r=>y>=r.top&&y<=r.bottom);if(index<0)return
-      this.mutate(s=>{const rows=s.roles.slice().sort((a,b)=>a.order-b.order),old=rows.findIndex(r=>r.id===id);if(old<0)return;const row=rows.splice(old,1)[0];rows.splice(index,0,row);rows.forEach((r,i)=>{r.order=i});s.roles=rows})
+      this.mutateRoles(s=>{const rows=s.roles.slice().sort((a,b)=>a.order-b.order),old=rows.findIndex(r=>r.id===id);if(old<0)return;const row=rows.splice(old,1)[0];rows.splice(index,0,row);rows.forEach((r,i)=>{r.order=i});s.roles=rows})
     }).exec()
   },
   roleDragMove(){},

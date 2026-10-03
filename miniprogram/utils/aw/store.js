@@ -141,6 +141,16 @@ async function pull(discard){return locked(async()=>{
   state=archives.hydrateTeam(row);version=row.version;teamName=row.name;teamDirty=false;memberDirty={}
   row.members.forEach(m=>{if(vault[m.id])vault[m.id].version=m.version});persistSession();persist();return state
 })}
+// Opening a page must read the shared team, while preserving unsent local edits.
+async function refreshIfClean(){
+  load();if(!session.teamId||busy||teamDirty||Object.keys(memberDirty).length)return false
+  await pull();return true
+}
+async function saveSharedRoles(next){
+  save(next)
+  if(session.teamId){try{await push()}catch(e){e.localSaved=true;throw e}}
+  return state
+}
 function localTeam(){if(busy)throw new Error('正在同步，请稍后切换');load();persist();session={};persistSession();state=null;load();return state}
 async function unlinkMember(id){return locked(async()=>{
   load();if(id!==currentMember()||!canEdit(id))throw new Error('只能退出自己的车队');if(teamDirty||Object.keys(memberDirty).length)throw new Error('有未上传改动，请先上传后再退出');if(session.teamId){const row=await remote.awArchive('unlink_member',session.teamCode,{memberId:id,memberCode:vault[id].code},version);state=archives.hydrateTeam(row);version=row.version;teamDirty=false;persist();setCurrentMember('');return state}
@@ -159,7 +169,7 @@ async function importOld(){
   const rows=await remote.getLegacyAwPlan(r.profileId,r.inviteCode),profile=await remote.openProfile(r.inviteCode)
   return save(fleet.importLegacy(fleet.clone(state),rows,profile.profileData.users||{}))
 }
-module.exports={load,save,pull,push,currentMember,setCurrentMember,remoteInfo,memberInfo,canEdit,createTeam,openTeam,attachMember,unlinkMember,createPersonalArchive(name){return locked(async()=>{const row=await remote.awArchive('create_member',null,{name:String(name||'').trim()});vault[row.id]={code:row.code,version:row.version};persistSession();return row.code})},publishMember(id){if(id!==currentMember())return Promise.reject(new Error('只能发布自己的玩家档'));return locked(()=>publishMember(id))},localTeam,importOld,
+module.exports={load,save,pull,push,refreshIfClean,saveSharedRoles,currentMember,setCurrentMember,remoteInfo,memberInfo,canEdit,createTeam,openTeam,attachMember,unlinkMember,createPersonalArchive(name){return locked(async()=>{const row=await remote.awArchive('create_member',null,{name:String(name||'').trim()});vault[row.id]={code:row.code,version:row.version};persistSession();return row.code})},publishMember(id){if(id!==currentMember())return Promise.reject(new Error('只能发布自己的玩家档'));return locked(()=>publishMember(id))},localTeam,importOld,
   get dirty(){load();return teamDirty||Object.keys(memberDirty).length>0},get connected(){return !!session.teamId},get busy(){return busy},
   exportText(){return JSON.stringify({team:remoteInfo(),members:vault,state:load()},null,2)},discardAndPull(){return pull(true)}
 }

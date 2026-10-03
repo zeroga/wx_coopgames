@@ -11,7 +11,7 @@
 .exclusive-label { color:#a94d16; font-size:23rpx; font-weight:800; }
 .ammo { padding:20rpx; background:#fbfafc; border-left:6rpx solid #867e8a; border-radius:12rpx; margin:16rpx 0; }
 .ammo-title { font-weight:700; line-height:1.5; }
-.ammo-type { display:inline-block; border-radius:8rpx; padding:4rpx 10rpx; margin:0; flex-shrink:0; background:#e8e5eb; color:#514a58; font-size:22rpx; }
+.ammo-type { max-width:55%; white-space:normal; display:inline-block; border-radius:8rpx; padding:4rpx 10rpx; margin:0; flex-shrink:0; background:#e8e5eb; color:#514a58; font-size:22rpx; }
 .ammo-ap { border-left-color:#347bd1; }
 .ammo-ap .ammo-type { background:#e2edff; color:#2462ad; }
 .ammo-heat { border-left-color:#d24747; }
@@ -27,3 +27,8 @@
 .ammo-details { margin-top:18rpx; }
 
 .ammo-name.expanded { white-space:normal; }
+
+.ammo-hesh { border-left-color:#3d945c; }
+.ammo-hesh .ammo-type { background:#e3f3e7; color:#257341; }
+.ammo-smoke { border-left-color:#b8b5bd; }
+.ammo-smoke .ammo-type { background:#fff; color:#514a58; border:1rpx solid #d9d5df; }

@@ -63,22 +63,28 @@ Component({
         return row
       });this.setData({rows,statusIndex,note})
     },
-    saveRole() {
+    async saveRole() {
       try{
         const form=this.data.roleForm,name=form.name.trim();if(!name)throw new Error('请填写职责名称')
         const next=fleet.clone(store.load())
         if(form.id)Object.assign(next.roles.find(r=>r.id===form.id),{name,description:form.description.trim()})
         else next.roles.push({id:fleet.id('role'),name,description:form.description.trim(),order:next.roles.length})
-        store.save(next);this.refreshRoles();this.cancelRole()
+        await this.syncRoles(next)
       }catch(e){wx.showModal({title:'无法保存职责',content:e.message,showCancel:false})}
     },
     deleteRole(e) {
       const id=e.currentTarget.dataset.id
-      wx.showModal({title:'删除职责？',content:'移除该职责及车队关联，保留成员车辆。',success:r=>{
+      wx.showModal({title:'删除职责？',content:'移除该职责及车队关联，保留成员车辆。',success:async r=>{
         if(!r.confirm)return
-        try{const next=fleet.clone(store.load());fleet.deleteRole(next,id);store.save(next);this.refreshRoles();this.cancelRole()}
+        try{const next=fleet.clone(store.load());fleet.deleteRole(next,id);await this.syncRoles(next)}
         catch(e){wx.showModal({title:'无法删除职责',content:e.message,showCancel:false})}
       }})
+    },
+    async syncRoles(next) {
+      this.setData({saving:true})
+      try{await store.saveSharedRoles(next);this.cancelRole();wx.showToast({title:store.connected?'职责已同步':'职责已保存本地',icon:'success'})}
+      catch(e){if(e.localSaved)this.cancelRole();throw new Error((e.localSaved?'职责已保存本地，尚未同步：':'')+e.message)}
+      finally{this.refreshRoles();this.setData({saving:false})}
     },
     pickStatus(e) { this.setData({ statusIndex: Number(e.detail.value) }) },
     note(e) { this.setData({ note: e.detail.value }) },

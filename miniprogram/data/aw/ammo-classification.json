@@ -1,0 +1,2112 @@
+{
+  "checkedAt": "2026-10-04",
+  "sources": {
+    "types": "https://armoredwarfare.fandom.com/wiki/Ammunition",
+    "khrizantema": "https://armoredwarfare.com/en/news/general/development-khrizantema-s",
+    "zbd": "https://armoredwarfare.com/en/news/general/development-zbd-100",
+    "starstreak": "https://armoredwarfare.com/en/news/general/development-lynx-skyranger",
+    "losat": "https://armoredwarfare.com/en/news/general/development-m8-mgm-166",
+    "brimstone": "https://armoredwarfare.com/en/news/general/development-challenger-2-streetfighter-ii",
+    "tow": "https://armoredwarfare.com/en/news/general/vehicles-focus-wiesel-1-tow"
+  },
+  "entries": {
+    "6d33f6e7-3d69-42ec-93f6-bc512b48fd00": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "HOT-2 ATGM",
+      "vehicle_name": "Wiesel 1 HOT"
+    },
+    "8275c27a-a693-4677-acca-1a755e6c0323": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "HOT-2MP ATGM",
+      "vehicle_name": "Wiesel 1 HOT"
+    },
+    "a7f96e3d-dd3d-4db7-9d95-467cac2834be": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/9910",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK14 \"Refleks\" ATGM-TH",
+      "vehicle_name": "9910"
+    },
+    "e02ee9ee-dfef-478e-b700-620a0ac88bc4": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "BGM-71C ITOW ATGM",
+      "vehicle_name": "Wiesel 1 TOW"
+    },
+    "e1674dd9-2ad3-48dc-b585-5fdae2162293": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-zbd-100",
+      "evidence_note": "官方 ZBD-100 资料明确 HJ-13 为自导串联 HEAT；性能数值仍未知。",
+      "verification_status": "public_verified",
+      "ammo_name": "HJ-13 ATGM",
+      "vehicle_name": "ZBD-100"
+    },
+    "e12466f4-2b7b-4e1e-aad8-fcf364d0bdac": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "rocket",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-zbd-100",
+      "evidence_note": "官方明确 PF11E 为温压火箭。",
+      "verification_status": "public_verified",
+      "ammo_name": "PF11E Thermobaric Rocket",
+      "vehicle_name": "ZBD-100"
+    },
+    "9af0553a-5dc1-48cf-b91b-37294ac5018f": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Centurion_AVRE",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "165mm BL, 6.5-inch, Mk.2 HESH",
+      "vehicle_name": "Centurion AVRE"
+    },
+    "905c9928-1f55-44d9-9683-221e07c9cd11": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-puma",
+      "evidence_note": "官方同型号 Spike-LR 游戏描述明确串联 HEAT。",
+      "verification_status": "public_verified",
+      "ammo_name": "Spike-LR ATGM",
+      "vehicle_name": "Boxer CRV"
+    },
+    "8884ddac-af10-43aa-a4dd-ce094403ce88": {
+      "warhead_type": "he",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Flakpanzer_Gepard",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "35mm ATOM HEAB",
+      "vehicle_name": "Flakpanzer Gepard"
+    },
+    "b0040654-e8df-438b-ae64-ea64087a64d3": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Ajax",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "40mm 40CT PELE",
+      "vehicle_name": "Ajax"
+    },
+    "aa82e3c1-05df-4b33-98bb-3efc69ce6b33": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Swingfire ATGM",
+      "vehicle_name": "FV438 Swingfire"
+    },
+    "fec0b124-9731-45f8-baf7-8b859dfbf6f9": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/KF41_Lynx_Prototype",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC283 PELE",
+      "vehicle_name": "KF41 Lynx Prototype"
+    },
+    "8861a748-1ab1-4cb2-bf2c-38b9c953650f": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3UBK23-3 \"Arkan\" ATGM",
+      "vehicle_name": "BMP-3M"
+    },
+    "abe73124-54a4-49fa-a8a3-8ae3a164e9df": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3UBK10M-3 \"Kan\" ATGM",
+      "vehicle_name": "BMP-3M"
+    },
+    "bfd6815c-272a-4df5-895f-3c8b14d0793c": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3UBK10M-3 \"Kan\" ATGM",
+      "vehicle_name": "BMP-3"
+    },
+    "cd0ab1ce-5dd7-4b62-a897-0a34e2d9d34e": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3UBK10-3 ATGM",
+      "vehicle_name": "BMP-3"
+    },
+    "d1908510-837c-4efb-a920-dd719cd2a48f": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "ZT3 Ingwe ATGM",
+      "vehicle_name": "VBL Ingwe"
+    },
+    "8bdb8168-4c7f-48f6-994a-bf23dea2fedd": {
+      "warhead_type": "he",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Sch%C3%BCtzenpanzer_Puma",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm MK310 HEAB",
+      "vehicle_name": "Schützenpanzer Puma"
+    },
+    "a30c9262-c3fc-42fe-aa40-c805f92a73e4": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-puma",
+      "evidence_note": "官方 Puma 游戏描述明确配备的 Spike/MELLS 为串联 HEAT。",
+      "verification_status": "public_verified",
+      "ammo_name": "MELLS ATGM",
+      "vehicle_name": "Schützenpanzer Puma"
+    },
+    "c2f57760-8f8a-4e26-8e65-e5bc7cb015a9": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M48_Patton",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "90mm T142E3 HEP",
+      "vehicle_name": "M48 Patton"
+    },
+    "f7b6443a-a5e2-4d34-9273-a6cb938a9fcc": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Sch%C3%BCtzenpanzer_Puma",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC283 PELE",
+      "vehicle_name": "Schützenpanzer Puma"
+    },
+    "8af4a324-0737-44ab-9ebd-af408befa4fb": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-challenger-2-streetfighter-ii",
+      "evidence_note": "官方同型号 Brimstone 导弹资料明确串联 HEAT 弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "Brimstone ATGM",
+      "vehicle_name": "Boxer RIWP"
+    },
+    "9df07cb6-1939-4e04-ba08-f4a88e6c1fcc": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Marder_2",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "50mm AP Supershot Mk.2",
+      "vehicle_name": "Marder 2"
+    },
+    "aaa4c688-2185-4aff-89e7-ac3db367f35a": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M111 \"Fagot\" ATGM",
+      "vehicle_name": "BMP-1P"
+    },
+    "cc130cb6-a232-4456-be33-694c3f677ddc": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-challenger-2-streetfighter-ii",
+      "evidence_note": "官方同型号 Brimstone 导弹资料明确串联 HEAT 弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "Brimstone ATGM",
+      "vehicle_name": "AMPV 30"
+    },
+    "453ebd22-a75c-4648-adef-d5418a2b77f3": {
+      "warhead_type": "kinetic",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "kinetic_missile"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-lynx-skyranger",
+      "evidence_note": "官方同型号 Starstreak 游戏机制为动能导弹。",
+      "verification_status": "public_verified",
+      "ammo_name": "Starstreak ATGM",
+      "vehicle_name": "Boxer RIWP"
+    },
+    "5c1d87af-d207-417f-8716-5d01fa8f4962": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "BGM-71F-6 TOW-2B Aero ATGM",
+      "vehicle_name": "Boxer RIWP"
+    },
+    "3e1812c8-30a5-4859-81d1-0efde3a61fb4": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "BGM-71F-6 TOW-2B Aero ATGM",
+      "vehicle_name": "M1134 Stryker ATGM"
+    },
+    "88ec1c3c-7b7c-44eb-921e-a3e5307ed7b5": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/maintenance-september-27-0",
+      "evidence_note": "官方更新说明明确 Sokol-V 为 HEAT-MP。",
+      "verification_status": "public_verified",
+      "ammo_name": "Sokol-V ATGM",
+      "vehicle_name": "T-90M Proryv"
+    },
+    "8948252b-6e95-450e-9652-72a744735f5a": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Bradley_Fighting_Vehicle",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "BGM-71E TOW-2A ATGM-TH",
+      "vehicle_name": "Bradley Fighting Vehicle"
+    },
+    "6ac7f41a-16d7-4e9d-9e7a-feb7b1e2c9bf": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Leopard_1",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm DM502 HESH",
+      "vehicle_name": "Leopard 1"
+    },
+    "b2e96685-1a14-46ef-8e2a-fff531da4f72": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M1134_Stryker_ATGM",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "BGM-71E TOW-2A ATGM-TH",
+      "vehicle_name": "M1134 Stryker ATGM"
+    },
+    "d3efab69-a6c3-454d-9336-9234b78fed1d": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Challenger_2_Hades",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A5 HESH",
+      "vehicle_name": "Challenger 2 Hades"
+    },
+    "e4b8669f-b399-4dcd-be53-d71f9ace2b4d": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/SPHINX",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "MLP ATGM-TH",
+      "vehicle_name": "SPHINX"
+    },
+    "92df0ccd-7612-4437-8486-bf2c542050da": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M60A1_Patton",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A1 HEP",
+      "vehicle_name": "M60A1 Patton"
+    },
+    "6c7dc20e-7eeb-42d8-a703-59057a63fa5f": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-challenger-2-streetfighter-ii",
+      "evidence_note": "官方同型号 Brimstone 导弹资料明确串联 HEAT 弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "Brimstone ATGM",
+      "vehicle_name": "Challenger 2 Streetfighter II"
+    },
+    "e93966a7-11a3-49d2-904e-0eaacc9b6818": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Challenger_2_Streetfighter_II",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A5 HESH",
+      "vehicle_name": "Challenger 2 Streetfighter II"
+    },
+    "eb8a9040-2732-42b3-ae0b-8b2ee2e8047f": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M60A3_Patton",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A1 HEP",
+      "vehicle_name": "M60A3 Patton"
+    },
+    "965b0177-0983-44aa-9a52-8b5e34db52ea": {
+      "warhead_type": "kinetic",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/VBL",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "20mm Type 820A APDS",
+      "vehicle_name": "VBL"
+    },
+    "a0e2b49c-5cd1-45cf-a0f4-bb7a95109abf": {
+      "warhead_type": "he",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-90M_Proryv",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "125mm 3VOF128 Telnik HE",
+      "vehicle_name": "T-90M Proryv"
+    },
+    "54a8750e-0555-4906-af41-4a92fce3960c": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/BMPT-72_Hades",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "\"Ataka-F\" ATGM-TB",
+      "vehicle_name": "BMPT-72 Hades"
+    },
+    "ee01bf30-dc47-48db-9e13-a28fff0320e0": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3UBK18 ATGM",
+      "vehicle_name": "Object 187"
+    },
+    "46f89b2a-1314-4671-aeee-5ff9c8012ba6": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-khrizantema-s",
+      "evidence_note": "官方逐型号区分 9M123 串联 HEAT 与 9M123F 温压弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M123 ATGM",
+      "vehicle_name": "9P157-2 Khrizantema-S"
+    },
+    "3332c23e-c46a-4a72-960c-96038c213377": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-khrizantema-s",
+      "evidence_note": "官方逐型号区分 9M123 串联 HEAT 与 9M123F 温压弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M123F ATGM",
+      "vehicle_name": "9P157-2 Khrizantema-S"
+    },
+    "baec3d48-f14b-4bf1-a9a4-82a99edabd5a": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-khrizantema-s",
+      "evidence_note": "官方逐型号区分 9M123 串联 HEAT 与 9M123F 温压弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M123F ATGM",
+      "vehicle_name": "9P157-2 Khrizantema-S"
+    },
+    "df30617a-dcb5-49ff-8944-6abf9b73835e": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-khrizantema-s",
+      "evidence_note": "官方逐型号区分 9M123 串联 HEAT 与 9M123F 温压弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M123 ATGM",
+      "vehicle_name": "9P157-2 Khrizantema-S"
+    },
+    "3b775fae-f72e-4090-b96d-d8d59eda7e17": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/9P162M_Kornet-D1",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133F Thermobaric HE ATGM^{[note 2]}",
+      "vehicle_name": "9P162M Kornet-D1"
+    },
+    "3252a1c4-7b79-465a-ae7b-382e4f48a123": {
+      "warhead_type": "he",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/2S38_Derivatsiya",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "57mm 53-OR-281 HEAB",
+      "vehicle_name": "2S38 Derivatsiya"
+    },
+    "49221999-9420-4c91-9b1d-5499a45c5a83": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/2T_Stalker",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M120 \"Ataka\" ATGM-TH",
+      "vehicle_name": "2T Stalker"
+    },
+    "c4d500d2-64f3-4b62-b4fe-d3a1e778d4e4": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T92_LT",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "76mm T17OE3 HEP",
+      "vehicle_name": "T92 LT"
+    },
+    "d1389435-be7a-421f-9ec5-3f55e3ec3621": {
+      "warhead_type": "kinetic",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T92_LT",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "76mm M331A2 HVAPDS",
+      "vehicle_name": "T92 LT"
+    },
+    "f94e268e-238d-452d-b74b-cb3209e22d51": {
+      "warhead_type": "kinetic",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T92_LT",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "76mm M331A3 HVAPDS",
+      "vehicle_name": "T92 LT"
+    },
+    "5adcabe2-5407-46d2-ad3f-74c687a365ce": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Sprinter ATGM",
+      "vehicle_name": "T-14 152 Hades"
+    },
+    "959f14c6-5bbb-4fcf-985e-00091d1da83b": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/ZSU-23-4_Shilka",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "23mm Arsenal FAPDS",
+      "vehicle_name": "ZSU-23-4 Shilka"
+    },
+    "c52f4f2e-da32-4002-a52e-542b2cc16e71": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/maintenance-september-27-0",
+      "evidence_note": "官方更新说明明确 Sokol-V 为 HEAT-MP。",
+      "verification_status": "public_verified",
+      "ammo_name": "Sokol-V ATGM",
+      "vehicle_name": "T-14 152 Hades"
+    },
+    "ef4d8ae7-61ed-4b1d-b64d-f7093579c719": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-15_Kinzhal",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133-1 ATGM-TH",
+      "vehicle_name": "T-15 Kinzhal"
+    },
+    "e1ef9873-6687-4027-a33f-c32948d9894f": {
+      "warhead_type": "he",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-14_152_Hades",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "125mm 3VOF36/3VM18 HE",
+      "vehicle_name": "T-14 152 Hades"
+    },
+    "94a620a8-7e17-4de1-80a7-31b83d1d4668": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-90MS_Hades",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20M \"Invar-M\" ATGM-TH",
+      "vehicle_name": "T-90MS Hades"
+    },
+    "7a497620-9dad-4248-98e4-7dbf8ba14a11": {
+      "warhead_type": "kinetic",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/2S14_Zhalo-S",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "85mm 3UBM12 APFSDS",
+      "vehicle_name": "2S14 Zhalo-S"
+    },
+    "97a7df91-0b7a-4a09-a347-a013b7f49844": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Stingray_2",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP",
+      "vehicle_name": "Stingray 2"
+    },
+    "f3a1c0aa-5b8d-4b5b-945c-ad2550a952a8": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/VFM_Mk._5",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "VFM Mk. 5"
+    },
+    "e80522c8-dec7-4d42-a80e-d67539aed081": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3M7 Drakon ATGM",
+      "vehicle_name": "IT-1"
+    },
+    "5dd3595e-2785-4288-a9d8-eac76fb4cde5": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M133 ATGM",
+      "vehicle_name": "BMD-2M"
+    },
+    "67bfc8a1-8750-4292-9e8b-3450d0d3d8db": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/FV101_Scorpion",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "76mm L24A2 HESH",
+      "vehicle_name": "FV101 Scorpion"
+    },
+    "7522bf75-2d4b-42d5-9262-ad3db2bc0d0d": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/FV101_Scorpion",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "76mm L24A1 HESH",
+      "vehicle_name": "FV101 Scorpion"
+    },
+    "7cd42ffe-2656-4f1b-a43e-09eb6c88c076": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Chieftain_Mk.2",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31 HESH",
+      "vehicle_name": "Chieftain Mk.2"
+    },
+    "d5034167-71f4-420a-bf3b-3ef01fe7bd30": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M8-105_Buford",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP",
+      "vehicle_name": "M8-105 Buford"
+    },
+    "fef88863-6a69-4507-ab55-04ef4e443ff8": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Chieftain_900",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A3 HESH",
+      "vehicle_name": "Chieftain 900"
+    },
+    "88bb768f-8a73-4d84-97b7-66d28b750c29": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Chieftain_Mk.10",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A2 HESH",
+      "vehicle_name": "Chieftain Mk.10"
+    },
+    "3e4b104d-bf65-4303-9a25-5b0260598758": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Object_292",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Sprinter (Early) ATGM-TH",
+      "vehicle_name": "Object 292"
+    },
+    "94582eec-3053-40e7-9dc4-4a3c8d9f68bd": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Challenger_2_ATDU",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "140mm Prototype HESH Mk.1",
+      "vehicle_name": "Challenger 2 ATDU"
+    },
+    "882936a3-610b-42e4-a7d7-a521e4f62d3a": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Challenger_2",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A5 HESH",
+      "vehicle_name": "Challenger 2"
+    },
+    "4a592389-4dfc-4dac-abae-5985548347d8": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-80UM-1_Bars",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20M \"Invar-M\" ATGM-TH",
+      "vehicle_name": "T-80UM-1 Bars"
+    },
+    "663c3f14-a87c-4bc1-ba84-409393c350bd": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_99B",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "HJ-8FAE Thermobaric ATGM",
+      "vehicle_name": "Type 99B"
+    },
+    "7538c310-dfcd-47ef-9d78-38f87cd9094e": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-90MS_Tagil",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20M \"Invar-M\" ATGM-TH",
+      "vehicle_name": "T-90MS Tagil"
+    },
+    "bcbfbf0e-bdbc-4f02-96e5-e4f3258ae611": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Arjun_Mk.IA",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A7 HESH",
+      "vehicle_name": "Arjun Mk.IA"
+    },
+    "a81361b9-08e3-405b-bf05-f7cd0de6221b": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Arjun_Mk.IA",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm Penetration-Cum-Blast PELE",
+      "vehicle_name": "Arjun Mk.IA"
+    },
+    "ee4bf425-377e-4b90-ace0-943f87137b8b": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/ST1",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "ST1"
+    },
+    "c9aa6085-5f49-4330-a818-10f90e007886": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/ZUBR_PSP",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP",
+      "vehicle_name": "ZUBR PSP"
+    },
+    "d2cd0d26-b45e-4348-89b8-aba2ed9b4050": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/WWO_Wilk",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Falarick 105 ATGM-TH",
+      "vehicle_name": "WWO Wilk"
+    },
+    "4442aa0e-976b-4bd9-a931-2a47e8471bf5": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Red Arrow 10 ATGM-O",
+      "vehicle_name": "AFT-10"
+    },
+    "498f9b8c-1dc7-400b-9dfa-06c41c3ed226": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M113 \"Konkurs\" ATGM",
+      "vehicle_name": "OT-64 Cobra"
+    },
+    "5dac26d5-aeae-46f0-a1ad-f250f0d9a1e8": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "R-2 ATGM",
+      "vehicle_name": "FV101 Scorpion Kastet"
+    },
+    "91a01b76-f60b-456b-8ab3-6f17b6f85eab": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "APS02-100 ATGM",
+      "vehicle_name": "VN20"
+    },
+    "77f7af90-003c-4343-8a67-145471feca77": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M14 \"Malyutka\" ATGM",
+      "vehicle_name": "BVP M-80A"
+    },
+    "de1baca3-312e-46a7-b60b-7a72ef621283": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M14 \"Malyutka\" ATGM",
+      "vehicle_name": "BVP M-80A"
+    },
+    "11b6d3cd-b056-498d-9519-4a77fde2e84f": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "GP2 ATGM",
+      "vehicle_name": "ST1"
+    },
+    "8cd58ac1-6bda-411d-b955-1f9da4d1b173": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M109",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "M109"
+    },
+    "760607a4-0b69-422c-b210-c91b35f6c181": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Panzerhaubitze_2000",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "Panzerhaubitze 2000"
+    },
+    "a2fc7959-319e-4328-b9a4-57521ff23a6b": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Palmaria",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "Palmaria"
+    },
+    "609daa0b-baaf-49ce-b25c-fefbc6605357": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/PLZ-89",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "PLZ-89"
+    },
+    "49dd5e9b-c542-4638-8798-1ee2ab501d45": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/PLZ-89",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "122mm BEE2 BB/RA HE",
+      "vehicle_name": "PLZ-89"
+    },
+    "923df8d1-73b6-46c7-a9cd-814ae139b3a4": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M109A6_Paladin",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "M109A6 Paladin"
+    },
+    "7f776a6b-6a54-49ed-b425-2cfdfa35dd74": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/B1_Centauro_155",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "B1 Centauro 155"
+    },
+    "4314c18a-6590-48af-8a39-08fc139241d4": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_99",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK14 \"Refleks\" ATGM-TH",
+      "vehicle_name": "Type 99"
+    },
+    "83bcc09e-4f9a-4adf-ace3-1f5345fa9b25": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_99A",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "GP125A ATGM",
+      "vehicle_name": "Type 99A"
+    },
+    "9aa2b12f-ab12-41be-a656-33ac141e3d14": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_79",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm 105-HEP-I",
+      "vehicle_name": "Type 79"
+    },
+    "604ff00b-4bb2-4e62-bc48-79f0dea0c89a": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Borsuk",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "40mm SS Mk.2/40 PELE",
+      "vehicle_name": "Borsuk"
+    },
+    "95920717-5766-4329-aac9-b88f48dcc289": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_80-II",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm 105-HEP-II",
+      "vehicle_name": "Type 80-II"
+    },
+    "b80e9160-79c9-4f32-822a-16e6dab45e78": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/second-part-arabian-nights-season-now-available",
+      "evidence_note": "官方补丁明确修正 9M133-2 串联弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133-2 ATGM",
+      "vehicle_name": "9P163-3 Kornet-EM"
+    },
+    "f2e4c954-0794-4f0b-a4c3-b15d09041461": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Borsuk",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "40mm SS Mk.2/40 PELE",
+      "vehicle_name": "Borsuk"
+    },
+    "e3c28bd8-6d2a-43c6-ba59-0bdaaf881eb8": {
+      "warhead_type": "kinetic",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "kinetic_missile"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-m8-mgm-166",
+      "evidence_note": "官方 LOSAT/CKEM 游戏机制为动能导弹。",
+      "verification_status": "public_verified",
+      "ammo_name": "LOSAT KEM ATGM",
+      "vehicle_name": "M8 MGM-166"
+    },
+    "fb7657b8-220d-4cd3-b578-fe6cd8c7663c": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_99A2",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "GP125A ATGM",
+      "vehicle_name": "Type 99A2"
+    },
+    "f9a81fac-52de-4108-84e0-40ef50ebc2e7": {
+      "warhead_type": "kinetic",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "kinetic_missile"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-m8-mgm-166",
+      "evidence_note": "官方 LOSAT/CKEM 游戏机制为动能导弹。",
+      "verification_status": "public_verified",
+      "ammo_name": "LOSAT KEM ATGM",
+      "vehicle_name": "Bradley AAWS-H"
+    },
+    "ea153117-7148-4022-80fc-1f55b309482b": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/ASCOD_LT-105",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP (GT7)",
+      "vehicle_name": "ASCOD LT-105"
+    },
+    "fd07e69a-f8f8-4df0-860d-282e478170b1": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/2S25_Sprut-SD",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK14 \"Refleks\" ATGM-TH",
+      "vehicle_name": "2S25 Sprut-SD"
+    },
+    "957355d2-38c1-4291-95a3-a46cf5696553": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/EE-18_Sucuri_II",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "EE-18 Sucuri II"
+    },
+    "6f6e47bd-a738-40df-b2e0-fb6787c5da34": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/preview-m1134-atgm",
+      "evidence_note": "官方同型号 BGM-71E 游戏描述明确串联弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "BGM-71E TOW ATGM",
+      "vehicle_name": "NM142"
+    },
+    "78248714-89d5-457a-8cca-3f74d304dd2b": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Pereh",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Tamuz-2 AGTM-TH",
+      "vehicle_name": "Pereh"
+    },
+    "ef4b44dd-0e3f-460c-b2e1-4c1345ae3103": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "BGM-71F-6 TOW-2B Aero ATGM",
+      "vehicle_name": "NM142"
+    },
+    "32ac7a29-ddd4-4d09-83a1-38ecba86a2d2": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Spike-LR II ATGM",
+      "vehicle_name": "Namer IFV"
+    },
+    "adf0ed5b-4f94-4048-9a5a-f1117cfd8661": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Namer_IFV",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC384 PELE^{[note 4]}",
+      "vehicle_name": "Namer IFV"
+    },
+    "d68343d8-d60e-4522-8396-38bb19e51ae0": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Namer_IFV",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "40mm SS Mk.2/40 PELE^{[note 2]}",
+      "vehicle_name": "Namer IFV"
+    },
+    "eeae769d-cb0d-4789-b19e-5de3d8dbda3d": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Merkava_Mk.1",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A1 HEP",
+      "vehicle_name": "Merkava Mk.1"
+    },
+    "880482e9-23e4-43f7-8b06-be3c4485f111": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "BGM-71C ITOW ATGM",
+      "vehicle_name": "C13 TUA"
+    },
+    "b3ee1aaf-a540-4b37-8ff1-6c33e5988e63": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Merkava_Mk.4",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "LAHAT ATGM-TH",
+      "vehicle_name": "Merkava Mk.4"
+    },
+    "d25484f6-e594-48fc-959e-9356fa252656": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Magach_7C",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "Magach 7C"
+    },
+    "eef5c3b5-1d60-4026-9395-0995fee124a9": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Magach_5",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A1 HEP",
+      "vehicle_name": "Magach 5"
+    },
+    "aa39e24f-e839-49e8-8980-ee150dd9558b": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-k21",
+      "evidence_note": "官方游戏描述明确 Raybolt 为 HEAT；不把现实型号弹头细节当作游戏串联能力。",
+      "verification_status": "public_verified",
+      "ammo_name": "AT-1K Raybolt ATGM",
+      "vehicle_name": "K21"
+    },
+    "47f6878f-9cbc-4788-9667-72bc0ba4592e": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-k21",
+      "evidence_note": "官方游戏描述明确 Raybolt 为 HEAT；不把现实型号弹头细节当作游戏串联能力。",
+      "verification_status": "public_verified",
+      "ammo_name": "AT-1K Raybolt ATGM",
+      "vehicle_name": "K-153C Raybolt"
+    },
+    "5324844e-9027-4b64-96e0-6aaaca0db26d": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "HOT-2MP ATGM",
+      "vehicle_name": "VCAC Mephisto"
+    },
+    "6ad91ab9-ece9-405c-a4a0-d01f92bc8592": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Type_16_MCV",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm Type 75 HESH",
+      "vehicle_name": "Type 16 MCV"
+    },
+    "76453639-c69b-49f0-a795-92b4fc421a24": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "HOT-2 ATGM",
+      "vehicle_name": "VCAC Mephisto"
+    },
+    "ee39faa3-b339-4137-bda4-c59e1b3b316a": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/OF-40",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M292A1 HEP",
+      "vehicle_name": "OF-40"
+    },
+    "e37c893b-efed-42ce-841c-8677437952d6": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/AS21_Redback",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC384 PELE",
+      "vehicle_name": "AS21 Redback"
+    },
+    "21f5cba0-a37f-482b-ba82-3dfabbb46beb": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/LAV-600",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "LAV-600"
+    },
+    "178f7696-af34-4cb1-8f2b-2346ec4a666a": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/BMP-3M_Dragun_125",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20M \"Invar-M\" ATGM-TH",
+      "vehicle_name": "BMP-3M Dragun 125"
+    },
+    "8660849b-3dba-4982-b882-73060e2a0fa5": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/%28Legendary%29_BMPT_Mod.2025",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M120X \"Ataka-X\" ATGM",
+      "vehicle_name": "(Legendary) BMPT Mod.2025"
+    },
+    "b6922eb0-a93e-47e6-aa2d-874b4e14aec7": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/XM1302",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP",
+      "vehicle_name": "XM1302"
+    },
+    "31bfbfec-4517-4407-9f03-62fd385c0b66": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/BMP-2M_Berezhok",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133-1 \"Kornet-E\" ATGM-TH",
+      "vehicle_name": "BMP-2M Berezhok"
+    },
+    "05e37577-e095-444b-9c92-d431d18e921f": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Boxer_CRV",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC283 PELE",
+      "vehicle_name": "Boxer CRV"
+    },
+    "1527b019-6852-490d-bcab-7c443d9024db": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Swingfire SWIG ATGM",
+      "vehicle_name": "FV438 Swingfire"
+    },
+    "088f1cea-d6ea-4a9f-a1fe-fec71fafa3b5": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/VBL_Ingwe",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "ZT3B Ingwe ATGM-TH",
+      "vehicle_name": "VBL Ingwe"
+    },
+    "2d4e7e25-c0a6-4b24-be3b-66ccd5000a6a": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M14 \"Malyutka\" ATGM",
+      "vehicle_name": "BMP-1"
+    },
+    "119e5539-4681-4606-8ef4-9d65641e56f6": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-challenger-2-streetfighter-ii",
+      "evidence_note": "官方同型号 Brimstone 导弹资料明确串联 HEAT 弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "Brimstone ATGM",
+      "vehicle_name": "Boxer RIWP"
+    },
+    "14dcb3d7-c6a8-4a06-8612-3138c9fa2062": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "MILAN 2T ATGM",
+      "vehicle_name": "VBR"
+    },
+    "078d3971-d354-48d7-b282-cef7f675df6b": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Chieftain_Mk.6_Leader",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A3 HESH",
+      "vehicle_name": "Chieftain Mk.6 Leader"
+    },
+    "21f6d9f0-b4d4-428d-8ebe-607ddea1d6a3": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "MGM-51A \"Shillelagh\" ATGM",
+      "vehicle_name": "M551 Sheridan"
+    },
+    "294c11e0-597a-411d-b07b-2c61e252f173": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/second-part-arabian-nights-season-now-available",
+      "evidence_note": "官方补丁明确修正 9M133-2 串联弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133-2 ATGM",
+      "vehicle_name": "9P162M Kornet-D1"
+    },
+    "17ac2980-cbbb-4a44-9c41-e69764288b68": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/9P162M_Kornet-D1",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133F-3 Thermobaric HE ATGM",
+      "vehicle_name": "9P162M Kornet-D1"
+    },
+    "140df9b6-40bb-4f3a-84d5-ee1669f026ca": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M8-105_Buford",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A1 HEP",
+      "vehicle_name": "M8-105 Buford"
+    },
+    "037d2928-768c-4dee-be59-8a7e5057be56": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/PL-01",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "LAHAT ATGM-TH",
+      "vehicle_name": "PL-01"
+    },
+    "102b655d-c2f5-41ca-bb2c-128390297e28": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-15_Armata",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M133-1 ATGM-TH",
+      "vehicle_name": "T-15 Armata"
+    },
+    "20a0074e-dd7b-44a4-8308-b07d43896a2b": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-15_Armata",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3M133F Thermobaric HE ATGM",
+      "vehicle_name": "T-15 Armata"
+    },
+    "30405036-ca36-480c-9a84-a43d6931a21f": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M14 \"Malyutka\" ATGM",
+      "vehicle_name": "BMD-1"
+    },
+    "2824e336-de27-4da9-b14e-18ef303e2777": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "BGM-71F-6 TOW-2B Aero ATGM",
+      "vehicle_name": "ZUBR PSP"
+    },
+    "2ab00948-ef2c-45b9-a10c-7276a40cf768": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/WWO_Wilk",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP",
+      "vehicle_name": "WWO Wilk"
+    },
+    "30b2cc62-885d-4265-bea6-34cb409f3568": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Kombat ATGM",
+      "vehicle_name": "BM Oplot"
+    },
+    "2e7551b6-a028-4bd6-85a7-7a9934437ff2": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "APS02-100 ATGM",
+      "vehicle_name": "VN20"
+    },
+    "14715f89-e215-4824-bca8-99c3421e5982": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/VN20",
+      "evidence_note": "同型号 Red Arrow 10 在公开弹药表明确标为 ATGM-TH。",
+      "verification_status": "public_verified",
+      "ammo_name": "Red Arrow 10 ATGM",
+      "vehicle_name": "AFT-10"
+    },
+    "129791cf-8d9f-4eb1-88ac-b9a8c77a7c3b": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/KTO_Rosomak_M1M",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC381 PELE",
+      "vehicle_name": "KTO Rosomak M1M"
+    },
+    "0082d5cd-5610-433a-9606-5043a0a947c0": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "GP125 ATGM",
+      "vehicle_name": "Type 96B"
+    },
+    "059c8eee-083f-4e40-bb5d-5ed0bd8f5d56": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "GP125 ATGM",
+      "vehicle_name": "Type 96A"
+    },
+    "2cb4d849-2365-40fd-9719-d643a55295a2": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/ZBL-08",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "HJ-73D ATGM-TH",
+      "vehicle_name": "ZBL-08"
+    },
+    "29acc66f-67ad-470b-a510-40dc1971978e": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "GP125 ATGM",
+      "vehicle_name": "VT4"
+    },
+    "2764bf5c-a491-4583-a987-4307eaf9b7e0": {
+      "warhead_type": "kinetic",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "kinetic_missile"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-m8-mgm-166",
+      "evidence_note": "官方 LOSAT/CKEM 游戏机制为动能导弹。",
+      "verification_status": "public_verified",
+      "ammo_name": "LOSAT CKEM ATGM",
+      "vehicle_name": "M8 MGM-166"
+    },
+    "11311e6e-92b3-45e8-ac14-324ecf7cbaf7": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Olifant_Mk.2",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HESH",
+      "vehicle_name": "Olifant Mk.2"
+    },
+    "2762de02-2165-4baf-badc-7b42ae14dff7": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Magach_7A",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "Magach 7A"
+    },
+    "13b1a8fb-3bf1-4374-ad2a-bb460e6ff423": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Magach_6B_Gal_Batash",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A1 HEP",
+      "vehicle_name": "Magach 6B Gal Batash"
+    },
+    "2cda8f51-d2a9-4020-93c3-bca3253a9949": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-k21",
+      "evidence_note": "官方游戏描述明确 Raybolt 为 HEAT；不把现实型号弹头细节当作游戏串联能力。",
+      "verification_status": "public_verified",
+      "ammo_name": "AT-1K Raybolt ATGM",
+      "vehicle_name": "K21"
+    },
+    "07bc6e5b-d416-4c35-9e59-b59c2f8679ef": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-knifv-nlos-lps",
+      "evidence_note": "官方 KNIFV 资料明确 TAipers 为串联 HEAT。",
+      "verification_status": "public_verified",
+      "ammo_name": "TAipers ATGM",
+      "vehicle_name": "KNIFV NLOS-LPS"
+    },
+    "13c1e435-47de-4aa7-8e8d-490bd4747e61": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Bulsae-6 AGTM-O",
+      "vehicle_name": "Bulsae-6"
+    },
+    "52dd3242-2b8c-45ae-a9e0-0bfa96d185a7": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Flakpanzer_Gepard",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "35mm DM33 FAPFSDS",
+      "vehicle_name": "Flakpanzer Gepard"
+    },
+    "5d99b073-6dee-4485-b774-da9d05408f40": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Sch%C3%BCtzenpanzer_Puma",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "30mm PMC283 PELE",
+      "vehicle_name": "Schützenpanzer Puma"
+    },
+    "6646d822-3a1b-42da-a553-bac6898ab8c3": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M60_Patton",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393 HEP",
+      "vehicle_name": "M60 Patton"
+    },
+    "644db5cc-5cee-4112-a3c0-106c080daf9f": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Object_640",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20M \"Invar-M\" ATGM-TH",
+      "vehicle_name": "Object 640"
+    },
+    "3ad6364d-d3ab-4e3d-af69-0a8ff37cf48f": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/FV101_Scorpion_90",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "90mm CTS-90 HESH",
+      "vehicle_name": "FV101 Scorpion 90"
+    },
+    "4307c9fd-f91b-4a8e-abcb-7fbaa7045ef1": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/BMP-2M_Berezhok",
+      "evidence_note": "同型号 Ataka-M 公开资料明确标记 ATGM-TH。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M120M \"Ataka-M\" ATGM",
+      "vehicle_name": "BMPT Mod.2017"
+    },
+    "5cee0fb4-bb7d-451a-95d6-a46e9f7d6040": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "3UBK10-2 ATGM",
+      "vehicle_name": "T-62M"
+    },
+    "41d5c8d0-0c1c-4d0b-a7b0-362e57f1f388": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Sho%27t_Kal_Dalet",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm DM502 HESH",
+      "vehicle_name": "Sho't Kal Dalet"
+    },
+    "705d3be3-e4e9-4bf3-9ac5-b57c5420ff35": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "MGM-51A \"Shillelagh\" ATGM",
+      "vehicle_name": "M60A2 Starship"
+    },
+    "8d852b1d-2a52-4429-bd91-32f80dd46108": {
+      "warhead_type": "kinetic",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/M48_Patton",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "90mm M304 HVAP",
+      "vehicle_name": "M48 Patton"
+    },
+    "6f426f0c-145f-4780-bb20-e63d1edd2e38": {
+      "warhead_type": "thermobaric",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "thermobaric"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Ramka-99",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M120F \"Ataka-F\" ATGM-TB",
+      "vehicle_name": "Ramka-99"
+    },
+    "77c5a6a7-160d-4571-a0e5-d89e012add17": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/XM247_Sergeant_York",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "40mm M811 HEIPD",
+      "vehicle_name": "XM247 Sergeant York"
+    },
+    "6d1e191c-d075-4874-8559-9434e8e922eb": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Merkava_Mk.2B",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A2 HEP",
+      "vehicle_name": "Merkava Mk.2B"
+    },
+    "70e29e52-158d-4e9e-9d22-8cc6b891ab9e": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/VCAC_Mephisto",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "HOT-3 ATGM-TH",
+      "vehicle_name": "VCAC Mephisto"
+    },
+    "adfd52bd-f56b-45ae-be35-9c7157b5d1f7": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/vehicles-focus-wiesel-1-tow",
+      "evidence_note": "官方 Wiesel TOW 的同型号 BGM-71A 明确为 HEAT 弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "BGM-71A TOW ATGM",
+      "vehicle_name": "Wiesel 1 TOW"
+    },
+    "b620fb36-5c80-42e9-a5ad-f958cb6e975e": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/B1_Centauro_105",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "105mm M393A3 HEP",
+      "vehicle_name": "B1 Centauro 105"
+    },
+    "bdceb3ac-b0a2-49c9-a9ec-c56bca916323": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.com/en/news/general/development-puma",
+      "evidence_note": "官方同型号 Spike-LR 游戏描述明确串联 HEAT。",
+      "verification_status": "public_verified",
+      "ammo_name": "Spike-LR ATGM",
+      "vehicle_name": "CV90 Mk.IV"
+    },
+    "b9392123-d06c-4509-b3a1-567cef981955": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M111M \"Faktoriya\" ATGM",
+      "vehicle_name": "BMP-1P"
+    },
+    "a31a197a-b4ab-4ed0-835b-4672f8f0baa4": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "FGM-148G ATGM",
+      "vehicle_name": "Boxer RIWP"
+    },
+    "c3d531e9-b8ee-46e4-85a3-198a0e3ae85a": {
+      "warhead_type": "hesh",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Challenger_1",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "120mm L31A4 HESH",
+      "vehicle_name": "Challenger 1"
+    },
+    "a990ec92-2493-40f9-8724-7f5103a2f228": {
+      "warhead_type": "he",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-14_Armata",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "125mm 3VOF36/3VM18 HE",
+      "vehicle_name": "T-14 Armata"
+    },
+    "9e445b58-e9f1-44b7-8345-e5c4a98f6a7d": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/Bulsae-6",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Bulsae-6 AGTM-TH",
+      "vehicle_name": "Bulsae-6"
+    },
+    "d07cc821-603c-4a83-bf9b-92483fb583b1": {
+      "warhead_type": "heat",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": "https://armoredwarfare.com/en/news/general/vehicles-focus-wiesel-1-tow",
+      "evidence_note": "官方 Wiesel TOW 的同型号 BGM-71A 明确为 HEAT 弹头。",
+      "verification_status": "public_verified",
+      "ammo_name": "BGM-71A TOW ATGM",
+      "vehicle_name": "VBL"
+    },
+    "cd8664e6-074a-42a8-9610-b610fb121325": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Kornet-E ATGM",
+      "vehicle_name": "BMPT Mod.2000"
+    },
+    "d2ba3e67-3e9f-4e08-b384-ef1a8693b7cf": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/K-4386D_Typhoon-VDV",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "9M113M1 ATGM-TH",
+      "vehicle_name": "K-4386D Typhoon-VDV"
+    },
+    "ca203833-e458-4281-b9f5-40d200d92009": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-90A_Vladimir",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20 \"Invar\" ATGM-TH",
+      "vehicle_name": "T-90A Vladimir"
+    },
+    "ea17db5b-e0ce-4343-a454-c05335cac3e0": {
+      "warhead_type": "tandem_heat",
+      "delivery_type": "guided_missile",
+      "traits": [
+        "tandem"
+      ],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/T-80BVM",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "3UBK20M \"Invar-M\" ATGM-TH",
+      "vehicle_name": "T-80BVM"
+    },
+    "ee9fad51-020c-4a65-ad47-d035bc71de85": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M111 \"Fagot\" ATGM",
+      "vehicle_name": "BMD-1P"
+    },
+    "e1088791-de8b-4db7-a8ff-f54b55272dce": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "9M111M \"Faktoriya\" ATGM",
+      "vehicle_name": "BMD-1P"
+    },
+    "cce0c250-15cf-4d2c-99b0-3f7a05914d82": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "GP105/GP2 ATGM",
+      "vehicle_name": "VT5"
+    },
+    "e141c77d-75d2-47d3-876b-a8ea0404cb08": {
+      "warhead_type": "smoke",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/2S3_Akatsiya",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "Smoke Round",
+      "vehicle_name": "2S3 Akatsiya"
+    },
+    "e5f7ae2b-c5b0-4a31-8f3d-223f67363b8d": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "FGM-148G ATGM",
+      "vehicle_name": "RST-V Shadow"
+    },
+    "e68b0bd2-3529-4315-8053-b4ac2175ed06": {
+      "warhead_type": "pele",
+      "delivery_type": "shell",
+      "traits": [],
+      "source_url": "https://armoredwarfare.fandom.com/wiki/EBRC_Jaguar",
+      "evidence_note": "原始资料中的弹药名称/细分类明确标注；保留参数及当前版本待游戏内核实状态。",
+      "verification_status": "public_verified",
+      "ammo_name": "40mm GPR-KE-T PELE",
+      "vehicle_name": "EBRC Jaguar"
+    },
+    "d4565ddf-d0c9-4281-bc6a-e197a9b3cb68": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "FGM-148G ATGM",
+      "vehicle_name": "Leclerc T40"
+    },
+    "cd37dd78-0bee-4791-a6da-949e75c40b9d": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "Type 79 ATGM",
+      "vehicle_name": "Type 89 IFV"
+    },
+    "f3cc10d3-a5ea-4dba-8839-70da9caf12d2": {
+      "warhead_type": "unknown",
+      "delivery_type": "guided_missile",
+      "traits": [],
+      "source_url": null,
+      "evidence_note": "只有发射方式/通用 ATGM 标签，尚无该型号弹头的明确资料。",
+      "verification_status": "needs_ingame_check",
+      "ammo_name": "FGM-148G ATGM",
+      "vehicle_name": "AS21 Redback"
+    }
+  }
+}
