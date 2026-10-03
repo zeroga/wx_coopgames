@@ -1,6 +1,6 @@
 # 弹药分类补充核对（2026-10-04）
 
-分类文件：`miniprogram/data/aw/ammo-classification.json`。原始快照保留，不写车辆数据库。每条补充按弹药 ID 关联；分类核实状态与伤害、穿深等参数核实状态独立。
+分类文件：`miniprogram/data/aw/ammo-classification.js`。原始快照保留，不写车辆数据库。每条补充按弹药 ID 关联；分类核实状态与伤害、穿深等参数核实状态独立。
 
 ## 补充依据
 

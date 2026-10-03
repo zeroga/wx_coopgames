@@ -1,4 +1,5 @@
-{
+// Local warhead classifications and evidence. Export as a JS module for WeChat.
+module.exports = {
   "checkedAt": "2026-10-04",
   "sources": {
     "types": "https://armoredwarfare.fandom.com/wiki/Ammunition",

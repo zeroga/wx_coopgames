@@ -1,6 +1,6 @@
 const snapshot = require('../../data/aw/catalog')
 const presentation = require('../../data/aw/presentation')
-const ammoEvidence = require('../../data/aw/ammo-classification.json')
+const ammoEvidence = require('../../data/aw/ammo-classification.js')
 const labels = {
   default: '默认', research: '研发', upgrade: '升级', unknown: '待确认', absent: '确认不具备',
   public_verified: '公开资料已核验', needs_ingame_check: '待游戏内核实', ingame_verified: '游戏内已核验',
