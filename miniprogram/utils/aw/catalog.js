@@ -1,4 +1,5 @@
 const snapshot = require('../../data/aw/catalog')
+const presentation = require('../../data/aw/presentation')
 const labels = {
   default: '默认', research: '研发', upgrade: '升级', unknown: '待确认', absent: '确认不具备',
   public_verified: '公开资料已核验', needs_ingame_check: '待游戏内核实', ingame_verified: '游戏内已核验',
@@ -90,6 +91,24 @@ function metrics(row, keys, fallback) {
   return keys.filter(k => present(row[k]) || (fallback && present(fallback[k]))).map(k => ({ key: k, name: (fields[k] || [k])[0], value: (present(row[k]) ? row[k] : fallback[k]) + ((fields[k] || ['', ''])[1] || '') }))
 }
 function tagName(c) { return (traitByCode[c] || {}).name_zh || label(c) }
+function ammoColor(type) {
+  if (['ap','apfsds','apds','apcr'].includes(type)) return 'ap'
+  if (type === 'heat') return 'heat'
+  if (type === 'he') return 'he'
+  // ATGM is a delivery mechanism, not evidence of a HEAT warhead.
+  return 'unknown'
+}
+function weaponGroups(vehicleId, weapons, evidence) {
+  const used = {}, groups = []
+  ;(evidence || presentation.exclusiveWeaponGroups).filter(g => g.vehicleId === vehicleId).forEach(g => {
+    const ids = Array.from(new Set(g.weaponIds || []))
+    if (ids.length < 2 || !g.sourceNote || ids.some(id => used[id] || !weapons.some(w => w.id === id))) return
+    ids.forEach(id => { used[id] = true })
+    groups.push({ id:g.id, exclusive:true, label:ids.length === 2 ? '二选一' : '仅可选择其中一种', sourceNote:g.sourceNote, weapons:ids.map(id => weapons.find(w => w.id === id)) })
+  })
+  weapons.filter(w => !used[w.id]).forEach(w => groups.push({ id:w.id, exclusive:false, weapons:[w] }))
+  return groups
+}
 function card(v, f) {
   const caps = capabilities(v.id).filter(c => c.availability !== 'absent').slice(0, 5).map(c => c.name + (c.availability === 'default' ? '' : ' · ' + label(c.availability)))
   const match = f && ammoFor(v.id).find(a => ammoMatch(a, f))
@@ -104,6 +123,7 @@ function detail(id) {
   ws.forEach(w => {
     const key = w.configuration_key || 'unknown'; if (!configs[key]) configs[key] = []
     const ammo = ammoFor(id).filter(a => a.weapon_id === w.id).map(a => Object.assign({}, a, {
+      colorClass: ammoColor(a.ammo_type), typeLabel: (a.ammo_type || '未知').toUpperCase(),
       tagNames: a.traits.map(tagName), params: metrics(a, ['damage', 'penetration', 'velocity', 'range', 'reload_seconds', 'magazine_size', 'rate_of_fire', 'intra_clip_reload', 'accuracy_deg', 'module_damage', 'module_damage_bonus_pct', 'explosion_radius_m', 'penetration_reference_m'], w),
       guidance: rows('ammo_guidance_modes', 'ammo_id', a.id).filter(x => present(x.lock_time_seconds)).map(x => tagName(x.mode_code) + ' · 锁定 ' + x.lock_time_seconds + ' s'),
       quality: label(a.verification_status), availabilityText: a.requires_research === true ? '研发' : a.requires_research === false ? '默认' : '待确认'
@@ -116,6 +136,7 @@ function detail(id) {
     basis: (v.performance_basis && v.performance_basis.tags || []).join(' · ') || '性能口径待核实',
     basisDetails: [['指挥官加成', 'commander_included'], ['乘员加成', 'crew_included'], ['改装加成', 'retrofits_included'], ['来源版本', 'source_version']].map(([name, key]) => ({ name, value: !present((v.performance_basis || {})[key]) ? '待确认' : v.performance_basis[key] === true ? '包含' : v.performance_basis[key] === false ? '不包含' : v.performance_basis[key] })),
     configs: Object.keys(configs).map((key, i) => ({ key, name: key === 'unresolved' ? '配置待确认' : key === 'announced' ? '公布配置' : '配置 ' + (i + 1), weapons: configs[key] })),
+    weaponGroups: weaponGroups(id, Object.keys(configs).reduce((out,key,i) => out.concat(configs[key].map(w => Object.assign({},w,{configurationText:Object.keys(configs).length > 1 ? '资料分组 ' + (i + 1) : ''}))), [])),
     capabilities: caps, upgradeGroups: ['default', 'research', 'upgrade', 'unknown'].map(a => ({ name: label(a), items: rows('vehicle_upgrades', 'vehicle_id', id).filter(u => u.availability === a).map(u => Object.assign({}, u, { params: metrics(u, ['xp_cost', 'credit_cost', 'hp_bonus', 'top_speed_kmh', 'reverse_speed_kmh', 'engine_power_hp']), quality: label(u.verification_status) })) })).filter(g => g.items.length),
     armor: rows('vehicle_armor', 'vehicle_id', id).map(a => ({ id: a.id, params: metrics(a, ['location', 'composition', 'thickness_mm', 'effective_ap_mm', 'effective_heat_mm']), source_url: a.source_url })),
     rewards: rows('vehicle_token_rewards', 'vehicle_id', id).map(r => Object.assign({}, r, { tokenName: (byId[r.token_id] || {}).name || 'Token' })),
@@ -123,5 +144,5 @@ function detail(id) {
     related: (tables.vehicle_progression_edges || []).filter(e => e.from_vehicle_id === id || e.to_vehicle_id === id).map(e => ({ id: e.from_vehicle_id === id ? e.to_vehicle_id : e.from_vehicle_id, direction: e.from_vehicle_id === id ? '后续' : '前置', name: (byId[e.from_vehicle_id === id ? e.to_vehicle_id : e.from_vehicle_id] || {}).name || '待补全' }))
   })
 }
-module.exports = { label, present, rows, filter, detail, card, metrics, capabilityMatch, ammoFor, ammoMatch, tagName, install,
+module.exports = { label, present, rows, filter, detail, card, metrics, capabilityMatch, ammoFor, ammoMatch, tagName, ammoColor, weaponGroups, install,
   get tables() { return tables }, get checkedAt() { return checkedAt }, get byId() { return byId } }

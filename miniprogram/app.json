@@ -3,6 +3,7 @@
     "pages/home/index",
     "pages/game/index",
     "pages/season/index",
+    "pages/aw-home/index",
     "pages/aw-catalog/index",
     "pages/aw-vehicle/index",
     "pages/aw-tree/index",

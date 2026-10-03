@@ -22,6 +22,13 @@ for p in list((mini / 'pages').glob('aw-*/index.wxml')) + list((mini / 'componen
                 assert condition.strip().startswith('{{') and condition.strip().endswith('}}'), f'{p}: wx:{directive} must bind an expression: {condition}'
     for imp in re.findall(r'@import "([^"]+)"', p.with_suffix('.wxss').read_text()):
         assert (p.parent / imp).exists(), imp
+    if p.parent.parent.name == 'components':
+        styles = p.with_suffix('.wxss').read_text()
+        assert '@import' not in styles, f'{p}: keep component-only class styles separate from the page theme'
+        styles = re.sub(r'/\*[\s\S]*?\*/', '', styles)
+        for selector in re.findall(r'([^{}]+)\{', styles):
+            for part in selector.strip().split(','):
+                assert all(token.startswith('.') for token in part.strip().split()), f'{p}: component selector must use classes: {part}'
 app = json.loads((mini / 'app.json').read_text())
 for route in app['pages']:
     for suffix in ['.js', '.json', '.wxml', '.wxss']:

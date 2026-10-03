@@ -1,11 +1,12 @@
+const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const store = require('../../utils/aw/store')
 function fresh() { return { query: '', tiers: [], classes: [], dealers: [], capabilities: [], ammoTypes: [], ammoTraits: [], acquisition: [], factory: false, penetration: '', speed: '', view: '', camo: '', premium: '', researchable: '' } }
 Page({
   data: { filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
-  onLoad() { this.options(); this.refresh() },
+  onLoad() { this.buildFilterOptions(); this.refresh() },
   onShow() { this.refresh() },
-  options() {
+  buildFilterOptions() {
     const caps = catalog.tables.capabilities.map(c => ({ value: c.code, name: c.name_zh, group: ['armor','defense'].includes(c.category) ? '防护' : ['recon','infantry'].includes(c.category) ? '侦察 / 支援' : c.category === 'weapon' ? '武器能力' : '车辆特性' }))
     this.setData({ groups: [
       { key: 'tiers', name: '等级', options: Array.from({length:10}, (_,i) => ({value:String(i+1),name:'T'+(i+1)})).concat({value:'legendary',name:'传奇'}) },
@@ -42,8 +43,8 @@ Page({
   switchFilters(e) { this.setData({filterTab:e.currentTarget.dataset.tab}) },
   closeFilters() { this.setData({filterTab:''}) },
   open(e) { wx.navigateTo({url:'/pages/aw-vehicle/index?id='+e.currentTarget.dataset.id}) },
-  nav(e) { wx.navigateTo({url:'/pages/aw-'+e.currentTarget.dataset.page+'/index'}) },
+  awHome(){navigation.visit('pages/aw-home/index')},
   onReachBottom() { this.setData({limit:this.data.limit+30});this.refresh() },
-  async refreshCloud() { this.setData({loading:true,error:''});try{await store.loadCatalog();this.options();this.refresh()}catch(e){this.setData({error:'刷新失败，已保留随包资料：'+e.message})}finally{this.setData({loading:false})} }
+  async refreshCloud() { this.setData({loading:true,error:''});try{await store.loadCatalog();this.buildFilterOptions();this.refresh()}catch(e){this.setData({error:'刷新失败，已保留随包资料：'+e.message})}finally{this.setData({loading:false})} }
 })
 function fleetSummary(s,id) { return require('../../utils/aw/fleet').summary(s,id) }

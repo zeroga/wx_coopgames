@@ -1,3 +1,22 @@
 @import "../../utils/aw/theme.wxss";
+.aw-page { padding-bottom:calc(170rpx + env(safe-area-inset-bottom)); }
+.section-head { display:flex; align-items:center; justify-content:space-between; gap:20rpx; min-height:60rpx; }
+.fold,.fold-light { flex:none; font-size:23rpx; color:#a94d16; }
+.fold-light { color:#eac9b5; }
+.weapon-name { font-size:28rpx; font-weight:800; line-height:1.5; overflow-wrap:break-word; min-width:0; }
 .param { margin:10rpx 18rpx 10rpx 0; font-size:26rpx; display:inline-block; }
-.ammo { padding:22rpx; background:#f8f5fa; border-radius:14rpx; margin:16rpx 0; }
+.weapon-group { margin-top:18rpx; }
+.weapon-card { background:#f1f0f2; border:1rpx solid rgba(28,26,30,.08); padding:20rpx; border-radius:14rpx; margin-top:12rpx; }
+.exclusive { border-left:4rpx solid #a94d16; border-top:2rpx solid #a94d16; border-bottom:2rpx solid #a94d16; border-radius:12rpx 0 0 12rpx; padding:12rpx 0 12rpx 16rpx; }
+.exclusive-label { color:#a94d16; font-size:23rpx; font-weight:800; }
+.ammo { padding:20rpx; background:#fbfafc; border-left:6rpx solid #867e8a; border-radius:12rpx; margin:16rpx 0; }
+.ammo-title { font-weight:700; line-height:1.5; }
+.ammo-type { display:inline-block; border-radius:8rpx; padding:4rpx 10rpx; margin:0 12rpx 8rpx 0; background:#e8e5eb; color:#514a58; font-size:22rpx; }
+.ammo-ap { border-left-color:#347bd1; }
+.ammo-ap .ammo-type { background:#e2edff; color:#2462ad; }
+.ammo-heat { border-left-color:#d24747; }
+.ammo-heat .ammo-type { background:#ffe5e5; color:#b13232; }
+.ammo-he { border-left-color:#e1812e; }
+.ammo-he .ammo-type { background:#fff0df; color:#a9530b; }
+.page-entry { display:flex; justify-content:space-between; padding:24rpx 0; border-top:1rpx solid rgba(28,26,30,.12); color:#a94d16; margin-top:16rpx; font-size:26rpx; }
+.vehicle-actions { position:fixed; bottom:0; left:0; right:0; padding:18rpx 24rpx calc(18rpx + env(safe-area-inset-bottom)); background:#fbfafc; border-top:1rpx solid rgba(28,26,30,.12); z-index:5; }

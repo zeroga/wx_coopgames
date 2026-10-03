@@ -1,3 +1,4 @@
+const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
@@ -11,6 +12,6 @@ Page({
   },
   search(e){this.setData({query:e.detail.value});this.refresh()},
   select(e){this.setData({id:e.currentTarget.dataset.id});this.refresh()},
-  detail(){wx.navigateTo({url:'/pages/aw-vehicle/index?id='+this.data.id})},
-  nav(e){wx.navigateTo({url:'/pages/aw-'+e.currentTarget.dataset.page+'/index'})}
+  detail(){navigation.visit('pages/aw-vehicle/index',{id:this.data.id})},
+  receiveNavigation(o){this.setData({id:o.id||this.data.id});this.refresh()}
 })

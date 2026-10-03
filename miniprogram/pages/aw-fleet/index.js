@@ -1,3 +1,4 @@
+const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
@@ -6,6 +7,7 @@ Page({
   data:{tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:''},
   onLoad(o){this.setData({tab:o.tab||'overview',memberId:o.member||store.currentMember(),targetId:o.target||''});this.refresh()},
   onShow(){this.refresh()},
+  receiveNavigation(o){this.setData({tab:o.tab||this.data.tab,memberId:o.member||this.data.memberId,targetId:o.target||''});this.refresh()},
   refresh(){
     const s=store.load(), members=s.members.slice().sort((a,b)=>a.order-b.order).map(m=>{
       const a=Object.values(s.assets).filter(x=>x.memberId===m.id)
@@ -35,7 +37,7 @@ Page({
   },
   mutate(fn){try{if(store.busy)throw new Error('正在同步，请稍后编辑');const s=fleet.clone(store.load());fn(s);store.save(s);this.refresh();return true}catch(e){error(e);return false}},
   tab(e){this.setData({tab:e.currentTarget.dataset.tab});this.refresh()},
-  nav(e){wx.navigateTo({url:'/pages/aw-'+e.currentTarget.dataset.page+'/index'})},
+  awHome(){navigation.visit('pages/aw-home/index')},
   selectMember(e){this.setData({memberId:e.currentTarget.dataset.id,targetId:''});this.refresh()},
   pickMember(e){const m=this.data.members[Number(e.detail.value)];this.setData({memberId:m.id,targetId:''});this.refresh()},
   setCurrent(){if(!this.data.member||!this.data.member.active)return;store.setCurrentMember(this.data.memberId);this.refresh();wx.showToast({title:'已设为当前玩家',icon:'success'})},
@@ -68,16 +70,16 @@ Page({
     }).exec()
   },
   roleDragMove(){},
-  editAsset(e){this.setData({editor:true,editVehicleId:e.currentTarget.dataset.id,editMemberId:e.currentTarget.dataset.member||this.data.memberId})},
+  editAsset(e){const member=e.currentTarget.dataset.member||this.data.memberId;if(member!==store.currentMember())return wx.showToast({title:'只能登记自己的车辆',icon:'none'});this.setData({editor:true,editVehicleId:e.currentTarget.dataset.id})},
   cancel(){this.setData({editor:false})},
   saved(){this.setData({editor:false});this.refresh()},
   removeAsset(e){const id=e.currentTarget.dataset.asset;wx.showModal({title:'移除玩家车辆？',content:'移除该车辆及手工职责。若仍被目标路线引用，将重新建立计划前置。',success:r=>{if(r.confirm)this.mutate(s=>fleet.removeAsset(s,id))}})},
-  tree(e){wx.navigateTo({url:'/pages/aw-tree/index?id='+e.currentTarget.dataset.id})},
-  detail(e){wx.navigateTo({url:'/pages/aw-vehicle/index?id='+e.currentTarget.dataset.id})},
-  addVehicle(){wx.navigateTo({url:'/pages/aw-catalog/index'})},
+  tree(e){navigation.visit('pages/aw-tree/index',{id:e.currentTarget.dataset.id})},
+  detail(e){navigation.visit('pages/aw-vehicle/index',{id:e.currentTarget.dataset.id})},
+  addVehicle(){navigation.visit('pages/aw-catalog/index')},
   token(e){if(!store.canEdit(this.data.memberId))return error(new Error('请先关联成员存档码'));const v=e.detail.value;if(!/^\d+$/.test(v))return error(new Error('Token 数量必须为非负整数'));const value=Number(v);if(!Number.isSafeInteger(value))return error(new Error('Token 数量过大'));this.mutate(s=>{s.tokens[fleet.assetKey(this.data.memberId,e.currentTarget.dataset.id)]=value})},
   target(e){this.setData({targetId:e.currentTarget.dataset.id});this.refresh()},
-  route(e){const {vehicle}=e.currentTarget.dataset,list=fleet.paths(vehicle),selected=list[Number(e.detail.value)];this.mutate(s=>{s.routes[fleet.assetKey(this.data.memberId,vehicle)]=selected.id})},
+  pickRoute(e){const {vehicle}=e.currentTarget.dataset,list=fleet.paths(vehicle),selected=list[Number(e.detail.value)];this.mutate(s=>{s.routes[fleet.assetKey(this.data.memberId,vehicle)]=selected.id})},
   routeChoice(e){const c=this.data.choices[Number(e.currentTarget.dataset.index)],p=c.paths[Number(e.detail.value)];this.mutate(s=>{s.routes[fleet.assetKey(this.data.memberId,c.vehicleId)]=p.id})},
   confirmRequirement(e){this.mutate(s=>{s.confirmedRequirements[fleet.assetKey(this.data.memberId,e.currentTarget.dataset.id)]=e.detail.value})},
   confirmReward(e){this.mutate(s=>{s.confirmedRewards[fleet.assetKey(this.data.memberId,e.currentTarget.dataset.id)]=e.detail.value})},
