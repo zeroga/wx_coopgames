@@ -1,28 +1,36 @@
 <view class="backdrop" catchtap="cancel"></view>
-<view class="sheet">
-  <view class="sheet-head"><view><view class="card-title">登记我的车辆与职责</view><view class="muted">{{vehicleName}}</view></view></view>
-  <scroll-view scroll-y="{{true}}" class="sheet-content">
-    <block wx:if="{{!members.length || !editable}}">
+<view class="sheet" style="bottom:{{keyboardHeight}}px;height:{{sheetHeight}}px">
+  <view class="sheet-head"><view class="card-title">{{showRoleManager ? '车队共同维护的职责' : '登记我的车辆与职责'}}</view><view class="muted">{{vehicleName}}</view></view>
+  <scroll-view scroll-y="{{true}}" class="sheet-content" style="height:{{contentHeight}}px">
+    <view wx:if="{{fieldError}}" class="warning">{{fieldError}}</view>
+    <view wx:if="{{syncError}}" class="warning">{{syncError}}<view class="link" bindtap="retrySync">刷新并重试同步</view></view>
+    <block wx:if="{{showRoleManager}}">
+      <view class="muted">职责属于车队，单独保存并同步。返回后继续编辑车辆草稿。</view>
+      <view class="tags"><text wx:for="{{rows}}" wx:key="id" class="tag" data-id="{{item.id}}" bindtap="editRole">{{item.name}} · 编辑</text><text class="tag" bindtap="newRole">+ 新增职责</text></view>
+      <view wx:if="{{roleForm}}"><view class="label">职责名称</view><input class="field" value="{{roleForm.name}}" data-key="name" disabled="{{saving}}" bindinput="roleField" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" maxlength="60" placeholder="职责名称"/><view class="label">职责说明</view><textarea class="field notes" value="{{roleForm.description}}" data-key="description" disabled="{{saving}}" bindinput="roleField" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" maxlength="500" placeholder="说明（可选）"/><button wx:if="{{roleForm.id}}" class="btn danger" data-id="{{roleForm.id}}" disabled="{{saving}}" bindtap="deleteRole">删除此职责</button></view>
+    </block>
+    <block wx:elif="{{!members.length || !editable}}">
       <view class="empty">{{members.length ? '关联自己的成员码后，可以登记车辆。' : '先建立自己的成员档，再登记车辆。'}}</view>
-      <block wx:if="{{!members.length}}"><view class="label">我的名字</view><input class="field" value="{{identityName}}" data-key="identityName" bindinput="identityField" maxlength="60" placeholder="填写自己的名字"/><button class="btn ghost" disabled="{{identityBusy}}" bindtap="createSelf">建立我的成员档</button></block>
-      <view class="label">使用已有成员档</view><input class="field" value="{{memberCode}}" data-key="memberCode" bindinput="identityField" maxlength="37" placeholder="AW-M-我的成员码"/><button class="btn ghost" disabled="{{identityBusy}}" bindtap="associateSelf">关联我的成员码</button>
+      <block wx:if="{{!members.length}}"><view class="label">我的名字</view><input class="field" value="{{identityName}}" data-key="identityName" bindinput="identityField" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" maxlength="60" placeholder="填写自己的名字"/><button class="btn ghost" disabled="{{identityBusy}}" bindtap="createSelf">建立我的成员档</button></block>
+      <view class="label">使用已有成员档</view><input class="field" value="{{memberCode}}" data-key="memberCode" bindinput="identityField" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" maxlength="37" placeholder="AW-M-我的成员码"/><button class="btn ghost" disabled="{{identityBusy}}" bindtap="associateSelf">关联我的成员码</button>
     </block>
     <block wx:else="">
       <view class="muted">我的成员档 · {{members[0].name}}</view>
-      <view class="label">车辆状态</view><picker range="{{statuses}}" value="{{statusIndex}}" bindchange="pickStatus"><view class="picker">{{statuses[statusIndex]}} ▾</view></picker>
-      <view class="row between"><view class="label">车辆职责 · 可多选</view><text class="link" bindtap="roleManager">{{showRoleManager ? '收起管理 ∧' : '管理职责 ∨'}}</text></view>
+      <view class="label">车辆状态</view><view class="segments"><button wx:for="{{statuses}}" wx:key="*this" class="choice {{statusIndex === index ? 'active' : ''}}" data-value="{{index}}" disabled="{{saving}}" bindtap="pickStatus">{{item}}</button></view>
+      <view class="row between"><view class="label">车辆职责 · 可多选</view><text class="link" bindtap="roleManager">管理车队职责 ›</text></view>
       <view class="tags"><text wx:for="{{rows}}" wx:key="id" class="tag {{item.index ? 'selected' : ''}}" data-index="{{index}}" bindtap="toggleRole">{{item.index ? '✓ ' : '+ '}}{{item.name}}</text></view>
-      <view wx:if="{{!rows.length}}" class="muted">还没有职责，可在“管理职责”中添加，也可以只保存车辆状态。</view>
-      <view wx:if="{{showRoleManager}}" class="role-manager"><view class="muted">点标签编辑职责；职责变更单独保存。</view><view class="tags"><text wx:for="{{rows}}" wx:key="id" class="tag" data-id="{{item.id}}" bindtap="editRole">{{item.name}} · 编辑</text><text class="tag" bindtap="newRole">+ 新增职责</text></view>
-        <view wx:if="{{roleForm}}"><input class="field" value="{{roleForm.name}}" data-key="name" bindinput="roleField" maxlength="60" placeholder="职责名称"/><input class="field" value="{{roleForm.description}}" data-key="description" bindinput="roleField" maxlength="500" placeholder="职责说明（可选）"/><view class="actions"><button class="btn ghost" bindtap="cancelRole">取消</button><button class="btn primary" disabled="{{saving}}" bindtap="saveRole">保存职责</button><button wx:if="{{roleForm.id}}" class="btn danger" data-id="{{roleForm.id}}" disabled="{{saving}}" bindtap="deleteRole">删除</button></view></view>
-      </view>
+      <view wx:if="{{!rows.length}}" class="muted">可添加职责，也可以只保存车辆状态。</view>
       <view wx:for="{{rows}}" wx:key="id" wx:if="{{item.index || item.automatic}}" class="line">
-        <view class="role-name">{{item.name}}</view><picker range="{{levels}}" value="{{item.index}}" data-index="{{index}}" bindchange="pickLevel"><view class="picker">{{levels[item.index]}} ▾</view></picker>
-        <view wx:if="{{item.automatic}}" class="muted">科技树自动过渡由目标路线维护。</view>
-        <checkbox-group wx:if="{{item.index === 3}}" data-index="{{index}}" bindchange="pickTargets"><view class="label">过渡服务的目标 · 可多选</view><label wx:for="{{item.targets}}" wx:for-item="target" wx:key="id" class="target"><checkbox value="{{target.id}}" checked="{{target.checked}}" color="#1c1a1e"/>{{target.name}}</label><view wx:if="{{!item.targets.length}}" class="muted">先为自己在同职责下登记主力或备选目标。</view></checkbox-group>
+        <view class="role-name">{{item.name}}</view>
+        <view wx:if="{{item.automatic}}" class="muted">过渡 · 科技树自动生成 → {{item.automaticTargets}}</view>
+        <view wx:if="{{item.index}}" class="segments"><button wx:for="{{levels}}" wx:for-item="level" wx:for-index="levelIndex" wx:key="*this" class="choice {{item.index === levelIndex + 1 ? 'active' : ''}}" data-index="{{index}}" data-value="{{levelIndex + 1}}" disabled="{{saving}}" bindtap="pickLevel">{{level}}</button></view>
+        <checkbox-group wx:if="{{item.index === 3}}" data-index="{{index}}" bindchange="pickTargets"><view class="label">过渡服务的目标 · 可多选</view><label wx:for="{{item.targets}}" wx:for-item="target" wx:key="id" class="target"><checkbox value="{{target.id}}" checked="{{target.checked}}" disabled="{{saving}}" color="#ea7428"/>{{target.name}}</label><view wx:if="{{!item.targets.length}}" class="muted">先登记同职责的主力或备选目标。</view></checkbox-group>
       </view>
-      <view class="label">备注</view><textarea class="field notes" value="{{note}}" bindinput="note" maxlength="1000" placeholder="我的车辆备注"/>
+      <block wx:if="{{tokenRewards.length}}"><view class="label">满经验 Token 奖励</view><view class="muted">每台车的奖励仅计一次；已拥有不代表已练满或已领取。</view><view wx:for="{{tokenRewards}}" wx:key="id" wx:for-item="reward" class="line"><view>{{reward.tokenName}} ×{{reward.quantity}}</view><view wx:if="{{reward.state === 'unknown'}}" class="muted">尚未记录进度</view><view class="segments"><button class="choice {{reward.state === 'unearned' ? 'active' : ''}}" data-id="{{reward.id}}" data-state="unearned" disabled="{{saving}}" bindtap="reward">未满经验</button><button class="choice {{reward.state === 'ready' ? 'active' : ''}}" data-id="{{reward.id}}" data-state="ready" disabled="{{saving || statusIndex === 1}}" bindtap="reward">满经验待领取</button><button class="choice {{reward.state === 'claimed' ? 'active' : ''}}" data-id="{{reward.id}}" data-state="claimed" disabled="{{saving || statusIndex === 1}}" bindtap="reward">已领取</button></view></view></block>
+      <block wx:if="{{unlockPaths.length}}"><view class="label">实际解锁记录</view><view class="muted">填写已经发生的消耗，和计划路线分开记录。</view><view class="segments"><button class="choice {{tokenAcquisition === 'unknown' ? 'active' : ''}}" data-value="unknown" bindtap="acquisition">{{statusIndex ? '未解锁' : '未记录'}}</button><button class="choice {{tokenAcquisition === 'token' ? 'active' : ''}}" data-value="token" bindtap="acquisition">已用 Token 解锁</button><button class="choice {{tokenAcquisition === 'other' ? 'active' : ''}}" data-value="other" bindtap="acquisition">其他方式解锁</button></view><view wx:if="{{tokenAcquisition === 'token'}}"><view wx:for="{{unlockPaths}}" wx:key="id" class="route-card {{unlockPathId === item.id ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="unlockPath"><view>{{item.name}}</view><view class="muted">{{item.details}}</view></view></view></block>
+      <view class="label">备注</view><textarea class="field notes" value="{{note}}" disabled="{{saving}}" bindinput="note" bindkeyboardheightchange="keyboard" adjust-position="{{false}}" maxlength="1000" placeholder="我的车辆备注"/>
     </block>
   </scroll-view>
-  <view class="actions"><button class="btn ghost" bindtap="cancel">取消</button><button class="btn primary {{!members.length || !editable ? 'is-disabled' : ''}}" disabled="{{saving || !members.length || !editable}}" bindtap="save">保存</button></view>
+  <view wx:if="{{showRoleManager}}" class="actions"><button class="btn ghost" disabled="{{saving}}" bindtap="roleManager">返回车辆草稿</button><button wx:if="{{roleForm}}" class="btn primary" loading="{{saving}}" disabled="{{saving}}" bindtap="saveRole">保存职责</button></view>
+  <view wx:else="" class="actions"><button class="btn ghost" disabled="{{saving}}" bindtap="cancel">取消</button><button class="btn primary" loading="{{saving}}" disabled="{{saving || !members.length || !editable}}" bindtap="save">保存车辆</button></view>
 </view>

@@ -1,4 +1,5 @@
 const catalog = require('./catalog')
+const tokenPlan = require('./token-plan')
 function clone(x) { return JSON.parse(JSON.stringify(x)) }
 function id(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9) }
 function empty(users) {
@@ -33,7 +34,7 @@ function resolveRoute(s, memberId, vehicleId) {
     if ((!path || !path.is_complete) && !owned) { complete = false; warnings.push((catalog.byId[vid] || {}).name + ' 获取路线待补全') }
     const reqs = path ? catalog.rows('unlock_requirements', 'unlock_path_id', path.id).sort((a, b) => a.sort_order - b.sort_order) : []
     // Only explicit requirement relations are prerequisites. Display edges are not proof of unlock requirements.
-    reqs.forEach(r => { if (r.source_vehicle_id) visit(r.source_vehicle_id, depth + 1) })
+    if (!owned && !tokenPlan.hasRecordedUnlock(getAsset(s,memberId,vid)||{})) reqs.forEach(r => { if (r.source_vehicle_id) visit(r.source_vehicle_id, depth + 1) })
     nodes.push({ vehicleId: vid, vehicle: catalog.byId[vid] || { name: '资料待补全' }, owned, path, requirements: reqs, depth })
     visited[vid] = true; delete stack[vid]
   }
@@ -91,51 +92,18 @@ function removeAsset(s, assetId) {
   Object.keys(s.assignments).forEach(k => { if (s.assignments[k].assetId === assetId) delete s.assignments[k] })
   return recompute(s)
 }
+function planningTargets(s, memberId) {
+  const formal=targets(s,memberId), seen=new Set(formal.map(t=>t.assetId))
+  return formal.concat(Object.values(s.assets).filter(a=>a.memberId===memberId&&a.status==='planned'&&a.explicit&&!seen.has(a.id)).map(a=>({id:a.id+'~plan',assetId:a.id,roleId:'',level:'planned',source:'manual'})))
+}
 function memberPlan(s, memberId, targetId) {
-  const ts = targets(s, memberId).filter(t => !targetId || t.id === targetId)
-  const order = [], seen = {}, warnings = [], choices = []
-  let complete = true
-  ts.forEach(t => {
-    const r = resolveRoute(s, memberId, s.assets[t.assetId].vehicleId)
-    complete = complete && r.complete; warnings.push.apply(warnings, r.warnings); choices.push.apply(choices, r.choices)
-    r.nodes.forEach(n => { if (!seen[n.vehicleId]) { seen[n.vehicleId] = true; order.push(n) } })
+  const ts=planningTargets(s,memberId).filter(t=>!targetId||t.id===targetId||(s.assets[t.assetId]||{}).tokenSupply),nodes=[],seen=new Set(),context={complete:true,warnings:[],choices:[]}
+  ts.forEach(t=>{
+    const route=resolveRoute(s,memberId,s.assets[t.assetId].vehicleId)
+    context.complete=context.complete&&route.complete;context.warnings.push.apply(context.warnings,route.warnings);context.choices.push.apply(context.choices,route.choices)
+    route.nodes.forEach(n=>{if(!seen.has(n.vehicleId)){seen.add(n.vehicleId);nodes.push(n)}})
   })
-  const budget = {}, steps = []
-  function bucket(tokenId) {
-    if (!budget[tokenId]) budget[tokenId] = { id: tokenId, name: (catalog.byId[tokenId] || {}).name || 'Token', owned: Number(s.tokens[assetKey(memberId, tokenId)] || 0), gained: 0, uncertain: 0, consumed: 0, balance: Number(s.tokens[assetKey(memberId, tokenId)] || 0), processOk: true }
-    return budget[tokenId]
-  }
-  order.forEach(n => {
-    const step = { id: n.vehicleId, name: n.vehicle.name_zh || n.vehicle.name, owned: n.owned, pathName: n.path && n.path.name, changes: [], requirements: n.requirements.map(r => Object.assign({}, r, { confirmed: !!s.confirmedRequirements[assetKey(memberId, r.id)] })), rewards: [], blocked: false, uncertain: false }
-    if (!n.owned) n.requirements.forEach(r => {
-      if (r.token_id) {
-        const b = bucket(r.token_id), amount = Number(r.required_value)
-        if (r.required_value === null || !Number.isFinite(amount) || amount < 0 || !['public_verified', 'ingame_verified'].includes(r.verification_status)) {
-          complete = false; step.uncertain = true; warnings.push('Token 消耗待确认：' + (r.description || n.vehicle.name)); return
-        }
-        b.consumed += amount
-        if (b.balance < amount) { b.processOk = false; step.blocked = true; step.changes.push(b.name + ' 不足，缺少 ' + (amount - b.balance)) }
-        b.balance -= amount; step.changes.push(b.name + ' 消耗 ' + amount)
-      } else if ((r.source_vehicle_id && !r.source_upgrade_id && ['own_vehicle', 'vehicle_progress'].includes(r.requirement_type)) || s.confirmedRequirements[assetKey(memberId, r.id)]) {
-        // Vehicle progress can have an additional threshold, which must be explicitly confirmed.
-        if (r.requirement_type === 'vehicle_progress' && !s.confirmedRequirements[assetKey(memberId, r.id)]) { complete = false; step.uncertain = true; warnings.push('车辆进度条件待确认：' + r.description) }
-      } else { complete = false; step.uncertain = true; warnings.push('其他解锁条件待确认：' + (r.description || r.requirement_type)) }
-    })
-    catalog.rows('vehicle_token_rewards', 'vehicle_id', n.vehicleId).forEach(r => {
-      const b = bucket(r.token_id), qty = Number(r.quantity), confirmed = !!s.confirmedRewards[assetKey(memberId, r.id)] && ['public_verified', 'ingame_verified'].includes(r.verification_status) && r.quantity !== null && Number.isFinite(qty) && qty >= 0
-      step.rewards.push(Object.assign({}, r, { tokenName: b.name, confirmed }))
-      // Owned vehicles' past rewards must already be part of current holdings. Never count twice.
-      if (n.owned) return
-      if (confirmed) { b.gained += qty; b.balance += qty; step.changes.push(b.name + ' 确认获取 ' + qty) }
-      else { b.uncertain += Number.isFinite(qty) ? qty : 0; step.uncertain = true; warnings.push('奖励获取时点待确认：' + n.vehicle.name + ' · ' + b.name) }
-    })
-    steps.push(step)
-  })
-  const tokens = Object.values(budget).map(b => Object.assign(b, { totalOk: b.consumed === 0 || b.owned + b.gained > b.consumed, final: b.owned + b.gained - b.consumed }))
-  const tokenOk = tokens.every(t => t.totalOk && t.processOk)
-  const uncertain = !complete || steps.some(x => x.uncertain)
-  const status = !tokenOk ? 'Token 不足 / 不满足' : uncertain ? '无法完全确认' : '已知条件通过'
-  return { steps, tokens, choices: choices.filter((c, i) => choices.findIndex(x => x.vehicleId === c.vehicleId) === i), warnings: Array.from(new Set(warnings)), complete: !uncertain, status, executable: !uncertain && tokenOk, ownedCount: order.filter(n => n.owned).length, count: order.length }
+  return tokenPlan.build(s,memberId,nodes,context)
 }
 function summary(s, vehicleId) {
   const roles = {}; s.roles.forEach(r => { roles[r.id] = r })
@@ -180,4 +148,4 @@ function importLegacy(s, entries, users) {
   })
   return recompute(s)
 }
-module.exports = { clone, id, empty, assetKey, assignmentKey, getAsset, ensureAsset, paths, resolveRoute, recompute, saveAsset, deleteRole, removeAsset, targets, memberPlan, summary, overview, importLegacy }
+module.exports = { clone, id, empty, assetKey, assignmentKey, getAsset, ensureAsset, paths, resolveRoute, recompute, saveAsset, deleteRole, removeAsset, targets, planningTargets, memberPlan, summary, overview, importLegacy }

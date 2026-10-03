@@ -1,9 +1,11 @@
 <view class="aw-page"><view class="hero"><view class="eyebrow">ARMORED WARFARE · UNLOCK ROUTE</view><view class="title">科技树与获取条件</view><view class="subtitle">车辆资料库与车队共用 · 未知路线保留待补全</view></view>
+  <button wx:if="{{historyCount}}" class="ghost small" bindtap="back">‹ 返回上一个车辆与浏览位置</button>
   <input placeholder="搜索并定位车辆" value="{{query}}" bindinput="search"/>
   <view wx:if="{{vehicle}}" class="card"><view class="row between"><text class="card-title">{{vehicle.displayName}}</text><text class="link" bindtap="detail">车辆详情 ›</text></view>
     <view wx:for="{{paths}}" wx:key="id" class="line"><view>{{item.name}} <text class="tag {{item.is_complete ? 'ok' : 'warning'}}">{{item.is_complete ? '资料完整' : '路线待补全'}}</text></view><view wx:for="{{item.requirements}}" wx:key="id" class="muted">{{item.description}}</view><view class="muted">{{item.note}}</view></view><view wx:if="{{!paths.length}}" class="warning">获取路线未采集，不能推断为无前置。</view>
     <view wx:if="{{route.nodes.length}}" class="label">当前玩家已选路线 · 前置在前</view><view wx:for="{{route.nodes}}" wx:key="vehicleId" class="line" data-id="{{item.vehicleId}}" bindtap="select">{{item.owned ? '✓' : '○'}} {{item.vehicle.name}} <text class="muted">{{item.owned ? '已拥有' : '待获取'}} ›</text></view>
     <view class="label">公开资料中的显示关系</view><view class="muted">显示关系不代表完整解锁条件，不自动作为获取前置。</view><view wx:for="{{related}}" wx:key="id" class="link" data-id="{{item.id}}" bindtap="select">{{item.direction}} · {{item.name}} ›</view>
   </view>
-  <view class="label">{{query ? '搜索结果' : '选择车辆'}}</view><view wx:for="{{candidates}}" wx:key="id" class="line row between" data-id="{{item.id}}" bindtap="select"><text>{{item.displayName}}</text><text class="muted">T{{item.tier}} · {{item.vehicle_class}} ›</text></view><view wx:if="{{!candidates.length}}" class="empty">没有匹配的车辆</view>
+  <view class="label">共 {{count}} 辆 · {{query ? '搜索结果' : '选择车辆'}}</view><view wx:for="{{candidates}}" wx:key="id" class="line row between" data-id="{{item.id}}" bindtap="select"><text>{{item.displayName}}</text><text class="muted">T{{item.tier}} · {{item.vehicle_class}} ›</text></view><view wx:if="{{!candidates.length}}" class="empty">没有匹配的车辆</view>
+  <button wx:if="{{count > candidates.length}}" class="ghost" bindtap="loadMore">加载更多车辆（{{candidates.length}} / {{count}}）</button>
 </view>

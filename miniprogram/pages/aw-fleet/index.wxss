@@ -6,3 +6,9 @@
 .drag-handle { padding:22rpx; color:#6b6370; font-size:34rpx; }
 .member-name { flex:1; min-width:0; }
 .archive-toggle { margin-top:16rpx; }
+.form { overflow-y:auto; }
+.member-buttons { display:flex; flex-wrap:wrap; gap:12rpx; margin:16rpx 0; }
+.member-buttons .choice { flex:none; min-width:120rpx; }
+.source-row { padding:16rpx 0; }
+.player { min-height:88rpx; }
+.fleet-status .muted { margin-top:8rpx; }

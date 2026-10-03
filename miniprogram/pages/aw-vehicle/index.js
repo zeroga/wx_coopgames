@@ -5,7 +5,7 @@ const navigation = require('../../utils/aw/navigation')
 Page({
   data: { syncError:'', id: '', vehicle: null, team: [], extra: 0, showTeam: false, showMore: false, showBasis: false, sections: { performance:true, weapons:false, abilities:false, upgrades:false, acquisition:false, armor:false, sources:false }, expandedAmmo: {}, editor: false, editMemberId: '', currentId:'' },
   onLoad(o) { this.setData({ id: o.id || '' }); this.refresh() },
-  async onShow() { this.refresh();try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}finally{this.refresh()} },
+  async onShow() { if(this.data.editor)return;this.refresh();try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}finally{this.refresh()} },
   refresh() {
     if (!this.data.id) return
     const v = catalog.detail(this.data.id)

@@ -2,6 +2,7 @@ const { test, beforeEach, after } = require('node:test')
 const assert = require('node:assert/strict')
 const catalog = require('../miniprogram/utils/aw/catalog')
 const fleet = require('../miniprogram/utils/aw/fleet')
+const tokenPlan = require('../miniprogram/utils/aw/token-plan')
 const original = catalog.tables, stamp = catalog.checkedAt
 function fixture() {
   return {
@@ -44,8 +45,8 @@ test('ammo reload overrides weapon fallback and nullable ammo uses weapon fallba
 test('all transitive prerequisites generated, owned preserved, backup also expands',()=>{
   const s=state();fleet.saveAsset(s,'m','B','owned','',[]);target(s,'D','backup')
   assert.equal(fleet.getAsset(s,'m','B').status,'owned')
-  assert.deepEqual(Object.values(s.assets).map(a=>a.vehicleId).sort(),['A','B','C','D'])
-  assert.equal(s.dependencies.length,3)
+  assert.deepEqual(Object.values(s.assets).map(a=>a.vehicleId).sort(),['B','C','D'])
+  assert.equal(s.dependencies.length,2)
   assert(!fleet.getAsset(s,'m','X')) // display edge is not an unlock requirement
 })
 test('shared prerequisites reference multiple targets; cancelling one retains the other and every asset',()=>{
@@ -74,29 +75,74 @@ test('multiple complete routes require selection; incomplete routes remain incom
   data.unlock_paths.find(p=>p.id==='pC').is_complete=false
   assert.equal(fleet.memberPlan(s,'m').complete,false)
 })
-test('Token strict > rejects equality, different token holdings do not help',()=>{
-  tokenCost('D');const s=state();target(s,'D');s.tokens['m~token']=1;s.tokens['m~other']=99
-  assert.equal(fleet.memberPlan(s,'m').tokens[0].totalOk,false)
-  s.tokens['m~token']=2;assert.equal(fleet.memberPlan(s,'m').executable,true)
+function reward(v,qty=1,token='token'){const r={id:'reward'+v,vehicle_id:v,token_id:token,quantity:qty,verification_status:'public_verified'};data.vehicle_token_rewards.push(r);return r}
+function progress(s,v,state){const a=fleet.getAsset(s,'m',v);tokenPlan.setReward(a,'reward'+v,state)}
+test('manual holdings are ignored; recorded claims pay equal cost while strict reserve is separately checked',()=>{
+  tokenCost('D');reward('A');const s=state();fleet.saveAsset(s,'m','A','owned','',[]);target(s,'D');s.tokens['m~token']=99;s.tokens['m~other']=99
+  let p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].owned,0);assert.equal(p.tokens[0].shortfall,1);assert.equal(p.complete,false)
+  progress(s,'A','claimed');p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].owned,1);assert.equal(p.tokens[0].totalOk,true);assert.equal(p.tokens[0].bufferOk,false);assert.equal(p.tokens[0].reserveShortfall,1);assert.equal(p.executable,false)
+  reward('X');fleet.saveAsset(s,'m','X','owned','',[]);progress(s,'X','claimed');assert.equal(fleet.memberPlan(s,'m').executable,true)
 })
-test('later confirmed reward cannot finance an earlier spend',()=>{
-  tokenCost('B');data.vehicle_token_rewards.push({id:'reward',vehicle_id:'C',token_id:'token',quantity:2,verification_status:'public_verified'})
-  const s=state();target(s,'D');s.confirmedRewards['m~reward']=true
-  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].totalOk,true);assert.equal(p.tokens[0].processOk,false);assert.equal(p.steps.find(x=>x.id==='B').blocked,true);assert.equal(p.executable,false)
+test('later full-experience reward cannot finance an earlier spend and blocked downstream nodes stay blocked',()=>{
+  tokenCost('B');reward('C',2);const s=state();target(s,'D');const p=fleet.memberPlan(s,'m')
+  assert.equal(p.tokens[0].totalOk,true);assert.equal(p.tokens[0].processOk,false);assert.equal(p.steps.find(x=>x.id==='B').blocked,true);assert.equal(p.executable,false)
+  assert(!p.actions.some(x=>x.vehicleId==='C'));assert(p.blocked.some(x=>x.vehicleId==='D'))
 })
-test('unconfirmed rewards excluded; owned vehicle rewards never double counted',()=>{
-  data.vehicle_token_rewards.push({id:'reward',vehicle_id:'A',token_id:'token',quantity:2,verification_status:'public_verified'})
-  const s=state();target(s,'D');let p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,0);assert.equal(p.complete,false)
-  s.confirmedRewards['m~reward']=true;p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2)
-  fleet.saveAsset(s,'m','A','owned','',[]);p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,0)
+test('owned is not claimed: unknown excluded, unearned/ready forecast, claimed ledger counted once',()=>{
+  reward('A',2);const s=state();target(s,'D');let p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2)
+  fleet.saveAsset(s,'m','A','owned','',[]);p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,0);assert.equal(p.complete,false)
+  progress(s,'A','unearned');p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2);assert.equal(p.tokens[0].owned,0);assert.match(p.actions[0].text,/练满/)
+  progress(s,'A','ready');p=fleet.memberPlan(s,'m');assert.match(p.actions[0].text,/领取满经验/)
+  progress(s,'A','claimed');p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,0);assert.equal(p.tokens[0].owned,2);assert.equal(p.actions.filter(x=>x.kind==='reward').length,0)
 })
-test('all player goals share one prerequisite/reward budget',()=>{
-  data.vehicle_token_rewards.push({id:'reward',vehicle_id:'A',token_id:'token',quantity:2,verification_status:'public_verified'})
-  tokenCost('D');tokenCost('E');const s=state();target(s,'D');target(s,'E');s.confirmedRewards['m~reward']=true
-  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2);assert.equal(p.tokens[0].consumed,2);assert.equal(p.tokens[0].totalOk,false)
+test('all player goals share one source and vehicle cost, repeated duties do not duplicate rewards or spending',()=>{
+  reward('A',2);tokenCost('D');tokenCost('E');const s=state();target(s,'D');target(s,'E');s.roles.push({id:'otherRole',name:'侦察',order:1});s.assignments['m~D~otherRole']={id:'m~D~otherRole',assetId:'m~D',roleId:'otherRole',level:'backup',source:'manual'}
+  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2);assert.equal(p.tokens[0].consumed,2);assert.equal(p.tokens[0].totalOk,true);assert.equal(p.tokens[0].bufferOk,false)
+  assert.equal(p.actions.filter(a=>a.id==='reward:rewardA').length,1)
+})
+test('actual unlock consumption is separate from ownership and removes future expenditure',()=>{
+  reward('A',3);tokenCost('D');const s=state();fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');target(s,'D')
+  const d=fleet.getAsset(s,'m','D');d.tokenAcquisition='token';d.tokenUnlockPathId='pD'
+  let p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].historicalSpent,1);assert.equal(p.tokens[0].owned,2);assert.equal(p.tokens[0].consumed,0)
+  d.status='owned';p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].historicalSpent,1);assert.equal(p.tokens[0].owned,2)
+  delete d.tokenUnlockPathId;delete d.tokenAcquisition;p=fleet.memberPlan(s,'m');assert.equal(p.complete,false);assert(p.warnings.some(x=>x.includes('实际获取方式')))
+  d.tokenAcquisition='other';assert.equal(fleet.memberPlan(s,'m').tokens[0].historicalSpent,0)
+})
+test('unassigned planned source is included only after choosing it; independent source breaks token cycle',()=>{
+  tokenCost('B');reward('C',2);reward('X',2);const s=state();const tid=target(s,'D');let p=fleet.memberPlan(s,'m',tid)
+  assert.equal(p.tokens[0].gained,2);assert(p.tokens[0].candidates.some(x=>x.vehicleId==='X'));assert.equal(p.executable,false)
+  fleet.saveAsset(s,'m','X','planned','',[]);fleet.getAsset(s,'m','X').tokenSupply=true;p=fleet.memberPlan(s,'m',tid)
+  assert.equal(p.tokens[0].gained,4);assert.equal(p.tokens[0].processOk,true);assert.equal(p.executable,true)
+  assert(p.actions.findIndex(x=>x.vehicleId==='X'&&x.kind==='reward')<p.actions.findIndex(x=>x.vehicleId==='B'))
+})
+test('different token types cannot fund each other and unverified quantities stay unknown',()=>{
+  tokenCost('D');reward('A',4,'other');reward('X',null);const s=state();target(s,'D');fleet.saveAsset(s,'m','X','planned','',[])
+  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens.find(x=>x.id==='token').shortfall,1);assert.equal(p.executable,false);assert(p.warnings.some(x=>x.includes('数量待核实')))
+})
+test('planned vehicles cannot claim rewards; claimed records survive personal archive roundtrip',()=>{
+  reward('A');const s=state();target(s,'A');assert.throws(()=>progress(s,'A','claimed'),/已拥有/)
+  fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');fleet.getAsset(s,'m','A').tokenSupply=true
+  const archives=require('../miniprogram/utils/aw/archives'),saved=archives.personal(s,'m'),restored=fleet.empty({m:'玩家'});archives.memberInto(restored,{id:'m',name:'玩家',data:saved})
+  assert.deepEqual(archives.personal(restored,'m'),saved);assert.equal(fleet.memberPlan(restored,'m').tokens[0].owned,1)
 })
 test('legacy import is idempotent, preserves unmappable metadata and inactive records',()=>{
   const s=state(),rows=[{id:'old',user_id:'m',vehicle_id:'A',status:'owned',role:'unknown_role',priority:4},{id:'abandoned',user_id:'m',vehicle_id:'B',status:'abandoned'}]
   fleet.importLegacy(s,rows,{m:'玩家'});fleet.importLegacy(s,rows,{m:'玩家'})
   assert.equal(s.legacyAudit.length,2);assert.equal(s.legacyAudit[0].role,'unknown_role');assert.equal(fleet.getAsset(s,'m','A').status,'owned');assert(!fleet.getAsset(s,'m','B'))
+})
+test('provider-first ordering avoids spending the only starting token on a non-producing target',()=>{
+ tokenCost('D');tokenCost('X');reward('A');reward('X',2);const s=state();fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');target(s,'D');fleet.saveAsset(s,'m','X','planned','',[])
+ const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].processOk,true);assert.equal(p.executable,true);assert(p.actions.findIndex(a=>a.id==='unlock:X')<p.actions.findIndex(a=>a.id==='unlock:D'))
+})
+test('unknown route rewards do not become currently obtainable or actionable',()=>{
+ reward('X',2);data.unlock_paths.find(p=>p.vehicle_id==='X').is_complete=false;const s=state();fleet.saveAsset(s,'m','X','planned','',[])
+ const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2);assert.equal(p.tokens[0].reachableGained,0);assert.equal(p.actions.length,0);assert.equal(p.complete,false);assert.match(p.blocked[0].reason,/路线待补全/)
+})
+test('ordering backtracks when the first reward source consumes the seed token but yields another type',()=>{
+ tokenCost('X');tokenCost('B');tokenCost('D');reward('A');reward('X',1,'other');reward('B',3);const s=state();fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');target(s,'X');target(s,'D')
+ const p=fleet.memberPlan(s,'m');assert.equal(p.executable,true);assert.equal(p.blocked.length,0);assert(p.actions.findIndex(a=>a.id==='unlock:B')<p.actions.findIndex(a=>a.id==='unlock:X'));assert.equal(p.tokens.find(t=>t.id==='token').final,1)
+})
+test('unknown token cost stops acquisition and downstream earnings',()=>{
+ tokenCost('B',null);reward('B',2);const s=state();target(s,'D');const p=fleet.memberPlan(s,'m')
+ assert.equal(p.tokens[0].reachableGained,0);assert.equal(p.complete,false);assert(p.blocked.some(x=>x.vehicleId==='B'&&x.reason.includes('数量待核实')))
 })

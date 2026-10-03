@@ -3,7 +3,8 @@ const personalKeys = ['assets','tokens','routes','confirmedRewards','confirmedRe
 function personal(s, memberId) {
   const result = { assets: {}, tokens: {}, routes: {}, confirmedRewards: {}, confirmedRequirements: {} }
   Object.values(s.assets).filter(a => a.memberId === memberId && a.explicit).forEach(a => {
-    result.assets[a.vehicleId] = { status: a.status, note: a.note || '', explicit: true }
+    result.assets[a.vehicleId] = Object.assign({},fleet.clone(a),{status:a.status,note:a.note||'',explicit:true})
+    delete result.assets[a.vehicleId].id;delete result.assets[a.vehicleId].memberId;delete result.assets[a.vehicleId].vehicleId
   })
   personalKeys.slice(1).forEach(key => Object.keys(s[key]).filter(k => k.startsWith(memberId + '~')).forEach(k => { result[key][k.slice(memberId.length+1)] = s[key][k] }))
   return result
@@ -19,7 +20,7 @@ function memberInto(s, row) {
   Object.keys(s.assets).filter(k=>s.assets[k].memberId===row.id).forEach(k=>delete s.assets[k])
   Object.keys(data.assets || {}).forEach(vehicleId=>{
     const key=fleet.assetKey(row.id,vehicleId),a=data.assets[vehicleId]
-    s.assets[key]={id:key,memberId:row.id,vehicleId,status:a.status,note:a.note||'',explicit:true}
+    s.assets[key]=Object.assign({},fleet.clone(a),{id:key,memberId:row.id,vehicleId,status:a.status,note:a.note||'',explicit:true})
   })
   personalKeys.slice(1).forEach(key=>{
     Object.keys(s[key]).filter(k=>k.startsWith(row.id+'~')).forEach(k=>delete s[key][k])

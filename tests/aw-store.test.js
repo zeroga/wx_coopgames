@@ -135,3 +135,23 @@ test('automatic refresh protects pending edits and failed role uploads retain re
  remote.awArchive=async()=>{throw Error('refresh should not issue a request')};assert.equal(await store.refreshIfClean(),false);assert.equal(store.load().roles[0].name,'离线改名')
  remote.awArchive=original;await store.push();assert.equal(Object.values(teams)[0].data.roles[0].name,'离线改名');assert.equal(store.dirty,false)
 })
+test('all personal edits auto-upload and another device reads token progress, route, note and rename',async()=>{
+ localMember();await store.createTeam('Shared');const a=store,tc=a.remoteInfo().teamCode,id=a.currentMember(),mc=a.memberInfo(id).code;let am=snapshotMemory()
+ memory.clear();const b=freshStore();await b.openTeam(tc);await b.attachMember(mc);const bm=snapshotMemory()
+ useMemory(am);const next=fleet.clone(a.load()),asset=Object.values(next.assets)[0];asset.note='自动上传备注';asset.tokenRewards={synthetic:'claimed'};asset.tokenAcquisition='token';asset.tokenUnlockPathId='synthetic-path';asset.tokenSupply=true;next.members[0].name='自动改名';next.routes[id+'~'+asset.vehicleId]='route';next.confirmedRequirements[id+'~condition']=true
+ await a.saveAndSync(next);assert.equal(a.dirty,false)
+ useMemory(bm);await b.refresh();const saved=Object.values(b.load().assets)[0];assert.equal(saved.note,'自动上传备注');assert.deepEqual(saved.tokenRewards,{synthetic:'claimed'});assert.equal(saved.tokenUnlockPathId,'synthetic-path');assert.equal(saved.tokenSupply,true);assert.equal(b.load().members[0].name,'自动改名');assert.equal(b.load().confirmedRequirements[id+'~condition'],true)
+})
+test('manual refresh uploads before download; failure/conflict never downloads over pending edits',async()=>{
+ localMember();await store.createTeam('Shared');const next=fleet.clone(store.load());Object.values(next.assets)[0].note='离线草稿';store.save(next)
+ const original=remote.awArchive,calls=[];remote.awArchive=async(...args)=>{calls.push(args[0]);if(args[0]==='put_member')throw Error('offline');return original(...args)}
+ await assert.rejects(store.refresh(),/offline/);assert.deepEqual(calls,['put_member']);assert.equal(Object.values(store.load().assets)[0].note,'离线草稿');assert(store.dirty);assert.match(store.syncInfo().status,/失败/)
+ calls.length=0;remote.awArchive=async(...args)=>{calls.push(args[0]);return original(...args)};await store.refresh();assert(calls.indexOf('put_member')<calls.lastIndexOf('open_team'));assert.equal(store.dirty,false);assert.equal(store.syncInfo().error,'')
+ const changed=fleet.clone(store.load());changed.roles[0].name='冲突职责';store.save(changed);Object.values(teams)[0].version++;calls.length=0
+ await assert.rejects(store.refresh(),/云端存档已更新/);assert.deepEqual(calls,['open_team']);assert.equal(store.load().roles[0].name,'冲突职责');assert(store.dirty)
+})
+test('published personal archive auto-syncs and refreshes without a connected team',async()=>{
+ localMember();await store.publishMember(store.currentMember());const id=store.currentMember(),m=members[id],next=fleet.clone(store.load());Object.values(next.assets)[0].note='个人自动上传'
+ await store.saveAndSync(next);assert.equal(Object.values(m.data.assets)[0].note,'个人自动上传');assert.equal(store.memberInfo(id).dirty,false)
+ m.name='另一设备修改';m.version++;assert.equal(await store.refreshIfClean(),true);assert.equal(store.load().members[0].name,'另一设备修改');assert.equal(store.memberInfo(id).version,m.version)
+})

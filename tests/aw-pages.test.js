@@ -2,7 +2,7 @@ const {test} = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('node:fs'), path = require('node:path')
 const memory = new Map(), messages=[]
-global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>memory.set(k,JSON.parse(JSON.stringify(v))),removeStorageSync:k=>memory.delete(k),showToast:r=>messages.push(r),showModal:r=>messages.push(r),setNavigationBarTitle(){},navigateTo(){},setClipboardData(){}}
+global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>memory.set(k,JSON.parse(JSON.stringify(v))),removeStorageSync:k=>memory.delete(k),showToast:r=>messages.push(r),showModal:r=>messages.push(r),setNavigationBarTitle(){},navigateTo(){},setClipboardData(){},pageScrollTo(){}}
 function hydrate(def, component=false) {
   const p=Object.assign({},component?def.methods:def)
   p.data=JSON.parse(JSON.stringify(def.data));p.properties={vehicleId:'',memberId:''};p.setData=function(update,cb){for(const [key,v] of Object.entries(update)){const parts=key.split('.');let at=this.data;for(const field of parts.slice(0,-1)){if(!at[field])at[field]={};at=at[field]}at[parts[parts.length-1]]=v}if(cb)cb()};p.triggerEvent=()=>{};return p
@@ -19,7 +19,7 @@ test('create member and role, edit asset with two roles, cancel without mutation
   const vid=c.tables.vehicles.find(v=>v.name==='Boxer RIWP').id
   let def;global.Component=d=>{def=d};require('../miniprogram/components/aw-asset-editor/index')
   const editor=hydrate(def,true);editor.properties={vehicleId:vid,memberId:p.data.memberId};editor.prepare()
-  editor.pickStatus(event({},1));editor.pickLevel(event({index:0},1));editor.pickLevel(event({index:1},2));editor.note(event({},'测试备注'));editor.save()
+  editor.pickStatus(event({value:1}));editor.pickLevel(event({index:0,value:1}));editor.pickLevel(event({index:1,value:2}));editor.note(event({},'测试备注'));await editor.save()
   const asset=s.load().assets[Object.keys(s.load().assets)[0]];assert.equal(asset.status,'planned');assert.equal(asset.note,'测试备注')
   const before=s.exportText();editor.prepare();editor.note(event({},'不保存'));editor.cancel();assert.equal(s.exportText(),before)
   p.refresh();assert.equal(p.data.playerAssets[0].roles.length,2)
@@ -73,7 +73,7 @@ test('vehicle editor visibility follows open/cancel events and member empty stat
     return !!vm.runInNewContext(expression.slice(2,-2),data)
   }
   const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/components/aw-asset-editor/index.wxml'),'utf8')
-  const emptyCondition=markup.match(/<block wx:if="([^"]+)"/)[1]
+  const emptyCondition=markup.match(/<block wx:elif="({{!members[^"]+)"/)[1]
   let def;global.Component=d=>{def=d}
   const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
   for(const name of ['aw-vehicle','aw-fleet']){
@@ -98,7 +98,7 @@ test('filter panel opens, switches and closes while retaining conditions; factor
   assert.equal(p.data.filterTab,'')
   p.showFilters(event({tab:'base'}));assert.equal(p.data.filterTab,'base')
   p.toggle(event({key:'tiers',value:'10'}));p.switchFilters(event({tab:'cap'}));assert.equal(p.data.filterTab,'cap')
-  p.factory(event({},true));assert(p.data.selected.some(x=>x.key==='factory'))
+  p.factory(event({value:'yes'}));assert(p.data.selected.some(x=>x.key==='factory'))
   p.closeFilters();assert.equal(p.data.filterTab,'');assert.equal(p.data.filters.tiers[0],'10');assert.equal(p.data.filters.factory,true)
   p.remove(event({key:'factory',value:true}));assert.equal(p.data.filters.factory,false)
   p.clear();assert.equal(p.data.selected.length,0)
@@ -110,7 +110,7 @@ test('personal editor refuses writes when its own member code is unavailable',()
   let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
   const p=hydrate(def,true),editable=s0.canEdit;p.properties={vehicleId:vid,memberId:member.id}
   s0.canEdit=()=>false
-  try{p.prepare();const before=s0.exportText();p.pickLevel(event({index:0},2));p.save();assert.equal(s0.exportText(),before);assert.equal(fleet.getAsset(s0.load(),member.id,vid).explicit,false)}finally{s0.canEdit=editable}
+  try{p.prepare();const before=s0.exportText();p.pickLevel(event({index:0,value:2}));p.save();assert.equal(s0.exportText(),before);assert.equal(fleet.getAsset(s0.load(),member.id,vid).explicit,false)}finally{s0.canEdit=editable}
 })
 
 test('AW navigation returns to existing pages without losing filters or stacking modules',()=>{
@@ -157,8 +157,8 @@ test('personal editor ignores other-member selection and supports tag duties wit
   const index=p.data.rows.findIndex(r=>r.name==='新增标签');assert(index>=0)
   assert.equal(p.data.note,'暂未保存的车辆备注')
   p.toggleRole(event({index}));assert.equal(p.data.rows[index].index,1)
-  p.pickLevel(event({index},2));assert.equal(p.data.rows[index].index,2)
-  const beforeOther=JSON.stringify(fleet.getAsset(s.load(),'other-test',p.properties.vehicleId));p.save()
+  p.pickLevel(event({index,value:2}));assert.equal(p.data.rows[index].index,2)
+  const beforeOther=JSON.stringify(fleet.getAsset(s.load(),'other-test',p.properties.vehicleId));await p.save()
   assert.equal(JSON.stringify(fleet.getAsset(s.load(),'other-test',p.properties.vehicleId)),beforeOther)
   const own=fleet.getAsset(s.load(),current,p.properties.vehicleId)
   assert.equal(own.note,'暂未保存的车辆备注')
@@ -217,4 +217,18 @@ test('AW page onShow reads shared team before rendering final duties',async()=>{
  const original=s.refreshIfClean;let calls=0
  try{s.refreshIfClean=async()=>{calls++;return true};for(const name of ['aw-fleet','aw-vehicle','aw-catalog']){const p=page(name);p.onLoad(name==='aw-vehicle'?{id:c.tables.vehicles[0].id}:{});await p.onShow();assert.equal(p.data.syncError,'')}assert.equal(calls,3)}
  finally{s.refreshIfClean=original}
+})
+test('new registration defaults planned; state choices, boolean filters and tree paging/history use buttons',()=>{
+ let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
+ const editor=hydrate(def,true);editor.properties={vehicleId:c.tables.vehicles.at(-1).id};editor.prepare();assert.equal(editor.data.statusIndex,1)
+ const cp=page('aw-catalog');cp.onLoad();cp.bool(event({key:'premium',value:1}));assert.equal(cp.data.filters.premium,'yes');cp.bool(event({key:'premium',value:0}));assert.equal(cp.data.filters.premium,'')
+ const tree=page('aw-tree');tree.onLoad({});assert.equal(tree.data.candidates.length,30);tree.loadMore();assert.equal(tree.data.candidates.length,60);tree.onPageScroll({scrollTop:600});tree.select(event({id:c.tables.vehicles[0].id}));assert.equal(tree.data.historyCount,1);tree.back();assert.equal(tree.data.id,'');assert.equal(tree.data.limit,60);assert.equal(tree.data.candidates.length,60)
+ for(const dir of ['pages/aw-catalog','pages/aw-fleet','components/aw-asset-editor'])assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'../miniprogram',dir,'index.wxml'),'utf8'),/<picker\b/)
+})
+test('open vehicle or form draft prevents automatic cloud read; keyboard adjusts available editor height',async()=>{
+ const old=s.refreshIfClean;let calls=0;s.refreshIfClean=async()=>{calls++;return true}
+ try{const fp=page('aw-fleet');fp.onLoad({});fp.setData({memberForm:{name:'草稿'}});await fp.onShow();assert.equal(calls,0)
+ const vp=page('aw-vehicle');vp.onLoad({id:c.tables.vehicles[0].id});vp.edit();await vp.onShow();assert.equal(calls,0)
+ let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script);const editor=hydrate(def,true);editor.properties={vehicleId:c.tables.vehicles[0].id};editor.prepare();const h=editor.data.sheetHeight;editor.keyboard({detail:{height:300}});assert(editor.data.sheetHeight<h);assert(editor.data.contentHeight>0)
+ }finally{s.refreshIfClean=old}
 })

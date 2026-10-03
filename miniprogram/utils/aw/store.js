@@ -4,7 +4,7 @@ const fleet = require('./fleet')
 const catalog = require('./catalog')
 const codes = require('./codes')
 const archives = require('./archives')
-let state=null,scope='',version=0,teamDirty=false,memberDirty={},busy=false,session=cache.get('aw.v2.session')||{},vault=cache.get('aw.v2.members')||{},teamName='我的车队'
+let state=null,scope='',version=0,teamDirty=false,memberDirty={},busy=false,session=cache.get('aw.v2.session')||{},vault=cache.get('aw.v2.members')||{},teamName='我的车队',lastSyncError=''
 function key(){return 'aw.v2.'+(session.teamId||'local')}
 function write(k,v){if(!cache.set(k,v))throw new Error('本地存储失败，改动未保存')}
 function persist(){write(scope,{state,version,teamDirty,memberDirty,teamName})}
@@ -97,7 +97,7 @@ async function updateMembers(){
 }
 async function push(){return locked(async()=>{
   load();await updateMembers()
-  if(!session.teamId)return state
+  if(!session.teamId){lastSyncError='';return state}
   // Ensure every independent save is linked before uploading this team's responsibilities.
   let cloud=await remote.awArchive('open_team',session.teamCode)
   if(cloud.version!==version)throw new Error('AW_VERSION_CONFLICT')
@@ -111,7 +111,7 @@ async function push(){return locked(async()=>{
     const before=JSON.stringify({data,members,name}),row=await remote.awArchive('put_team',session.teamCode,{name,data,members,memberCode:actor.code},version)
     version=row.version;teamDirty=before!==JSON.stringify({data:archives.team(state),members:state.members.map(m=>({id:m.id,active:m.active,order:m.order})),name:teamName});persist()
   }
-  return state
+  lastSyncError='';return state
 })}
 async function createTeam(name){
   const clean=String(name||'').trim();if(!clean)throw new Error('请填写车队名称')
@@ -141,16 +141,31 @@ async function pull(discard){return locked(async()=>{
   state=archives.hydrateTeam(row);version=row.version;teamName=row.name;teamDirty=false;memberDirty={}
   row.members.forEach(m=>{if(vault[m.id])vault[m.id].version=m.version});persistSession();persist();return state
 })}
-// Opening a page must read the shared team, while preserving unsent local edits.
-async function refreshIfClean(){
-  load();if(!session.teamId||busy||teamDirty||Object.keys(memberDirty).length)return false
-  await pull();return true
+function cloudReady(){load();return !!session.teamId||!!vault[currentMember()]}
+function pendingCloud(){load();return Object.keys(memberDirty).length>0 || !!session.teamId&&teamDirty}
+async function pullPersonal(){return locked(async()=>{
+  load();const id=currentMember(),v=vault[id];if(!v)throw new Error('请先生成或读取自己的玩家码')
+  if(memberDirty[id])throw new Error('本地有未同步改动，已保留本地版本')
+  const before=JSON.stringify(state),oldScope=scope,row=await remote.awArchive('open_member',v.code)
+  if(scope!==oldScope||JSON.stringify(state)!==before)throw new Error('载入期间本地发生改动，已保留本地版本')
+  archives.memberInto(state,row);fleet.recompute(state);v.version=row.version;persistSession();persist();return state
+})}
+// Refresh is always upload-before-download. A failed upload stops the download.
+async function refresh(){
+  try{if(!cloudReady())return false;if(pendingCloud())await push();if(session.teamId)await pull();else await pullPersonal();lastSyncError='';return true}
+  catch(e){lastSyncError=e.message;throw e}
 }
-async function saveSharedRoles(next){
+async function refreshIfClean(){
+  load();if(!cloudReady()||busy||pendingCloud())return false
+  return refresh()
+}
+async function saveAndSync(next){
   save(next)
-  if(session.teamId){try{await push()}catch(e){e.localSaved=true;throw e}}
+  if(cloudReady()){try{await push();lastSyncError=''}catch(e){lastSyncError=e.message;e.localSaved=true;throw e}}
   return state
 }
+const saveSharedRoles=saveAndSync
+function syncInfo(){load();return {ready:cloudReady(),status:busy?'正在同步':lastSyncError?'同步失败 · 点击刷新重试':pendingCloud()?'等待同步':session.teamId?'已同步':vault[currentMember()]?'个人档已同步 · 职责保存在本机':'已保存本地',error:lastSyncError}}
 function localTeam(){if(busy)throw new Error('正在同步，请稍后切换');load();persist();session={};persistSession();state=null;load();return state}
 async function unlinkMember(id){return locked(async()=>{
   load();if(id!==currentMember()||!canEdit(id))throw new Error('只能退出自己的车队');if(teamDirty||Object.keys(memberDirty).length)throw new Error('有未上传改动，请先上传后再退出');if(session.teamId){const row=await remote.awArchive('unlink_member',session.teamCode,{memberId:id,memberCode:vault[id].code},version);state=archives.hydrateTeam(row);version=row.version;teamDirty=false;persist();setCurrentMember('');return state}
@@ -169,7 +184,7 @@ async function importOld(){
   const rows=await remote.getLegacyAwPlan(r.profileId,r.inviteCode),profile=await remote.openProfile(r.inviteCode)
   return save(fleet.importLegacy(fleet.clone(state),rows,profile.profileData.users||{}))
 }
-module.exports={load,save,pull,push,refreshIfClean,saveSharedRoles,currentMember,setCurrentMember,remoteInfo,memberInfo,canEdit,createTeam,openTeam,attachMember,unlinkMember,createPersonalArchive(name){return locked(async()=>{const row=await remote.awArchive('create_member',null,{name:String(name||'').trim()});vault[row.id]={code:row.code,version:row.version};persistSession();return row.code})},publishMember(id){if(id!==currentMember())return Promise.reject(new Error('只能发布自己的玩家档'));return locked(()=>publishMember(id))},localTeam,importOld,
+module.exports={load,save,saveAndSync,pull,push,refresh,refreshIfClean,saveSharedRoles,syncInfo,currentMember,setCurrentMember,remoteInfo,memberInfo,canEdit,createTeam,openTeam,attachMember,unlinkMember,createPersonalArchive(name){return locked(async()=>{const row=await remote.awArchive('create_member',null,{name:String(name||'').trim()});vault[row.id]={code:row.code,version:row.version};persistSession();return row.code})},publishMember(id){if(id!==currentMember())return Promise.reject(new Error('只能发布自己的玩家档'));return locked(()=>publishMember(id))},localTeam,importOld,
   get dirty(){load();return teamDirty||Object.keys(memberDirty).length>0},get connected(){return !!session.teamId},get busy(){return busy},
   exportText(){return JSON.stringify({team:remoteInfo(),members:vault,state:load()},null,2)},discardAndPull(){return pull(true)}
 }

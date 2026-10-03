@@ -53,3 +53,13 @@ textarea { height:150rpx; }
 .sheet-content.short { height:32vh; }
 
 .module-footer { padding:0 24rpx 28rpx; text-align:center; }
+/* Shared mobile choices: orange selected, neutral inactive, at least 44 CSS px. */
+.segments { display:flex; flex-wrap:wrap; gap:12rpx; margin:12rpx 0; }
+button.choice { flex:1; min-width:100rpx; min-height:88rpx; padding:20rpx 12rpx; background:#ece9ed; color:#6b6370; line-height:1.4; }
+button.choice.active { background:#ea7428; color:#fff; }
+.small { min-height:88rpx; font-size:26rpx; padding:20rpx; }
+.link { display:inline-block; min-height:56rpx; padding:16rpx 4rpx; }
+.tag.selected { background:#ea7428; color:#fff; }
+.tabs .tab { min-height:60rpx; padding:20rpx 5rpx; }
+.route-card { border:2rpx solid #dedbe0; border-radius:14rpx; padding:22rpx; margin:12rpx 0; }
+.route-card.selected { border-color:#ea7428; background:#fff2df; }

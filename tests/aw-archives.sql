@@ -6,11 +6,12 @@ do $$
 declare
   m jsonb;t jsonb;t2 jsonb;linked jsonb;opened jsonb;other_member jsonb;bad_team jsonb;
   mc text;tc text;tc2 text;mid text;ok boolean;
-  personal jsonb := '{"assets":{"synthetic-vehicle":{"status":"owned","note":"test","explicit":true}},"tokens":{"synthetic-token":2},"routes":{},"confirmedRewards":{},"confirmedRequirements":{}}';
+  personal jsonb := '{"assets":{"synthetic-vehicle":{"status":"owned","note":"test","explicit":true,"tokenRewards":{"synthetic-reward":"claimed"},"tokenAcquisition":"token","tokenUnlockPathId":"synthetic-route","tokenSupply":true}},"tokens":{"synthetic-token":2},"routes":{},"confirmedRewards":{},"confirmedRequirements":{}}';
   team jsonb;
 begin
   m:=public.aw_archive('create_member',null,jsonb_build_object('name','AW V2 synthetic member','data',personal));
   mc:=m->>'code';mid:=m->>'id';
+  if m->'data'->'assets'->'synthetic-vehicle'->'tokenRewards'->>'synthetic-reward'<>'claimed' then raise exception 'TEST nested token progress lost';end if;
   if mc !~ '^AW-M-[A-F0-9]{32}$' then raise exception 'TEST member prefix';end if;
   t:=public.aw_archive('create_team',null,'{"name":"AW V2 synthetic team"}');tc:=t->>'code';
   t2:=public.aw_archive('create_team',null,'{"name":"AW V2 second team"}');tc2:=t2->>'code';
@@ -36,6 +37,7 @@ begin
   if not ok then raise exception 'TEST unknown code';end if;
   m:=public.aw_archive('put_member',mc,jsonb_build_object('name','Renamed','data',jsonb_set(personal,'{tokens,synthetic-token}','3')),(m->>'version')::integer);
   opened:=public.aw_archive('open_team',tc2);
+  if opened->'members'->0->'data'->'assets'->'synthetic-vehicle'->>'tokenUnlockPathId'<>'synthetic-route' or opened->'members'->0->'data'->'assets'->'synthetic-vehicle'->>'tokenSupply'<>'true' then raise exception 'TEST shared token unlock ledger lost';end if;
   if opened->'members'->0->>'name'<>'Renamed' or opened->'members'->0->'data'->'tokens'->>'synthetic-token'<>'3' then raise exception 'TEST shared member data';end if;
   ok:=false;
   begin perform public.aw_archive('put_member',mc,jsonb_build_object('name','stale','data',personal),(m->>'version')::integer-1);exception when others then if sqlerrm like '%AW_VERSION_CONFLICT%' then ok:=true;else raise;end if;end;
