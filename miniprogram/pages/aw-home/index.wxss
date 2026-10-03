@@ -1,0 +1,3 @@
+@import "../../utils/aw/theme.wxss";
+.module-entry { display:flex; align-items:center; justify-content:space-between; min-height:120rpx; }
+.entry-arrow { font-size:48rpx; color:#a94d16; margin-left:20rpx; }

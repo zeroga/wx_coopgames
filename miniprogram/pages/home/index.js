@@ -8,6 +8,6 @@ Page({
       wx.showToast({ title: '入口已预留', icon: 'none' })
       return
     }
-    wx.navigateTo({ url: '/pages/game/index?game=' + key })
+    wx.navigateTo({ url: key === 'aw' ? '/pages/aw-home/index' : '/pages/game/index?game=' + key })
   }
 })
