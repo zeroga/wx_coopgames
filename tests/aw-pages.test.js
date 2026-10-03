@@ -7,7 +7,7 @@ function hydrate(def, component=false) {
   const p=Object.assign({},component?def.methods:def)
   p.data=JSON.parse(JSON.stringify(def.data));p.properties={vehicleId:'',memberId:''};p.setData=function(update,cb){for(const [key,v] of Object.entries(update)){const parts=key.split('.');let at=this.data;for(const field of parts.slice(0,-1)){if(!at[field])at[field]={};at=at[field]}at[parts[parts.length-1]]=v}if(cb)cb()};p.triggerEvent=()=>{};return p
 }
-function page(name){let def;global.Page=d=>{def=d};require('../miniprogram/pages/'+name+'/index');return hydrate(def)}
+function page(name){let def;global.Page=d=>{def=d};const script='../miniprogram/pages/'+name+'/index';delete require.cache[require.resolve(script)];require(script);return hydrate(def)}
 function event(dataset,value){return {currentTarget:{dataset},detail:{value}}}
 const c=require('../miniprogram/utils/aw/catalog'),s=require('../miniprogram/utils/aw/store')
 test('create member and role, edit asset with two roles, cancel without mutation, reload every AW page',()=>{
@@ -42,4 +42,50 @@ test('all AW event bindings and referenced routes resolve',()=>{
     for(const m of text.matchAll(/\b(?:bind|catch)(?::)?(?:tap|input|blur|change|touchstart|touchmove|touchend|saved|cancel)="([A-Za-z]+)"/g))assert.equal(typeof methods[m[1]],'function',dir+' '+m[1])
   }
   const app=require('../miniprogram/app.json');for(const route of app.pages)assert(fs.existsSync(path.join(__dirname,'../miniprogram',route+'.wxml')))
+})
+test('vehicle editor visibility follows open/cancel events and member empty state',()=>{
+  const vm=require('node:vm')
+  function visible(expression,data){
+    assert(expression.startsWith('{{') && expression.endsWith('}}'), 'wx:if requires a data binding')
+    return !!vm.runInNewContext(expression.slice(2,-2),data)
+  }
+  const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/components/aw-asset-editor/index.wxml'),'utf8')
+  const emptyCondition=markup.match(/<view wx:if="([^"]+)" class="empty"/)[1]
+  let def;global.Component=d=>{def=d}
+  const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
+  for(const name of ['aw-vehicle','aw-fleet']){
+    const parent=page(name),template=fs.readFileSync(path.join(__dirname,'../miniprogram/pages',name,'index.wxml'),'utf8')
+    const tag=template.match(/<aw-asset-editor\b[^>]+/)[0]
+    const condition=tag.match(/wx:if="([^"]+)"/)[1],handler=tag.match(/bind:cancel="([^"]+)"/)[1]
+    assert.equal(visible(condition,parent.data),false)
+    if(name==='aw-vehicle')parent.edit(event({member:'A'}));else parent.editAsset(event({id:c.tables.vehicles[0].id,member:'A'}))
+    assert.equal(visible(condition,parent.data),true)
+    const editor=hydrate(def,true),before=s.exportText()
+    editor.triggerEvent=eventName=>{assert.equal(eventName,'cancel');parent[handler]()}
+    editor.note(event({},'取消不保存'));editor.cancel()
+    assert.equal(visible(condition,parent.data),false)
+    assert.equal(s.exportText(),before)
+  }
+  assert.equal(visible(emptyCondition,{members:[]}),true)
+  assert.equal(visible(emptyCondition,{members:[{id:'A',name:'Zero',active:true}]}),false)
+})
+
+test('filter panel opens, switches and closes while retaining conditions; factory chip resets',()=>{
+  const p=page('aw-catalog');p.onLoad()
+  assert.equal(p.data.filterTab,'')
+  p.showFilters(event({tab:'base'}));assert.equal(p.data.filterTab,'base')
+  p.toggle(event({key:'tiers',value:'10'}));p.switchFilters(event({tab:'cap'}));assert.equal(p.data.filterTab,'cap')
+  p.factory(event({},true));assert(p.data.selected.some(x=>x.key==='factory'))
+  p.closeFilters();assert.equal(p.data.filterTab,'');assert.equal(p.data.filters.tiers[0],'10');assert.equal(p.data.filters.factory,true)
+  p.remove(event({key:'factory',value:true}));assert.equal(p.data.filters.factory,false)
+  p.clear();assert.equal(p.data.selected.length,0)
+})
+test('responsibility-only editing keeps implicit personal assets implicit',()=>{
+  const s0=require('../miniprogram/utils/aw/store'),fleet=require('../miniprogram/utils/aw/fleet')
+  const next=fleet.clone(s0.load()),member=next.members[0],vid=c.tables.vehicles[1].id
+  const a=fleet.ensureAsset(next,member.id,vid);a.explicit=false;s0.save(next)
+  let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script)
+  const p=hydrate(def,true),editable=s0.canEdit;p.properties={vehicleId:vid,memberId:member.id}
+  s0.canEdit=()=>false
+  try{p.prepare();p.pickLevel(event({index:0},2));p.save();assert.equal(fleet.getAsset(s0.load(),member.id,vid).explicit,false)}finally{s0.canEdit=editable}
 })

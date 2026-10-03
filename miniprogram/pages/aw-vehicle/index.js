@@ -2,7 +2,7 @@ const catalog = require('../../utils/aw/catalog')
 const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
 Page({
-  data: { id: '', vehicle: null, configIndex: 0, team: [], extra: 0, showTeam: false, showMore: false, showBasis: false, expandedWeapons: {}, editor: false, editMemberId: '' },
+  data: { id: '', vehicle: null, configIndex: 0, team: [], extra: 0, showTeam: false, showMore: false, showBasis: false, showAbilities: false, showSources: false, expandedWeapons: {}, editor: false, editMemberId: '' },
   onLoad(o) { this.setData({ id: o.id || '' }); this.refresh() },
   onShow() { this.refresh() },
   refresh() {
@@ -15,6 +15,8 @@ Page({
     wx.setNavigationBarTitle({title:v.displayName})
   },
   config(e) { this.setData({ configIndex:Number(e.currentTarget.dataset.index) }) },
+  abilities() { this.setData({showAbilities:!this.data.showAbilities}) },
+  sources() { this.setData({showSources:!this.data.showSources}) },
   more() { this.setData({showMore:!this.data.showMore}) },
   basis() { this.setData({showBasis:!this.data.showBasis}) },
   allTeam() { this.setData({showTeam:!this.data.showTeam});this.refresh() },

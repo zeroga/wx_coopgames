@@ -1,41 +1,89 @@
-const {test,beforeEach} = require('node:test')
+const {test,beforeEach}=require('node:test')
 const assert=require('node:assert/strict')
-const memory=new Map();let failStorage=false
-// Every test uses a new profile scope. No real network requests or credentials.
-global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>{if(failStorage)throw Error('full');memory.set(k,JSON.parse(JSON.stringify(v)))},removeStorageSync:k=>memory.delete(k)}
-const cache=require('../miniprogram/utils/cache'),remote=require('../miniprogram/utils/supabase'),store=require('../miniprogram/utils/aw/store'),fleet=require('../miniprogram/utils/aw/fleet')
-let version=0,cloud=null,puts=0,index=0
+const memory=new Map();let failStorage=false,store,serial,teams,members
+const fleet=require('../miniprogram/utils/aw/fleet'),archives=require('../miniprogram/utils/aw/archives'),codes=require('../miniprogram/utils/aw/codes'),catalog=require('../miniprogram/utils/aw/catalog'),remote=require('../miniprogram/utils/supabase')
+global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>{if(failStorage)throw Error('full');memory.set(k,fleet.clone(v))},removeStorageSync:k=>memory.delete(k)}
+function row(type,name,data){const n=++serial,id='00000000-0000-4000-8000-'+String(n).padStart(12,'0'),code='AW-'+type+'-'+n.toString(16).toUpperCase().padStart(32,'0');return {id,code,name,data,version:1,members:[]}}
+function snapshot(t){return {...fleet.clone(t),members:t.members.map(m=>({...fleet.clone(members[m.id]),active:m.active,order:m.order,code:undefined}))}}
+function freshStore(){delete require.cache[require.resolve('../miniprogram/utils/aw/store')];return require('../miniprogram/utils/aw/store')}
 beforeEach(()=>{
- failStorage=false;version=0;cloud=null;puts=0
- cache.setRemote('synthetic-'+(++index),'A'.repeat(20));store.load()
- remote.openProfile=async()=>({profileData:{users:{A:'共享玩家'}}})
- remote.getGameState=async()=>({exists:!!cloud,state:cloud,version})
- remote.putGameState=async(_id,_code,_key,s)=>{cloud=fleet.clone(s);puts++;return {version:++version}}
- remote.patchProfile=async()=>({})
+  memory.clear();failStorage=false;serial=0;teams={};members={};store=freshStore()
+  remote.awArchive=async(action,code,payload={},version)=>{
+    if(action==='create_member'){const r=row('M',payload.name,payload.data||{assets:{},tokens:{},routes:{},confirmedRewards:{},confirmedRequirements:{}});members[r.id]=r;return fleet.clone(r)}
+    if(action==='create_team'){const r=row('T',payload.name,{roles:[],assignments:{},dependencies:[],legacyAudit:[]});teams[r.id]=r;return fleet.clone(r)}
+    const m=Object.values(members).find(m=>m.code===code),t=Object.values(teams).find(t=>t.code===code)
+    if(action==='open_member'){if(!m)throw Error('MEMBER_NOT_FOUND');return fleet.clone(m)}
+    if(action==='put_member'){if(version!==m.version)throw Error('AW_VERSION_CONFLICT');m.name=payload.name;m.data=fleet.clone(payload.data);m.version++;return fleet.clone(m)}
+    if(!t)throw Error('TEAM_NOT_FOUND')
+    if(action==='open_team')return snapshot(t)
+    if(version!==t.version)throw Error('AW_VERSION_CONFLICT')
+    if(action==='link_member'){const m=Object.values(members).find(m=>m.code===payload.memberCode);if(!t.members.some(x=>x.id===m.id))t.members.push({id:m.id,active:true,order:t.members.length});t.version++;return snapshot(t)}
+    if(action==='unlink_member'){t.members=t.members.filter(m=>m.id!==payload.memberId);t.version++;return snapshot(t)}
+    if(action==='put_team'){t.data=fleet.clone(payload.data);t.name=payload.name;t.members=payload.members;t.version++;return snapshot(t)}
+    throw Error('UNKNOWN_ACTION')
+  }
 })
-test('pull loads stable shared users and save/push persists one whole AW state',async()=>{
- await store.pull();assert.equal(store.load().members[0].id,'A')
- const next=fleet.clone(store.load());next.roles.push({id:'r',name:'职责',order:0});store.save(next)
- await store.push();assert.equal(puts,1);assert.equal(store.dirty,false);assert.equal(cloud.roles.length,1)
+function localMember(){const s=fleet.clone(store.load());s.members.push({id:'local',name:'Zero',active:true,order:0});s.roles.push({id:'role',name:'抗线',order:0});fleet.saveAsset(s,'local',catalog.tables.vehicles[0].id,'owned','备注',[{roleId:'role',level:'primary'}]);store.save(s);return s}
+test('typed codes preserve all characters and reject wrong-entry and malformed codes',()=>{
+ const t='AW-T-'+ 'A'.repeat(32),m='AW-M-'+ 'B'.repeat(32)
+ assert.equal(codes.parse(t.toLowerCase(),'team').code,t);assert.equal(codes.parse(m,'member').type,'member')
+ assert.throws(()=>codes.parse(m,'team'),/成员码/);assert.throws(()=>codes.parse(t,'member'),/车队码/);assert.throws(()=>codes.parse('B'.repeat(20)),/完整/)
 })
-test('cloud version conflict prevents writes and preserves local changes',async()=>{
- await store.pull();const next=fleet.clone(store.load());next.members[0].name='本地改名';store.save(next);version=1
- await assert.rejects(store.push(),/团队数据已更新/);assert.equal(puts,0);assert.equal(store.load().members[0].name,'本地改名');assert(store.dirty)
+test('publishing remaps every stable relation and separates member vehicles from team duties',async()=>{
+ localMember();store.setCurrentMember('local');await store.createTeam('测试车队')
+ const s=store.load(),id=s.members[0].id,m=members[id],t=Object.values(teams)[0]
+ assert.notEqual(id,'local');assert.equal(store.currentMember(),id);assert.match(store.memberInfo(id).code,/^AW-M-/);assert.match(store.remoteInfo().teamCode,/^AW-T-/)
+ assert.equal(Object.values(m.data.assets)[0].status,'owned');assert(!('roles' in m.data));assert(!('assets' in t.data));assert.equal(Object.values(t.data.assignments)[0].assetId.split('~')[0],id);assert.equal(store.dirty,false)
 })
-test('edits during upload remain dirty and are not mistakenly marked synchronized',async()=>{
- await store.pull();const next=fleet.clone(store.load());next.members[0].name='第一版';store.save(next)
- remote.putGameState=async(_id,_code,_key,s)=>{cloud=fleet.clone(s);const newer=fleet.clone(store.load());newer.members[0].name='第二版';store.save(newer);return {version:++version}}
- await store.push();assert.equal(cloud.members[0].name,'第一版');assert.equal(store.load().members[0].name,'第二版');assert(store.dirty)
+test('member attachment is idempotent and one member can belong to independent teams',async()=>{
+ localMember();await store.createTeam('Team A');const id=store.load().members[0].id,mc=store.memberInfo(id).code,first=Object.values(teams)[0]
+ await store.attachMember(mc);await store.push();assert.equal(store.load().members.length,1)
+ store.localTeam();store.save(fleet.empty({}));await store.attachMember(mc);await store.createTeam('Team B');const second=Object.values(teams)[1]
+ assert.equal(first.members[0].id,second.members[0].id);assert.equal(second.data.roles.length,0);assert.equal(first.data.roles[0].name,'抗线')
 })
-test('edits during download prevent replacing local state',async()=>{
- remote.getGameState=async()=>{const next=fleet.clone(store.load());next.members.push({id:'mine',name:'本地',active:true,order:0});store.save(next);return {exists:false,version:0}}
- await assert.rejects(store.pull(),/本地发生改动/);assert.equal(store.load().members[0].id,'mine')
+test('wrong code type fails before any remote request',async()=>{
+ remote.awArchive=async()=>{throw Error('network should not be called')}
+ await assert.rejects(store.openTeam('AW-M-'+'A'.repeat(32)),/成员码/)
+ await assert.rejects(store.attachMember('AW-T-'+'A'.repeat(32)),/车队码/)
 })
-test('storage failure rolls back state and reports failed save',()=>{
- const before=store.exportText(),next=fleet.clone(store.load());next.roles.push({id:'r',name:'职责',order:0});failStorage=true
- assert.throws(()=>store.save(next),/本地存储失败/);assert.equal(store.exportText(),before)
+test('team version conflicts preserve local responsibilities and prevent stale writes',async()=>{
+ localMember();await store.createTeam('Team');const t=Object.values(teams)[0],s=fleet.clone(store.load());s.roles[0].name='本地修改';store.save(s);t.version++
+ await assert.rejects(store.push(),/云端存档已更新/);assert.equal(t.data.roles[0].name,'抗线');assert.equal(store.load().roles[0].name,'本地修改');assert(store.dirty)
 })
-test('profile name partial failure retains retry status after game state succeeds',async()=>{
- await store.pull();store.save(fleet.clone(store.load()));remote.patchProfile=async()=>{throw Error('network')}
- await assert.rejects(store.push(),/玩家名称同步失败/);assert.equal(version,1);assert(store.dirty)
+test('member version conflict does not overwrite data or upload subsequent team changes',async()=>{
+ localMember();await store.createTeam('Team');const id=store.load().members[0].id,s=fleet.clone(store.load());s.members[0].name='本地';store.save(s);members[id].version++
+ await assert.rejects(store.push(),/云端存档已更新/);assert.equal(store.load().members[0].name,'本地');assert.equal(members[id].name,'Zero');assert(store.memberInfo(id).dirty)
+})
+test('joining via team code gives read-only personal data but permits responsibility edits',async()=>{
+ localMember();await store.createTeam('Team');const tc=store.remoteInfo().teamCode,id=store.load().members[0].id
+ memory.delete('coopgame.state.aw.v2.members');memory.delete('coopgame.state.aw.v2.session');store=freshStore();await store.openTeam(tc)
+ assert.equal(store.canEdit(id),false)
+ const next=fleet.clone(store.load());next.members[0].name='不允许';assert.throws(()=>store.save(next),/只读/);assert.equal(store.load().members[0].name,'Zero')
+ const duties=fleet.clone(store.load());duties.roles[0].name='车队职责';store.save(duties);await store.push();assert.equal(Object.values(teams)[0].data.roles[0].name,'车队职责')
+ await store.attachMember(members[id].code);assert.equal(store.canEdit(id),true)
+})
+test('unlink preserves the independent member archive and another team link',async()=>{
+ localMember();await store.createTeam('A');const id=store.load().members[0].id,mc=store.memberInfo(id).code
+ store.localTeam();await store.attachMember(mc);await store.createTeam('B');await store.unlinkMember(id)
+ assert.equal(store.load().members.length,0);assert.equal(Object.values(teams)[0].members.length,1);assert.equal(Object.values(teams)[1].members.length,0);assert.equal(Object.values(members[id].data.assets)[0].status,'owned')
+})
+test('storage failure rolls back state and dirty flags',()=>{
+ const before=store.exportText(),next=fleet.clone(store.load());next.members.push({id:'x',name:'新成员',active:true,order:0});failStorage=true
+ assert.throws(()=>store.save(next),/本地存储失败/);failStorage=false;assert.equal(store.exportText(),before);assert.equal(store.dirty,false)
+})
+test('sync blocks edits and switching; failures preserve retryable personal versions',async()=>{
+ localMember();await store.createTeam('Team');let calls=0;const original=remote.awArchive
+ remote.awArchive=async(...args)=>{if(args[0]==='put_member'){calls++;assert.throws(()=>store.save(fleet.clone(store.load())),/正在同步/);assert.throws(()=>store.localTeam(),/正在同步/)}if(args[0]==='put_team')throw Error('network');return original(...args)}
+ const next=fleet.clone(store.load());next.members[0].name='改名';next.roles[0].name='职责';store.save(next)
+ await assert.rejects(store.push(),/network/);assert.equal(calls,1);assert.equal(store.memberInfo(next.members[0].id).dirty,false);assert(store.dirty)
+ remote.awArchive=original;await store.push();assert.equal(calls,1);assert.equal(store.dirty,false)
+})
+test('legacy local v1 is backed up and converted without touching its original cache',()=>{
+ const old=fleet.empty({A:'旧玩家'});memory.set('coopgame.state.aw.v1.local',{state:old,version:2,dirty:true});store=freshStore()
+ assert.equal(store.load().members[0].name,'旧玩家');assert.equal(store.load().schemaVersion,2);assert.equal(memory.get('coopgame.state.aw.v1.local').state.schemaVersion,1);assert(memory.has('coopgame.state.aw.v2.legacy-backup'))
+})
+test('team projection excludes auto prerequisite assets and personal-only data',()=>{
+ const s=localMember(),implicit=fleet.ensureAsset(s,'local',catalog.tables.vehicles[1].id)
+ const personal=archives.personal(s,'local'),team=archives.team(s)
+ assert(!personal.assets[implicit.vehicleId]);assert(!team.assets);assert(!team.tokens);assert.equal(Object.values(personal.assets).length,1)
 })

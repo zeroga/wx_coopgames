@@ -1,0 +1,52 @@
+-- Synthetic records in new v2 tables only. Never touches imported vehicle data or old saves.
+begin;
+set local statement_timeout='15s';
+set local role anon;
+do $$
+declare
+  m jsonb;t jsonb;t2 jsonb;linked jsonb;opened jsonb;
+  mc text;tc text;tc2 text;mid text;ok boolean;
+  personal jsonb := '{"assets":{"synthetic-vehicle":{"status":"owned","note":"test","explicit":true}},"tokens":{"synthetic-token":2},"routes":{},"confirmedRewards":{},"confirmedRequirements":{}}';
+  team jsonb;
+begin
+  m:=public.aw_archive('create_member',null,jsonb_build_object('name','AW V2 synthetic member','data',personal));
+  mc:=m->>'code';mid:=m->>'id';
+  if mc !~ '^AW-M-[A-F0-9]{32}$' then raise exception 'TEST member prefix';end if;
+  t:=public.aw_archive('create_team',null,'{"name":"AW V2 synthetic team"}');tc:=t->>'code';
+  t2:=public.aw_archive('create_team',null,'{"name":"AW V2 second team"}');tc2:=t2->>'code';
+  if tc !~ '^AW-T-[A-F0-9]{32}$' then raise exception 'TEST team prefix';end if;
+  linked:=public.aw_archive('link_member',tc,jsonb_build_object('memberCode',mc),(t->>'version')::integer);
+  if jsonb_array_length(linked->'members')<>1 or linked->'members'->0->'data'->'tokens'->>'synthetic-token'<>'2' then raise exception 'TEST link';end if;
+  if linked::text like '%'||mc||'%' then raise exception 'TEST leaked member code';end if;
+  t2:=public.aw_archive('link_member',tc2,jsonb_build_object('memberCode',mc),(t2->>'version')::integer);
+  team:=jsonb_build_object('roles','[{"id":"r","name":"抗线","order":0}]'::jsonb,'assignments',jsonb_build_object(mid||'~synthetic-vehicle~r',jsonb_build_object('id',mid||'~synthetic-vehicle~r','assetId',mid||'~synthetic-vehicle','roleId','r','level','primary','source','manual')),'dependencies','[]'::jsonb,'legacyAudit','[]'::jsonb);
+  t:=public.aw_archive('put_team',tc,jsonb_build_object('name','Team A','data',team),(linked->>'version')::integer);
+  if jsonb_array_length(t2->'data'->'roles')<>0 then raise exception 'TEST cross team responsibilities';end if;
+  ok:=false;
+  begin perform public.aw_archive('put_team',tc,jsonb_build_object('name','stale','data',team),(linked->>'version')::integer);exception when others then if sqlerrm like '%AW_VERSION_CONFLICT%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST stale team write allowed';end if;
+  ok:=false;
+  begin perform public.aw_archive('put_member',tc,jsonb_build_object('name','wrong type','data',personal),(m->>'version')::integer);exception when others then if sqlerrm like '%MEMBER_CODE_REQUIRED%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST team code wrote member';end if;
+  ok:=false;
+  begin perform public.aw_archive('open_team',mc);exception when others then if sqlerrm like '%TEAM_CODE_REQUIRED%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST member code opened team';end if;
+  ok:=false;
+  begin perform public.aw_archive('open_member','AW-M-'||repeat('0',32));exception when others then if sqlerrm like '%MEMBER_NOT_FOUND%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST unknown code';end if;
+  m:=public.aw_archive('put_member',mc,jsonb_build_object('name','Renamed','data',jsonb_set(personal,'{tokens,synthetic-token}','3')),(m->>'version')::integer);
+  opened:=public.aw_archive('open_team',tc2);
+  if opened->'members'->0->>'name'<>'Renamed' or opened->'members'->0->'data'->'tokens'->>'synthetic-token'<>'3' then raise exception 'TEST shared member data';end if;
+  ok:=false;
+  begin perform public.aw_archive('put_member',mc,jsonb_build_object('name','stale','data',personal),(m->>'version')::integer-1);exception when others then if sqlerrm like '%AW_VERSION_CONFLICT%' then ok:=true;else raise;end if;end;
+  if not ok then raise exception 'TEST stale member write';end if;
+  t:=public.aw_archive('unlink_member',tc,jsonb_build_object('memberId',mid),(t->>'version')::integer);
+  if jsonb_array_length(t->'members')<>0 or t->'data'->'assignments'<>'{}'::jsonb then raise exception 'TEST unlink';end if;
+  opened:=public.aw_archive('open_member',mc);
+  if opened->'data'->'assets'->'synthetic-vehicle'->>'status'<>'owned' then raise exception 'TEST unlink deleted personal data';end if;
+  if has_table_privilege('anon','private.aw_member_saves','SELECT') or has_table_privilege('anon','private.aw_team_saves','UPDATE') then raise exception 'TEST direct table permission';end if;
+end;
+$$;
+reset role;
+select 'AW v2 synthetic RPC tests passed; no existing data modified' as result;
+rollback;

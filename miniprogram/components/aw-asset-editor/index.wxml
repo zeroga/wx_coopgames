@@ -1,24 +1,24 @@
 <view class="backdrop" catchtap="cancel"></view>
 <view class="sheet">
-  <view class="card-title">编辑玩家车辆</view>
-  <scroll-view scroll-y="{{true}}" class="sheet-content">
-    <view wx:if="!members.length" class="empty">还没有玩家。先添加玩家，再记录车辆。<button class="ghost" bindtap="manage">管理玩家</button></view>
+  <view class="sheet-head"><view><view class="card-title">安排成员车辆</view><view class="muted">{{vehicleName}}</view></view></view>
+  <scroll-view scroll-y="{{true}}" class="sheet-content {{members.length ? '' : 'short'}}">
+    <view wx:if="{{!members.length}}" class="empty">还没有玩家。先添加玩家，再记录车辆。<button class="ghost" bindtap="manage">管理玩家</button></view>
     <block wx:else="">
       <view class="label">玩家</view><picker range="{{members}}" range-key="name" value="{{playerIndex}}" bindchange="pickPlayer"><view class="picker">{{members[playerIndex].name}} ▾</view></picker>
-      <view class="label">车辆状态</view><picker range="{{statuses}}" value="{{statusIndex}}" bindchange="pickStatus"><view class="picker">{{statuses[statusIndex]}} ▾</view></picker>
+      <view wx:if="{{!editable}}" class="warning">个人资料只读，当前可修改车队职责。关联该成员的 AW-M 码后可修改车辆状态。</view><view class="label">车辆状态</view><picker disabled="{{!editable}}" range="{{statuses}}" value="{{statusIndex}}" bindchange="pickStatus"><view class="picker">{{statuses[statusIndex]}} ▾</view></picker>
       <view class="label">团队职责 · 每个职责独立设置</view>
-      <view wx:if="!rows.length" class="muted">暂无自定义职责，可以先保存车辆，稍后在车队中添加职责。</view>
+      <view wx:if="{{!rows.length}}" class="muted">暂无自定义职责，可以先保存车辆，稍后在车队中添加职责。</view>
       <view wx:for="{{rows}}" wx:key="id" class="line">
         <view class="row between"><text>{{item.name}}</text><picker range="{{levels}}" value="{{item.index}}" data-index="{{index}}" bindchange="pickLevel"><view class="picker">{{levels[item.index]}} ▾</view></picker></view>
-        <view wx:if="item.automatic" class="muted">当前为科技树自动过渡；不分配时仍由目标路线维护。</view>
-        <checkbox-group wx:if="item.index === 3" data-index="{{index}}" bindchange="pickTargets">
+        <view wx:if="{{item.automatic}}" class="muted">当前为科技树自动过渡；不分配时仍由目标路线维护。</view>
+        <checkbox-group wx:if="{{item.index === 3}}" data-index="{{index}}" bindchange="pickTargets">
           <view class="label">过渡服务的目标 · 可多选</view>
-          <label wx:for="{{item.targets}}" wx:for-item="target" wx:key="id" class="target"><checkbox value="{{target.id}}" checked="{{target.checked}}" color="#504060"/>{{target.name}}</label>
-          <view wx:if="!item.targets.length" class="muted">先为同玩家、同职责登记主力或备选目标。</view>
+          <label wx:for="{{item.targets}}" wx:for-item="target" wx:key="id" class="target"><checkbox value="{{target.id}}" checked="{{target.checked}}" color="#1c1a1e"/>{{target.name}}</label>
+          <view wx:if="{{!item.targets.length}}" class="muted">先为同玩家、同职责登记主力或备选目标。</view>
         </checkbox-group>
       </view>
-      <view class="label">备注</view><textarea value="{{note}}" bindinput="note" maxlength="1000" placeholder="玩家车辆备注"/>
+      <view class="label">备注</view><textarea value="{{note}}" bindinput="note" disabled="{{!editable}}" maxlength="1000" placeholder="玩家车辆备注"/>
     </block>
   </scroll-view>
-  <view class="actions"><button class="ghost" bindtap="cancel">取消</button><button class="primary" disabled="{{!members.length}}" bindtap="save">保存</button></view>
+  <view class="actions"><button class="ghost" bindtap="cancel">取消</button><button class="primary" disabled="{{!members.length}}" bindtap="save">{{editable ? '保存' : '保存职责'}}</button></view>
 </view>

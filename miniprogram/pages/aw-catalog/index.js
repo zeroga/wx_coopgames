@@ -2,7 +2,7 @@ const catalog = require('../../utils/aw/catalog')
 const store = require('../../utils/aw/store')
 function fresh() { return { query: '', tiers: [], classes: [], dealers: [], capabilities: [], ammoTypes: [], ammoTraits: [], acquisition: [], factory: false, penetration: '', speed: '', view: '', camo: '', premium: '', researchable: '' } }
 Page({
-  data: { filters: fresh(), results: [], selected: [], filterTab: '', limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
+  data: { filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
   onLoad() { this.options(); this.refresh() },
   onShow() { this.refresh() },
   options() {
@@ -22,7 +22,7 @@ Page({
     ;(this.data.capabilityGroups||[]).forEach(g=>g.options.forEach(o=>{choices['capabilities:'+o.value]=o.name}))
     ;['ammoTypes','ammoTraits'].forEach(key=>(this.data[key]||[]).forEach(o=>{choices[key+':'+o.value]=o.name}))
     ;(this.data.acquisitions||[]).forEach(o=>{choices['acquisition:'+o.value]=o.name})
-    const selected = []
+    const selected = []; if(f.factory)selected.push({key:'factory',value:true,name:'出厂能力'})
     ;['tiers','classes','dealers','capabilities','ammoTypes','ammoTraits','acquisition'].forEach(key=>f[key].forEach(value=>selected.push({key,value,name:choices[key+':'+value]||value})))
     ;[['penetration','穿深'],['speed','速度'],['view','视野'],['camo','隐蔽']].forEach(([key,name])=>{if(f[key] !== '') selected.push({key,value:f[key],name:name+' ≥ '+f[key]})})
     ;[['premium','高级车'],['researchable','当前可研发']].forEach(([key,name])=>{if(f[key]) selected.push({key,value:f[key],name:name+'：'+(f[key]==='yes'?'是':'否')})})
@@ -34,11 +34,13 @@ Page({
   },
   input(e) { const key=e.currentTarget.dataset.key; this.setData({ ['filters.'+key]:e.detail.value, limit:30 }); this.refresh() },
   toggle(e) { const {key,value}=e.currentTarget.dataset, values=this.data.filters[key].slice(), i=values.indexOf(value); if(i>=0) values.splice(i,1); else values.push(value); this.setData({['filters.'+key]:values,limit:30});this.refresh() },
-  remove(e) { const {key,value}=e.currentTarget.dataset; if(Array.isArray(this.data.filters[key])) this.toggle(e); else {this.setData({['filters.'+key]:'', premiumIndex:key==='premium'?0:this.data.premiumIndex,researchIndex:key==='researchable'?0:this.data.researchIndex});this.refresh()} },
+  remove(e) { const {key,value}=e.currentTarget.dataset; if(Array.isArray(this.data.filters[key])) this.toggle(e); else {this.setData({['filters.'+key]:key==='factory'?false:'', premiumIndex:key==='premium'?0:this.data.premiumIndex,researchIndex:key==='researchable'?0:this.data.researchIndex});this.refresh()} },
   clear() { this.setData({filters:fresh(),premiumIndex:0,researchIndex:0,limit:30}); this.refresh() },
   factory(e) { this.setData({'filters.factory':e.detail.value});this.refresh() },
   bool(e) { const key=e.currentTarget.dataset.key,i=Number(e.detail.value);this.setData({['filters.'+key]:['','yes','no'][i],[key==='premium'?'premiumIndex':'researchIndex']:i});this.refresh() },
   showFilters(e) { const tab=e.currentTarget.dataset.tab;this.setData({filterTab:this.data.filterTab===tab?'':tab}) },
+  switchFilters(e) { this.setData({filterTab:e.currentTarget.dataset.tab}) },
+  closeFilters() { this.setData({filterTab:''}) },
   open(e) { wx.navigateTo({url:'/pages/aw-vehicle/index?id='+e.currentTarget.dataset.id}) },
   nav(e) { wx.navigateTo({url:'/pages/aw-'+e.currentTarget.dataset.page+'/index'}) },
   onReachBottom() { this.setData({limit:this.data.limit+30});this.refresh() },

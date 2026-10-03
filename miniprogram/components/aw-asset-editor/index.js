@@ -3,7 +3,7 @@ const fleet = require('../../utils/aw/fleet')
 const catalog = require('../../utils/aw/catalog')
 Component({
   properties: { vehicleId: String, memberId: String },
-  data: { members: [], playerIndex: 0, statusIndex: 0, statuses: ['已拥有', '计划'], levels: ['不分配', '主力', '备选', '过渡'], rows: [], note: '', saving: false },
+  data: { members: [], playerIndex: 0, statusIndex: 0, statuses: ['已拥有', '计划'], levels: ['不分配', '主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '' },
   lifetimes: { attached() { this.prepare() } },
   observers: { 'vehicleId,memberId'() { if (this.properties.vehicleId) this.prepare() } },
   methods: {
@@ -28,7 +28,7 @@ Component({
         return { id: r.id, name: r.name, index: manual ? ['','primary','backup','transition'].indexOf(a.level) : 0, targets,
           automatic: a && a.source === 'tech_tree' }
       })
-      this.setData({ rows, statusIndex: asset && asset.status === 'planned' ? 1 : 0, note: asset && asset.note || '' })
+      this.setData({ editable: store.canEdit(m.id), vehicleName: (catalog.byId[this.properties.vehicleId] || {}).displayName || (catalog.byId[this.properties.vehicleId] || {}).name || '', rows, statusIndex: asset && asset.status === 'planned' ? 1 : 0, note: asset && asset.note || '' })
     },
     pickPlayer(e) { this.setData({ playerIndex: Number(e.detail.value) }); this.loadPlayer() },
     pickStatus(e) { this.setData({ statusIndex: Number(e.detail.value) }) },
@@ -41,7 +41,10 @@ Component({
       try {
         const m = this.data.members[this.data.playerIndex]; if (!m) throw new Error('请先添加玩家')
         const roles = this.data.rows.filter(r => r.index > 0).map(r => ({ roleId: r.id, level: ['','primary','backup','transition'][r.index], targetIds: r.targets.filter(t => t.checked).map(t => t.id) }))
-        store.save(fleet.saveAsset(fleet.clone(store.load()), m.id, this.properties.vehicleId, this.data.statusIndex ? 'planned' : 'owned', this.data.note.trim(), roles))
+        const next = fleet.clone(store.load()), previous = fleet.getAsset(next,m.id,this.properties.vehicleId), editable = store.canEdit(m.id), previousExplicit = previous && previous.explicit
+        fleet.saveAsset(next,m.id,this.properties.vehicleId,editable ? (this.data.statusIndex ? 'planned' : 'owned') : (previous && previous.status || 'planned'),editable ? this.data.note.trim() : (previous && previous.note || ''),roles)
+        if (!editable) fleet.getAsset(next,m.id,this.properties.vehicleId).explicit = previous ? previousExplicit : false
+        store.save(next)
         store.setCurrentMember(m.id); this.triggerEvent('saved'); wx.showToast({ title: '已保存本地', icon: 'success' })
       } catch (e) { wx.showModal({ title: '无法保存', content: e.message, showCancel: false }) }
     }

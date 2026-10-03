@@ -7,7 +7,12 @@ mini = root / 'miniprogram'
 for p in mini.rglob('*.js'):
     subprocess.run(['node', '--check', str(p)], check=True, capture_output=True)
 for p in list((mini / 'pages').glob('aw-*/index.wxml')) + list((mini / 'components').glob('aw-*/index.wxml')):
-    ET.fromstring('<root xmlns:wx="urn:wx" xmlns:bind="urn:bind">' + p.read_text() + '</root>')
+    tree = ET.fromstring('<root xmlns:wx="urn:wx" xmlns:bind="urn:bind">' + p.read_text() + '</root>')
+    for node in tree.iter():
+        for directive in ['if', 'elif']:
+            condition = node.get('{urn:wx}' + directive)
+            if condition is not None:
+                assert condition.strip().startswith('{{') and condition.strip().endswith('}}'), f'{p}: wx:{directive} must bind an expression: {condition}'
     for imp in re.findall(r'@import "([^"]+)"', p.with_suffix('.wxss').read_text()):
         assert (p.parent / imp).exists(), imp
 app = json.loads((mini / 'app.json').read_text())
