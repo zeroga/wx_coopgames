@@ -1,5 +1,5 @@
 <view class="vehicle-label {{variant === 'hero' ? 'vehicle-label-hero' : ''}}">
-  <view class="vehicle-badge vehicle-class" aria-label="{{className}}"><view class="vehicle-icon"><view class="type-shape type-{{shape}}"></view></view><text class="vehicle-class-code">{{classCode}}</text></view>
+  <view class="vehicle-badge vehicle-class" aria-label="{{className}}"><text class="vehicle-class-code">{{classCode}}</text></view>
   <view class="vehicle-badge vehicle-tier"><text>{{tierText}}</text></view>
   <text class="vehicle-name">{{displayName}}</text>
 </view>

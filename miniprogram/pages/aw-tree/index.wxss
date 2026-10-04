@@ -1,1 +1,3 @@
 @import "../../utils/aw/theme.wxss";
+
+@import "../../utils/ui/components.wxss";

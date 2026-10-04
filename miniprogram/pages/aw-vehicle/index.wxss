@@ -32,3 +32,5 @@
 .ammo-hesh .ammo-type { background:#e3f3e7; color:#257341; }
 .ammo-smoke { border-left-color:#b8b5bd; }
 .ammo-smoke .ammo-type { background:#fff; color:#514a58; border:1rpx solid #d9d5df; }
+
+@import "../../utils/ui/components.wxss";

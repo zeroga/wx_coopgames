@@ -7,7 +7,7 @@
     <view class="sync {{cloudStatus==='已同步'?'ok':''}}">● {{cloudStatus}}</view>
   </view>
 
-  <view class="cloud card">
+  <view class="ui-card cloud card">
     <view class="cloud-title">云存档</view>
     <view class="muted cloud-desc">Supabase 是主存档；本地只保留缓存。</view>
 
@@ -16,9 +16,9 @@
         <view class="code-meta"><text class="code-label">当前合作码</text><text class="code-value">{{shareCode}}</text></view>
       </view>
       <view class="cloud-actions cloud-actions-three">
-        <button class="btn btn-ghost" bindtap="copyShareCode">复制</button>
-        <button class="btn btn-primary" bindtap="loadCloud">刷新</button>
-        <button class="btn btn-ghost" bindtap="switchCloud">切换</button>
+        <button class="ui-button btn btn-ghost" bindtap="copyShareCode">复制</button>
+        <button class="ui-button btn btn-primary" bindtap="loadCloud">刷新</button>
+        <button class="ui-button btn btn-ghost" bindtap="switchCloud">切换</button>
       </view>
     </block>
 
@@ -27,13 +27,13 @@
         <input class="join-input" maxlength="20" placeholder="输入20位合作码" value="{{joinCode}}" bindinput="inputJoin"/>
       </view>
       <view class="cloud-actions">
-        <button class="btn btn-primary" bindtap="joinCloud">导入已有档</button>
-        <button class="btn btn-ghost" bindtap="createCloud">创建新档</button>
+        <button class="ui-button btn btn-primary" bindtap="joinCloud">导入已有档</button>
+        <button class="ui-button btn btn-ghost" bindtap="createCloud">创建新档</button>
       </view>
     </block>
   </view>
 
-  <view class="identity card">
+  <view class="ui-card identity card">
     <view class="id-title">合作成员</view>
     <view class="id-row"><view class="dot me"></view><text class="id-label">用户 A</text><input class="name-input" value="{{state.userNames.A}}" data-slot="A" bindblur="editUser"/></view>
     <view class="id-row"><view class="dot friend"></view><text class="id-label">用户 B</text><input class="name-input" value="{{state.userNames.B}}" data-slot="B" bindblur="editUser"/></view>
@@ -45,21 +45,21 @@
   </view>
 
   <view class="tabs">
-    <view class="tab {{platform==='pc'?'active':''}}" data-platform="pc" bindtap="switchPlatform">PC</view>
-    <view class="tab {{platform==='console'?'active':''}}" data-platform="console" bindtap="switchPlatform">主机</view>
+    <view class="ui-tab tab {{platform==='pc'?'active':''}}" data-platform="pc" bindtap="switchPlatform">PC</view>
+    <view class="ui-tab tab {{platform==='console'?'active':''}}" data-platform="console" bindtap="switchPlatform">主机</view>
   </view>
 
-  <view class="collapse-tools card">
+  <view class="ui-card collapse-tools card">
     <view><view class="collapse-title">折叠已完成</view><view class="muted collapse-desc">Complete 后自动收起；仍可逐项展开查看。</view></view>
     <switch checked="{{collapseCompleted}}" bindchange="toggleCollapseCompleted" color="#58ba9b"/>
   </view>
 
   <view class="steps">
-    <view class="step card" wx:for="{{visibleSteps}}" wx:key="id">
+    <view class="ui-card step card" wx:for="{{visibleSteps}}" wx:key="id">
       <view class="step-head">
         <view class="order">{{item.no<10?'0'+item.no:item.no}}</view>
         <view class="step-title-wrap"><view class="season">{{item.season}}</view><view class="step-title">{{item.title}}</view><view class="step-sub">{{item.sub}}</view></view>
-        <view class="head-actions"><text data-id="{{item.id}}" data-dir="-1" bindtap="moveStep">↑</text><text data-id="{{item.id}}" data-dir="1" bindtap="moveStep">↓</text><text class="remove" data-id="{{item.id}}" bindtap="removeStep">×</text></view>
+        <view class="head-actions"><text class="ui-icon-touch" data-id="{{item.id}}" data-dir="-1" bindtap="moveStep">↑</text><text class="ui-icon-touch" data-id="{{item.id}}" data-dir="1" bindtap="moveStep">↓</text><text class="ui-icon-touch remove" data-id="{{item.id}}" bindtap="removeStep">×</text></view>
       </view>
 
       <view class="complete-summary" wx:if="{{item.collapsed}}" data-id="{{item.id}}" bindtap="toggleStepCollapse">
@@ -68,31 +68,31 @@
       </view>
 
       <block wx:else>
-        <view class="creator-row"><text class="section-label">创建人</text><view class="segment"><view class="seg {{item.creator==='A'?'seg-a':''}}" data-id="{{item.id}}" data-slot="A" bindtap="setCreator">{{state.userNames.A}}</view><view class="seg {{item.creator==='B'?'seg-b':''}}" data-id="{{item.id}}" data-slot="B" bindtap="setCreator">{{state.userNames.B}}</view></view><text class="creator-state" wx:if="{{!item.creator}}">未标记</text></view>
+        <view class="creator-row"><text class="section-label">创建人</text><view class="segment"><view class="ui-option sr-option" data-id="{{item.id}}" data-slot="A" bindtap="setCreator"><view class="seg {{item.creator==='A'?'seg-a':''}}">{{state.userNames.A}}</view></view><view class="ui-option sr-option" data-id="{{item.id}}" data-slot="B" bindtap="setCreator"><view class="seg {{item.creator==='B'?'seg-b':''}}">{{state.userNames.B}}</view></view></view><text class="creator-state" wx:if="{{!item.creator}}">未标记</text></view>
 
         <view class="columns">
           <view class="col">
             <view class="col-head"><text>目标</text><text>{{item.gDone}}/{{item.gAll}}</text></view>
             <view class="row" wx:for="{{item.goals}}" wx:key="id" wx:for-item="goal" wx:for-index="gi">
-              <view class="check {{goal.done?'checked':''}}" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="toggleGoal">{{goal.done?'✓':''}}</view>
+              <view class="ui-icon-touch" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="toggleGoal"><view class="check {{goal.done?'checked':''}}">{{goal.done?'✓':''}}</view></view>
               <input class="row-input {{goal.done?'done':''}}" value="{{goal.text}}" data-id="{{item.id}}" data-gi="{{gi}}" bindblur="editGoal"/>
-              <text class="x" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="deleteGoal">×</text>
+              <text class="ui-icon-touch x" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="deleteGoal">×</text>
             </view>
-            <view class="add" data-id="{{item.id}}" bindtap="addGoal">＋ 添加目标</view>
+            <view class="ui-tap-row add" data-id="{{item.id}}" bindtap="addGoal">＋ 添加目标</view>
           </view>
 
           <view class="col">
             <view class="col-head"><text>车辆</text><text>{{item.vGot}}/{{item.vAll}}</text></view>
             <view class="vehicle" wx:for="{{item.vehicles}}" wx:key="id" wx:for-item="vehicle" wx:for-index="vi">
-              <view class="vehicle-main"><view class="check {{vehicle.got?'checked':''}}" data-id="{{item.id}}" data-vi="{{vi}}" bindtap="toggleVehicle">{{vehicle.got?'✓':''}}</view><text class="vehicle-name {{vehicle.got?'done':''}}">{{vehicle.name}}</text></view>
-              <view class="assign"><view class="assign-btn {{vehicle.owner==='A'?'assign-a':''}}" data-id="{{item.id}}" data-vi="{{vi}}" data-slot="A" bindtap="setOwner">{{state.userNames.A}}</view><view class="assign-btn {{vehicle.owner==='B'?'assign-b':''}}" data-id="{{item.id}}" data-vi="{{vi}}" data-slot="B" bindtap="setOwner">{{state.userNames.B}}</view></view>
+              <view class="vehicle-main"><view class="ui-icon-touch" data-id="{{item.id}}" data-vi="{{vi}}" bindtap="toggleVehicle"><view class="check {{vehicle.got?'checked':''}}">{{vehicle.got?'✓':''}}</view></view><text class="vehicle-name {{vehicle.got?'done':''}}">{{vehicle.name}}</text></view>
+              <view class="assign"><view class="ui-option sr-option" data-id="{{item.id}}" data-vi="{{vi}}" data-slot="A" bindtap="setOwner"><view class="assign-btn {{vehicle.owner==='A'?'assign-a':''}}">{{state.userNames.A}}</view></view><view class="ui-option sr-option" data-id="{{item.id}}" data-vi="{{vi}}" data-slot="B" bindtap="setOwner"><view class="assign-btn {{vehicle.owner==='B'?'assign-b':''}}">{{state.userNames.B}}</view></view></view>
             </view>
             <view class="empty muted" wx:if="{{item.vehicles.length===0}}">本阶段没有单列车辆</view>
           </view>
         </view>
 
         <textarea class="note" placeholder="备注" value="{{item.note}}" data-id="{{item.id}}" bindblur="editNote" auto-height></textarea>
-        <view class="complete-open-row" wx:if="{{item.complete}}" data-id="{{item.id}}" bindtap="toggleStepCollapse">
+        <view class="ui-tap-row complete-open-row" wx:if="{{item.complete}}" data-id="{{item.id}}" bindtap="toggleStepCollapse">
           <text class="stamp-inline">✓ COMPLETE</text><text>收起⌃</text>
         </view>
         <view class="stamp" wx:if="{{item.complete}}">COMPLETE</view>
@@ -100,12 +100,12 @@
     </view>
   </view>
 
-  <view class="add-season card">
+  <view class="ui-card add-season card">
     <view><view class="add-title">添加赛季 / 本体区域</view><view class="muted">赛季目录共 {{seasonCatalogCount}} 项；新增资料在独立管理页维护。</view></view>
     <picker range="{{availableLabels}}" value="{{addSeasonIndex}}" bindchange="pickSeason"><view class="picker">{{availableLabels[addSeasonIndex] || '没有可添加项'}} ▾</view></picker>
     <view class="add-season-actions">
-      <button class="btn btn-primary" bindtap="addSeason" disabled="{{availableSeasons.length===0}}">加入当前平台</button>
-      <button class="btn btn-ghost" bindtap="openSeasonManager">赛季资料管理</button>
+      <button class="ui-button btn btn-primary" bindtap="addSeason" disabled="{{availableSeasons.length===0}}">加入当前平台</button>
+      <button class="ui-button btn btn-ghost" bindtap="openSeasonManager">赛季资料管理</button>
     </view>
   </view>
 </view>

@@ -25,3 +25,5 @@
 .role-description { padding:0 12rpx 10rpx; margin-left:44px; }
 
 .role-group,.member-detail { margin:24rpx 0; }
+
+@import "../../utils/ui/components.wxss";

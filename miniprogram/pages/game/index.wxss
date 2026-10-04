@@ -5,3 +5,15 @@
 
 /* Complete folding */
 .collapse-tools{padding:18rpx 22rpx;margin:-4rpx 0 20rpx;display:flex;align-items:center;justify-content:space-between;gap:18rpx}.collapse-title{font-size:25rpx;font-weight:800}.collapse-desc{font-size:20rpx;margin-top:2rpx}.complete-summary{margin-top:18rpx;background:#eef7f3;border:1rpx solid rgba(43,139,108,.18);border-radius:14rpx;padding:18rpx 20rpx;display:flex;align-items:center;justify-content:space-between;gap:16rpx}.complete-summary-main{min-width:0;display:flex;align-items:center;gap:14rpx;flex-wrap:wrap}.complete-badge{font-size:23rpx;font-weight:900;color:#187458;letter-spacing:1rpx}.complete-count{font-size:21rpx;color:#5d6d67}.complete-expand{font-size:21rpx;color:#187458;font-weight:700;white-space:nowrap}.complete-open-row{margin-top:16rpx;display:flex;align-items:center;justify-content:space-between;padding:13rpx 16rpx;border-radius:12rpx;background:#eef7f3;color:#187458;font-size:21rpx;font-weight:700}.stamp-inline{font-weight:900;letter-spacing:1rpx}
+/* Preserve the existing SnowRunner faces inside non-overlapping touch slots. */
+.step-head { flex-wrap:wrap; }
+.step-title-wrap { min-width:180rpx; }
+.head-actions { gap:0; margin-left:auto; }
+.head-actions .ui-icon-touch { font-size:30rpx; }
+.sr-option { margin:0; }
+.segment { align-items:center; }
+.seg { box-sizing:border-box; text-align:center; }
+.assign { margin-left:calc(44px + 11rpx); flex-wrap:wrap; }
+.assign-btn { box-sizing:border-box; text-align:center; }
+@import "../../utils/ui/components.wxss";
+.sr-option { margin:0; }
