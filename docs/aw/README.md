@@ -56,6 +56,13 @@ python tools/build_aw_manual_data_package.py \
 每个数据 SQL 文件的 SHA256、行数和依赖顺序可在包内和仓库里的 manifest 中核对。
 固定 ZIP 元数据，同一输入可重复生成相同文件。
 
+### 当前游戏内科技树覆盖层
+
+小程序本地目录在原始数据包之外，额外应用 `data/aw/tech_tree_ingame_overrides.json`。
+该文件保存 2026-10-04 游戏内 Dealer 科技树总览的人工核验结果，生成工具会自动应用；详见 [科技树核验记录](./tech-tree-verification-2026-10-04.md)。
+
+覆盖层只修正/提升截图能证明的 `vehicle_progression_edges`，不会把总览图无法证明的升级节点、Token 数量或其他解锁条件标记完整，也不会自动写数据库或重打初始手动导入 ZIP。
+
 ## 4. 数据范围与验证状态
 
 本包基于前次公开目录快照，不是本次实时重查。
