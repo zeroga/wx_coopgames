@@ -9,7 +9,6 @@
 .form { overflow-y:auto; }
 .member-buttons { display:flex; flex-wrap:wrap; gap:12rpx; margin:16rpx 0; }
 .member-buttons .choice { flex:none; min-width:120rpx; }
-.source-row { padding:16rpx 0; }
 .player { min-height:88rpx; }
 .fleet-status .muted { margin-top:8rpx; }
 
@@ -24,3 +23,5 @@
 .role-actions { display:flex; align-items:center; justify-content:flex-end; margin-left:auto; flex:none; }
 .role-actions .quiet-control { padding:8rpx; }
 .role-description { padding:0 12rpx 10rpx; margin-left:44px; }
+
+.role-group,.member-detail { margin:24rpx 0; }

@@ -26,7 +26,7 @@ Component({
     search(e){this.setData({query:e.detail.value,limit:30});this.refresh()},
     more(){this.setData({limit:this.data.limit+30});this.refresh()},
     toggleCustom(e){if(this.data.saving||!this.data.editable)return;const d=fleet.clone(this.data.draft),id=e.currentTarget.dataset.id;d.mode='custom';if(!d.pathId&&this.data.options.length===1)d.pathId=this.data.options[0].id;d.customVehicleIds=d.customVehicleIds.includes(id)?d.customVehicleIds.filter(x=>x!==id):d.customVehicleIds.concat(id);this.setData({draft:d,error:''});this.refresh()},
-    keyboard(e){const h=Number(e.detail.height)||0,win=wx.getWindowInfo?wx.getWindowInfo().windowHeight:680;this.setData({keyboardHeight:h,contentHeight:Math.max(100,Math.min(win*.64,win-h-220))})},
+    keyboard(e){const h=Number(e.detail.height)||0,win=wx.getWindowInfo?wx.getWindowInfo().windowHeight:680;this.setData({keyboardHeight:h,contentHeight:Math.max(100,Math.min(win*.64,win-h-300))})},
     cancel(){if(!this.data.saving){updates.release(this);this.triggerEvent('cancel')}},
     async save(){
       if(this.data.saving||!this.data.editable)return

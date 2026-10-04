@@ -269,7 +269,7 @@ test('shared vehicle label reads live catalog identity, legendary tier and missi
   try{
     c.byId[v.id]={...original,name:'线上更新后的车名',name_zh:null,vehicle_class:'TD',tier:9,is_legendary:true}
     p.properties.catalogRevision=revision+1;def.observers['vehicleId, name, catalogRevision'].call(p)
-    assert.equal(p.data.displayName,'线上更新后的车名');assert.equal(p.data.classCode,'TD');assert.equal(p.data.tierText,'传奇');assert.notEqual(p.data.icon,'?')
+    assert.equal(p.data.displayName,'线上更新后的车名');assert.equal(p.data.classCode,'TD');assert.equal(p.data.tierText,'传奇');assert.equal(p.data.shape,'td')
   }finally{c.byId[v.id]=original}
   p.properties={vehicleId:'missing',name:'历史车辆'};p.refresh()
   assert.equal(p.data.displayName,'历史车辆');assert.equal(p.data.tierText,'T—');assert.equal(p.data.classCode,'—')

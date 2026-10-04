@@ -1,9 +1,19 @@
-.vehicle-label { display:flex; flex:1; align-items:flex-start; gap:10rpx; min-width:0; width:100%; box-sizing:border-box; text-align:left; color:inherit; line-height:1.45; }
-.vehicle-class { display:flex; align-items:center; flex:none; gap:5rpx; min-height:42rpx; color:inherit; }
-.vehicle-class-icon { font-size:25rpx; line-height:42rpx; }
-.vehicle-class-code { font-size:19rpx; font-weight:600; line-height:42rpx; opacity:.7; }
-.vehicle-tier { flex:none; min-width:44rpx; padding:3rpx 7rpx; margin-top:2rpx; border-radius:6rpx; background:#ece9ed; color:#514a58; font-size:21rpx; font-weight:700; text-align:center; box-sizing:border-box; }
+/* Fixed badge columns: wrapping names never move the type or tier. */
+.vehicle-label { display:flex; flex:1; align-items:flex-start; gap:10rpx; min-width:0; width:100%; box-sizing:border-box; text-align:left; color:#1c1a1e; line-height:1.45; }
+.vehicle-badge { display:flex; align-items:center; justify-content:center; flex:none; height:44rpx; margin-top:1rpx; box-sizing:border-box; border:1rpx solid #dedbe0; border-radius:8rpx; background:#ece9ed; color:#514a58; font-size:21rpx; font-weight:700; line-height:1; }
+.vehicle-class { width:100rpx; gap:8rpx; }
+.vehicle-tier { width:64rpx; }
+.vehicle-class-code { font-size:20rpx; }
+.vehicle-icon { display:flex; align-items:center; justify-content:center; flex:none; width:24rpx; height:24rpx; }
+.type-shape { box-sizing:border-box; border:3rpx solid #514a58; width:20rpx; height:20rpx; }
+.type-mbt,.type-lt { width:18rpx; height:18rpx; transform:rotate(45deg); }
+.type-mbt { position:relative; }
+.type-mbt::after { content:""; position:absolute; top:2rpx; left:2rpx; width:8rpx; height:8rpx; border:2rpx solid #514a58; box-sizing:border-box; }
+.type-afv { border-radius:50%; }
+.type-td { position:relative; width:0; height:0; border:0; border-left:12rpx solid transparent; border-right:12rpx solid transparent; border-bottom:22rpx solid #514a58; }
+.type-td::after { content:""; position:absolute; top:6rpx; left:-7rpx; border-left:7rpx solid transparent; border-right:7rpx solid transparent; border-bottom:13rpx solid #ece9ed; }
+.type-unknown { border-radius:4rpx; border-style:dashed; }
 .vehicle-name { flex:1; min-width:0; font-size:32rpx; font-weight:800; overflow-wrap:break-word; word-break:break-word; }
+.vehicle-label-hero { color:#fff; }
 .vehicle-label-hero .vehicle-name { font-size:40rpx; }
-.vehicle-label-hero .vehicle-class { margin-top:4rpx; }
-.vehicle-label-hero .vehicle-tier { margin-top:6rpx; background:#39343d; color:#fff; }
+.vehicle-label-hero .vehicle-badge { margin-top:7rpx; }

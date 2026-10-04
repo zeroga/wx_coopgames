@@ -1,0 +1,6 @@
+/* Class-only styles also work in isolated editing components. */
+.vehicle-card { display:block; box-sizing:border-box; width:100%; min-width:0; min-height:44px; padding:20rpx; margin:12rpx 0; border:1rpx solid #dedbe0; border-radius:14rpx; background:#fff; color:#1c1a1e; font-size:28rpx; text-align:left; line-height:1.5; }
+.vehicle-card.vehicle-heading { display:flex; }
+.vehicle-card.selected,.vehicle-card.active { border-color:#ea7428; background:#fff7ed; }
+.vehicle-card.vehicle-warning { border-color:#e5c98f; background:#fff7ed; }
+.vehicle-card-note { padding-left:184rpx; margin-top:8rpx; color:#6b6370; font-size:23rpx; line-height:1.6; }

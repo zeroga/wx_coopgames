@@ -11,7 +11,6 @@
 .filter-tab { display:inline-block; box-sizing:border-box; min-height:88rpx; padding:20rpx 24rpx; border-radius:12rpx; background:#ece9ed; color:#6b6370; font-size:28rpx; margin:6rpx 12rpx 6rpx 0; }
 .filter-tab.active { background:#1c1a1e; color:#fff; }
 .vehicle-name { font-size:32rpx; font-weight:900; line-height:1.35; flex:1; }
-.vehicle-card { margin:14rpx 0; }
 .vehicle-meta { margin:8rpx 0; }
 
 .filters .tag { margin:0; }

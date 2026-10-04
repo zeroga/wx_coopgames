@@ -7,7 +7,7 @@
   <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="muted">资料 {{catalogInfo.versionText}}</text></view>
   <view wx:if="{{catalogInfo.error}}" class="warning">{{catalogInfo.status}} · {{catalogInfo.error}}</view>
   <view wx:if="{{error}}" class="warning">{{error}}</view>
-  <view wx:for="{{results}}" wx:key="id" class="card vehicle-card" data-id="{{item.id}}" bindtap="open">
+  <view wx:for="{{results}}" wx:key="id" class="vehicle-card" data-id="{{item.id}}" bindtap="open">
     <view class="vehicle-heading"><view class="vehicle-label-wrap"><aw-vehicle-label vehicle-id="{{item.id}}" catalog-revision="{{catalogRevision}}"/></view><text class="vehicle-chevron">›</text></view>
     <view><text wx:for="{{item.caps}}" wx:key="*this" class="tag">{{item}}</text></view>
     <view wx:if="{{item.performance}}" class="muted">{{item.performance}}</view><view wx:if="{{item.ammoSummary}}" class="line">{{item.ammoSummary}}</view>
