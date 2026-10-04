@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "status": "visual-source-of-truth",
+  "baseline_commit": "4177de40fdb32517b98af83ce4b8a0fce9ab716d",
+  "baseline_date": "2026-10-04",
+  "scope": [
+    "miniprogram/app.wxss",
+    "miniprogram/pages/home/index.wxml",
+    "miniprogram/pages/home/index.wxss",
+    "miniprogram/pages/game/index.wxml",
+    "miniprogram/pages/game/index.wxss",
+    "miniprogram/pages/season/index.wxml",
+    "miniprogram/pages/season/index.wxss"
+  ],
+  "tokens": {
+    "colors": {
+      "page_background": "#f1f0f2",
+      "text_primary": "#1c1a1e",
+      "text_secondary": "#6b6370",
+      "accent_primary": "#ea7428",
+      "member_b": "#663171",
+      "success": "#0c7156",
+      "sync_success": "#58ba9b",
+      "danger": "#cf3a36",
+      "control_surface": "#ece9ed",
+      "card_surface": "#fbfafc",
+      "input_surface": "#f1f0f2",
+      "row_input_surface": "#f6f4f7",
+      "note_surface": "#f2eff3"
+    },
+    "card": {
+      "background": "#fbfafc",
+      "border": "1rpx solid rgba(28,26,30,.12)",
+      "radius_rpx": 22,
+      "shadow": "0 8rpx 26rpx rgba(28,26,30,.05)"
+    },
+    "button": {
+      "radius_rpx": 14,
+      "font_size_rpx": 26,
+      "line_height": 1,
+      "padding_vertical_rpx": 22,
+      "padding_horizontal_rpx": 26,
+      "min_height_px": null
+    },
+    "page": {
+      "standard_padding_rpx": [28, 24, 80],
+      "home_padding_rpx": [44, 30, 80]
+    }
+  },
+  "snowrunner": {
+    "topbar": {
+      "radius_rpx": 24,
+      "padding_rpx": [32, 30],
+      "margin_bottom_rpx": 18,
+      "headline_font_size_rpx": 48
+    },
+    "cloud_card": {
+      "padding_rpx": 26,
+      "margin_bottom_rpx": 18
+    },
+    "identity_card": {
+      "padding_rpx": [22, 26],
+      "margin_bottom_rpx": 18
+    },
+    "summary": {
+      "gap_rpx": 14,
+      "box_padding_rpx": 22,
+      "box_radius_rpx": 18
+    },
+    "tabs": {
+      "container_radius_rpx": 16,
+      "container_padding_rpx": 5,
+      "container_margin_vertical_rpx": 20,
+      "tab_padding_rpx": 17,
+      "tab_radius_rpx": 12,
+      "tab_min_height_px": null
+    },
+    "steps": {
+      "gap_rpx": 20,
+      "card_padding_rpx": 25,
+      "order_font_size_rpx": 44,
+      "title_font_size_rpx": 34,
+      "subtitle_font_size_rpx": 22
+    },
+    "creator_segment": {
+      "container_radius_rpx": 12,
+      "container_padding_rpx": 3,
+      "item_padding_rpx": [10, 17],
+      "item_radius_rpx": 9,
+      "item_font_size_rpx": 22,
+      "item_min_height_px": null
+    },
+    "goal_row": {
+      "padding_vertical_rpx": 11,
+      "divider": "1rpx dashed rgba(28,26,30,.12)"
+    },
+    "vehicle_row": {
+      "padding_vertical_rpx": 12,
+      "divider": "1rpx dashed rgba(28,26,30,.12)"
+    },
+    "checkbox": {
+      "width_rpx": 34,
+      "height_rpx": 34,
+      "border_rpx": 3,
+      "radius_rpx": 9
+    },
+    "goal_input": {
+      "min_height_rpx": 62,
+      "radius_rpx": 10,
+      "padding_horizontal_rpx": 14,
+      "font_size_rpx": 25
+    },
+    "vehicle_assignment": {
+      "container_gap_rpx": 8,
+      "container_margin_rpx": [10, 0, 0, 47],
+      "item_padding_rpx": [8, 14],
+      "item_radius_rpx": 9,
+      "item_font_size_rpx": 20,
+      "item_max_width_rpx": 220,
+      "item_min_height_px": null
+    },
+    "note": {
+      "min_height_rpx": 104,
+      "padding_rpx": 16,
+      "margin_top_rpx": 20,
+      "radius_rpx": 12,
+      "font_size_rpx": 23
+    },
+    "join_input": {
+      "height_rpx": 88,
+      "radius_rpx": 14,
+      "padding_horizontal_rpx": 20
+    },
+    "member_name_input": {
+      "min_height_rpx": 72,
+      "radius_rpx": 12,
+      "padding_horizontal_rpx": 18,
+      "font_size_rpx": 26
+    },
+    "season_picker": {
+      "min_height_rpx": 72,
+      "padding_rpx": [18, 20],
+      "radius_rpx": 12,
+      "font_size_rpx": 25
+    }
+  },
+  "season_manager": {
+    "card_padding_rpx": 26,
+    "card_margin_bottom_rpx": 18,
+    "input_height_rpx": 88,
+    "input_radius_rpx": 14,
+    "input_padding_horizontal_rpx": 20,
+    "input_font_size_rpx": 27,
+    "textarea_min_height_rpx": 220,
+    "textarea_radius_rpx": 14,
+    "textarea_padding_rpx": 20,
+    "textarea_font_size_rpx": 27
+  },
+  "home": {
+    "hero_padding_rpx": [42, 34],
+    "hero_radius_rpx": 26,
+    "hero_margin_bottom_rpx": 28,
+    "title_font_size_rpx": 52,
+    "game_list_gap_rpx": 18,
+    "game_card_padding_rpx": 30,
+    "game_name_font_size_rpx": 36,
+    "game_subtitle_font_size_rpx": 24
+  },
+  "guardrails": {
+    "visual_controls_do_not_require_44px_min_height": true,
+    "touch_target_must_not_change_visual_box": true,
+    "shared_components_must_not_override_page_specific_density": true,
+    "compact_controls_are_distinct_from_primary_buttons": true,
+    "forbidden_global_overrides": [
+      "min-height:44px on .btn",
+      "min-height:44px on SnowRunner tabs",
+      "min-height:44px on SnowRunner creator segments",
+      "min-height:44px on SnowRunner vehicle assignment controls"
+    ]
+  }
+}
