@@ -258,3 +258,42 @@ test('all configuration entries register component; frontend omits verification 
     assert(config.usingComponents['aw-prerequisites'])
   }
 })
+
+test('shared vehicle label reads live catalog identity, legendary tier and missing-data fallback',()=>{
+  let def;global.Component=d=>def=d
+  const script='../miniprogram/components/aw-vehicle-label/index';delete require.cache[require.resolve(script)];require(script)
+  const p=hydrate(def,true),v=c.tables.vehicles.find(x=>x.vehicle_class==='MBT')
+  p.properties={vehicleId:v.id,name:'过期名称'};p.refresh()
+  assert.equal(p.data.displayName,v.name_zh||v.name);assert.equal(p.data.classCode,'MBT');assert.equal(p.data.tierText,'T'+v.tier)
+  const original=c.byId[v.id],revision=c.revision
+  try{
+    c.byId[v.id]={...original,name:'线上更新后的车名',name_zh:null,vehicle_class:'TD',tier:9,is_legendary:true}
+    p.properties.catalogRevision=revision+1;def.observers['vehicleId, name, catalogRevision'].call(p)
+    assert.equal(p.data.displayName,'线上更新后的车名');assert.equal(p.data.classCode,'TD');assert.equal(p.data.tierText,'传奇');assert.notEqual(p.data.icon,'?')
+  }finally{c.byId[v.id]=original}
+  p.properties={vehicleId:'missing',name:'历史车辆'};p.refresh()
+  assert.equal(p.data.displayName,'历史车辆');assert.equal(p.data.tierText,'T—');assert.equal(p.data.classCode,'—')
+  for(const dir of ['pages/aw-catalog','pages/aw-fleet','pages/aw-vehicle','pages/aw-tree','components/aw-prerequisites','components/aw-asset-editor']){
+    const cfg=JSON.parse(fs.readFileSync(path.join(__dirname,'../miniprogram',dir,'index.json'),'utf8'))
+    assert.equal(cfg.usingComponents['aw-vehicle-label'],'/components/aw-vehicle-label/index')
+  }
+})
+test('unknown availability and internal weapon grouping stay out of display while raw data remain unchanged',()=>{
+  const raw=JSON.stringify(c.tables)
+  let unknown=0,research=0
+  for(const v of c.tables.vehicles){
+    const detail=c.detail(v.id)
+    assert(detail.caps.every(x=>!x.includes('待确认')&&!x.includes('已核验')))
+    assert.doesNotMatch(detail.basis,/待确认|待核实|核验/)
+    for(const u of detail.upgradeGroups.flatMap(g=>g.items))assert.doesNotMatch(u.displayDescription,/待确认|待核实|核验/)
+    for(const cap of detail.capabilities){
+      assert.doesNotMatch(cap.displayDescription,/待确认|待核实|核验/)
+      if(cap.availability==='unknown'){unknown++;assert.equal(cap.statusText,'')}
+      if(cap.availability==='research'){research++;assert.equal(cap.statusText,'研发')}
+    }
+    const weapons=detail.weaponGroups.flatMap(g=>g.weapons)
+    assert.equal(weapons.length,c.rows('vehicle_weapons','vehicle_id',v.id).length)
+    for(const w of weapons){assert(!w.configurationText);for(const a of w.ammo)assert.notEqual(a.availabilityText,'待确认')}
+  }
+  assert(unknown>0);assert(research>0);assert.equal(JSON.stringify(c.tables),raw)
+})

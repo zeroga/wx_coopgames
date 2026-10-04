@@ -12,3 +12,15 @@
 .source-row { padding:16rpx 0; }
 .player { min-height:88rpx; }
 .fleet-status .muted { margin-top:8rpx; }
+
+/* Vehicle text leads; controls have small visible labels and 44px touch areas. */
+.vehicle-entry .tag { font-size:21rpx; padding:3rpx 9rpx; margin:0 10rpx 0 0; }
+.vehicle-entry .vehicle-toolbar { margin-top:0; }
+.role-sort { padding:8rpx 12rpx; }
+.role-row { display:flex; align-items:center; gap:4rpx; flex-wrap:wrap; }
+.role-title { flex:1; min-width:128rpx; }
+.role-title .card-title { font-size:28rpx; }
+.drag-handle { flex:none; display:flex; align-items:center; justify-content:center; width:44px; min-height:44px; box-sizing:border-box; padding:0; font-size:28rpx; }
+.role-actions { display:flex; align-items:center; justify-content:flex-end; margin-left:auto; flex:none; }
+.role-actions .quiet-control { padding:8rpx; }
+.role-description { padding:0 12rpx 10rpx; margin-left:44px; }

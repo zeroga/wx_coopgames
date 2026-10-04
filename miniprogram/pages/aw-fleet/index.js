@@ -8,7 +8,7 @@ const updates = require('../../utils/aw/catalog-update')
 const refreshAll = require('../../utils/aw/refresh-all')
 function error(e) { wx.showModal({title:'操作未完成',content:e.message||String(e),showCancel:false}) }
 Page({
-  data:{prerequisiteForm:null,syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
+  data:{draggingRole:'',prerequisiteForm:null,syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
   configurePrerequisites(e){const d=e.currentTarget.dataset;this.setData({prerequisiteForm:{vehicleId:d.vehicle||d.id||this.data.id,memberId:d.member||store.currentMember()}})},
   closePrerequisites(){this.setData({prerequisiteForm:null});this.refresh()},
   prerequisitesSaved(){this.closePrerequisites()},
@@ -32,7 +32,7 @@ Page({
     if(!targets.some(t=>t.id===targetId))targetId=''
     const unionPlan=memberId?fleet.memberPlan(s,memberId):null
     const plan=targetId?fleet.memberPlan(s,memberId,targetId):unionPlan
-    this.setData({archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,planningWarnings:unionPlan?unionPlan.warnings.filter(x=>!x.includes('需要前置')).map(x=>x.replace(/待核实/g,'暂不可计算')):[],
+    this.setData({catalogRevision:catalog.revision, archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,planningWarnings:unionPlan?unionPlan.warnings.filter(x=>!x.includes('需要前置')).map(x=>x.replace(/待核实/g,'暂不可计算')):[],
       sync:store.syncInfo(),catalogInfo:updates.info(),visibleMembers:members.filter(m=>m.name.toLowerCase().includes(this.data.memberSearch.toLowerCase())),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
   },
   async mutate(fn){

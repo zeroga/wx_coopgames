@@ -11,7 +11,7 @@ Component({
       updates.hold(this)
       const memberId=this.properties.memberId||store.currentMember(),s=store.load()
       this.memberId=memberId
-      this.setData({draft:fleet.clone(fleet.prerequisiteConfig(s,memberId,this.properties.vehicleId)),editable:store.canEdit(memberId),name:(catalog.byId[this.properties.vehicleId]||{}).displayName||(catalog.byId[this.properties.vehicleId]||{}).name||'',options:fleet.prerequisiteOptions(this.properties.vehicleId)})
+      this.setData({draft:fleet.clone(fleet.prerequisiteConfig(s,memberId,this.properties.vehicleId)),editable:store.canEdit(memberId),catalogRevision:catalog.revision,name:(catalog.byId[this.properties.vehicleId]||{}).displayName||(catalog.byId[this.properties.vehicleId]||{}).name||'',options:fleet.prerequisiteOptions(this.properties.vehicleId)})
       this.keyboard({detail:{height:0}});this.refresh()
     },
     refresh(){

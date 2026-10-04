@@ -164,6 +164,7 @@ function summary(s, vehicleId) {
     const plan = a.status === 'planned' && formal ? memberPlan(s, a.memberId, formal.id) : null
     return Object.assign({}, a, prerequisiteStatus(s,a.memberId,a.vehicleId), { memberName: m.name + (m.active ? '' : '（停用）'), statusText: catalog.label(a.status),
       roles: assigned.map(x => Object.assign({}, x, { name: (roles[x.roleId] || {}).name || '历史职责', levelText: catalog.label(x.level), sourceText: catalog.label(x.source),
+        targetVehicles: s.dependencies.filter(d => d.assignmentId === x.id).map(d => { const t=s.assignments[d.targetId], v=t&&s.assets[t.assetId]; return v?{id:v.vehicleId,name:(catalog.byId[v.vehicleId]||{}).name}:null }).filter(Boolean),
         targetNames: s.dependencies.filter(d => d.assignmentId === x.id).map(d => { const t = s.assignments[d.targetId], v = t && s.assets[t.assetId]; return v ? (catalog.byId[v.vehicleId] || {}).name : '' }).filter(Boolean).join('、') })),
       roleText: assigned.map(x => (roles[x.roleId] || {}).name + '·' + catalog.label(x.level)).join(' / ') || '暂无车队职责',
       planText: plan ? '前置 ' + plan.steps.filter(n => n.id !== vehicleId && n.owned).length + '/' + plan.steps.filter(n => n.id !== vehicleId).length + ' · ' + plan.status : '', planTargetId: formal && formal.id

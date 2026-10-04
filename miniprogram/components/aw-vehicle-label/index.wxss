@@ -1,0 +1,9 @@
+.vehicle-label { display:flex; flex:1; align-items:flex-start; gap:10rpx; min-width:0; width:100%; box-sizing:border-box; text-align:left; color:inherit; line-height:1.45; }
+.vehicle-class { display:flex; align-items:center; flex:none; gap:5rpx; min-height:42rpx; color:inherit; }
+.vehicle-class-icon { font-size:25rpx; line-height:42rpx; }
+.vehicle-class-code { font-size:19rpx; font-weight:600; line-height:42rpx; opacity:.7; }
+.vehicle-tier { flex:none; min-width:44rpx; padding:3rpx 7rpx; margin-top:2rpx; border-radius:6rpx; background:#ece9ed; color:#514a58; font-size:21rpx; font-weight:700; text-align:center; box-sizing:border-box; }
+.vehicle-name { flex:1; min-width:0; font-size:32rpx; font-weight:800; overflow-wrap:break-word; word-break:break-word; }
+.vehicle-label-hero .vehicle-name { font-size:40rpx; }
+.vehicle-label-hero .vehicle-class { margin-top:4rpx; }
+.vehicle-label-hero .vehicle-tier { margin-top:6rpx; background:#39343d; color:#fff; }

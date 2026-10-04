@@ -1,1 +1,6 @@
-{"component":true}
+{
+  "component": true,
+  "usingComponents": {
+    "aw-vehicle-label": "/components/aw-vehicle-label/index"
+  }
+}

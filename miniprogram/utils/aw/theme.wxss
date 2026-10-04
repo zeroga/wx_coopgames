@@ -65,5 +65,15 @@ button.choice.active { background:#ea7428; color:#fff; }
 .route-card.selected { border-color:#ea7428; background:#fff2df; }
 
 /* Unified prerequisites / Token configuration entry. */
-button.prerequisite-alert { flex:none; display:inline-flex; align-items:center; justify-content:center; width:88rpx; min-width:88rpx; height:88rpx; padding:0; border-radius:50%; background:#ffdc69; color:#735005; font-size:40rpx; font-weight:900; }
+button.prerequisite-alert { flex:none; display:inline-flex; align-items:center; justify-content:center; width:44px; min-width:44px; height:44px; min-height:44px; padding:0; margin:0; background:transparent; border:0; }
+.prerequisite-dot { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#ffdc69; color:#735005; font-size:13px; line-height:18px; font-weight:800; }
+button.quiet-control { flex:none; display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; padding:8rpx 12rpx; margin:0; background:transparent; border:0; color:#6b6370; font-size:24rpx; line-height:1.3; }
+button.quiet-control.danger { color:#cf3a36; }
+.vehicle-heading { display:flex; align-items:center; gap:8rpx; min-width:0; width:100%; }
+.vehicle-label-wrap { flex:1; min-width:0; }
+.vehicle-open { min-height:44px; display:flex; align-items:center; flex:1; min-width:0; color:inherit; }
+.vehicle-chevron { flex:none; color:#8c838f; font-size:26rpx; }
+.vehicle-caption { font-size:23rpx; color:#6b6370; line-height:1.6; margin-top:4rpx; }
+.vehicle-toolbar { display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:4rpx; }
+.vehicle-toolbar .vehicle-meta { margin-right:auto; flex:1; min-width:150rpx; display:flex; align-items:center; flex-wrap:wrap; gap:4rpx 8rpx; }
 .custom-prerequisite { display:inline-block; background:#f1ecf7; color:#6b5795; border-radius:8rpx; font-size:23rpx; padding:6rpx 14rpx; margin:8rpx 0; }

@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "AW · 车辆资料库",
   "usingComponents": {
-    "aw-prerequisites": "../../components/aw-prerequisites/index"
+    "aw-prerequisites": "../../components/aw-prerequisites/index",
+    "aw-vehicle-label": "/components/aw-vehicle-label/index"
   }
 }

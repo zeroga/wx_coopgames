@@ -36,7 +36,8 @@ install(decode(snapshot), snapshot.checkedAt)
 function capabilities(vehicleId) {
   const result = rows('vehicle_capabilities', 'vehicle_id', vehicleId).map(c => Object.assign({}, c, {
     name: (capByCode[c.capability_code] || {}).name_zh || c.capability_code,
-    statusText: label(c.availability), era: rows('vehicle_era', 'capability_id', c.id),
+    displayDescription: displayNotes(c.effect_description),
+    statusText: availabilityLabel(c.availability), era: rows('vehicle_era', 'capability_id', c.id),
     infantry: rows('vehicle_infantry', 'capability_id', c.id)
   }))
   return result
@@ -100,6 +101,11 @@ function metrics(row, keys, fallback) {
   return keys.filter(k => present(row[k]) || (fallback && present(fallback[k]))).map(k => ({ key: k, name: (fields[k] || [k])[0], value: (present(row[k]) ? row[k] : fallback[k]) + ((fields[k] || ['', ''])[1] || '') }))
 }
 function tagName(c) { return (traitByCode[c] || {}).name_zh || label(c) }
+// Keep verification/unknown metadata in the catalog; do not display it as a badge.
+function availabilityLabel(value) { return value === 'unknown' ? '' : label(value) }
+function displayNotes(text) {
+  return String(text || '').split(/[；。\n]/).filter(x => x.trim() && !/待确认|待(?:游戏内)?核实|待核验|已核验|未核验|公开资料配件记录/.test(x)).join('；')
+}
 function ammoColor(type) {
   if (typeof type === 'object') {
     const warhead = type.classification && type.classification.warhead_type
@@ -125,7 +131,7 @@ function weaponGroups(vehicleId, weapons, evidence) {
   return groups
 }
 function card(v, f) {
-  const caps = capabilities(v.id).filter(c => c.availability !== 'absent').slice(0, 5).map(c => c.name + (c.availability === 'default' ? '' : ' · ' + label(c.availability)))
+  const caps = capabilities(v.id).filter(c => c.availability !== 'absent').slice(0, 5).map(c => c.name + (['research','upgrade'].includes(c.availability) ? ' · ' + availabilityLabel(c.availability) : ''))
   const match = f && ammoFor(v.id).find(a => ammoMatch(a, f))
   const constrained = f && ((f.ammoTypes || []).length || (f.ammoTraits || []).length || present(f.penetration))
   return Object.assign({}, v, { displayName: v.name_zh || v.name, caps, performance: metrics(v, ['top_speed', 'view_range', 'camouflage']).map(x => x.value).join(' · '),
@@ -142,18 +148,18 @@ function detail(id) {
       warheadLabel: a.classification ? ({kinetic:'动能',heat:'HEAT',tandem_heat:'串联 HEAT',thermobaric:'温压',he:'HE',hesh:'HESH / HEP',pele:'PELE',smoke:'烟幕',unknown:''})[a.classification.warhead_type] : '',
       tagNames: a.traits.map(tagName), params: metrics(a, ['damage', 'penetration', 'velocity', 'range', 'reload_seconds', 'magazine_size', 'rate_of_fire', 'intra_clip_reload', 'accuracy_deg', 'module_damage', 'module_damage_bonus_pct', 'explosion_radius_m', 'penetration_reference_m'], w),
       guidance: rows('ammo_guidance_modes', 'ammo_id', a.id).filter(x => present(x.lock_time_seconds)).map(x => tagName(x.mode_code) + ' · 锁定 ' + x.lock_time_seconds + ' s'),
-      quality: label(a.verification_status), availabilityText: a.requires_research === true ? '研发' : a.requires_research === false ? '默认' : '待确认'
+      quality: label(a.verification_status), availabilityText: a.requires_research === true ? '研发' : a.requires_research === false ? '默认' : ''
     }))
     configs[key].push(Object.assign({}, w, { typeText: label(w.weapon_type), ammo, params: metrics(w, ['caliber_mm', 'reload_seconds', 'magazine_size', 'rate_of_fire', 'accuracy_deg', 'aim_time', 'elevation_deg', 'depression_deg']), quality: label(w.verification_status) }))
   })
   const caps = capabilities(id).map(c => Object.assign({}, c, { params: c.era.concat(c.infantry).reduce((out, r) => out.concat(metrics(r, Object.keys(fields).filter(k => present(r[k])))), []) }))
   return Object.assign(card(v), { dealerName: (byId[v.dealer_id] || {}).name || '', acquisitionText: label(v.acquisition_type),
     core: metrics(v, ['hp', 'top_speed', 'view_range', 'camouflage']), more: metrics(v, ['reverse_speed', 'hull_traverse', 'turret_traverse', 'acceleration_0_32_seconds', 'weight_t', 'engine_power_hp', 'power_to_weight_hp_t']),
-    basis: (v.performance_basis && v.performance_basis.tags || []).join(' · ') || '性能口径待核实',
-    basisDetails: [['指挥官加成', 'commander_included'], ['乘员加成', 'crew_included'], ['改装加成', 'retrofits_included'], ['来源版本', 'source_version']].map(([name, key]) => ({ name, value: !present((v.performance_basis || {})[key]) ? '待确认' : v.performance_basis[key] === true ? '包含' : v.performance_basis[key] === false ? '不包含' : v.performance_basis[key] })),
+    basis: (v.performance_basis && v.performance_basis.tags || []).filter(x => !/待确认|待核实|核验/.test(x)).join(' · ') || '性能统计口径',
+    basisDetails: [['指挥官加成', 'commander_included'], ['乘员加成', 'crew_included'], ['改装加成', 'retrofits_included'], ['来源版本', 'source_version']].map(([name, key]) => ({ name, value: !present((v.performance_basis || {})[key]) ? '—' : v.performance_basis[key] === true ? '包含' : v.performance_basis[key] === false ? '不包含' : v.performance_basis[key] })),
     configs: Object.keys(configs).map((key, i) => ({ key, name: key === 'unresolved' ? '配置待确认' : key === 'announced' ? '公布配置' : '配置 ' + (i + 1), weapons: configs[key] })),
-    weaponGroups: weaponGroups(id, Object.keys(configs).reduce((out,key,i) => out.concat(configs[key].map(w => Object.assign({},w,{configurationText:Object.keys(configs).length > 1 ? '资料分组 ' + (i + 1) : ''}))), [])),
-    capabilities: caps, upgradeGroups: ['default', 'research', 'upgrade', 'unknown'].map(a => ({ name: label(a), items: rows('vehicle_upgrades', 'vehicle_id', id).filter(u => u.availability === a).map(u => Object.assign({}, u, { params: metrics(u, ['xp_cost', 'credit_cost', 'hp_bonus', 'top_speed_kmh', 'reverse_speed_kmh', 'engine_power_hp']), quality: label(u.verification_status) })) })).filter(g => g.items.length),
+    weaponGroups: weaponGroups(id, Object.keys(configs).reduce((out,key) => out.concat(configs[key]), [])),
+    capabilities: caps, upgradeGroups: ['default', 'research', 'upgrade', 'unknown'].map(a => ({ name: a === 'unknown' ? '其他配件' : label(a), items: rows('vehicle_upgrades', 'vehicle_id', id).filter(u => u.availability === a).map(u => Object.assign({}, u, { displayDescription:displayNotes(u.effect_description), params: metrics(u, ['xp_cost', 'credit_cost', 'hp_bonus', 'top_speed_kmh', 'reverse_speed_kmh', 'engine_power_hp']), quality: label(u.verification_status) })) })).filter(g => g.items.length),
     armor: rows('vehicle_armor', 'vehicle_id', id).map(a => ({ id: a.id, params: metrics(a, ['location', 'composition', 'thickness_mm', 'effective_ap_mm', 'effective_heat_mm']), source_url: a.source_url })),
     rewards: rows('vehicle_token_rewards', 'vehicle_id', id).map(r => Object.assign({}, r, { tokenName: (byId[r.token_id] || {}).name || 'Token' })),
     paths: rows('unlock_paths', 'vehicle_id', id).filter(p => !p.target_upgrade_id).map(p => Object.assign({}, p, { requirements: rows('unlock_requirements', 'unlock_path_id', p.id) })),

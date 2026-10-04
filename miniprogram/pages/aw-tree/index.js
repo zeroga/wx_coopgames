@@ -13,7 +13,7 @@ Page({
   onPageScroll(e){this.scrollTop=e.scrollTop},
   refresh(){
     const v=this.data.id&&catalog.detail(this.data.id),all=catalog.filter({query:this.data.query})
-    this.setData({vehicle:v||null,paths:v?v.paths:[],related:v?v.related:[],count:all.length,candidates:all.slice(0,this.data.limit).map(x=>catalog.card(x)),historyCount:(this.history||[]).length,prerequisite:v?fleet.prerequisiteStatus(store.load(),store.currentMember(),v.id):null,configured:v?fleet.prerequisiteConfig(store.load(),store.currentMember(),v.id).mode!=='ignore':false,route:v?fleet.resolveRoute(store.load(),store.currentMember(),v.id):null})
+    this.setData({catalogRevision:catalog.revision, vehicle:v||null,paths:v?v.paths:[],related:v?v.related:[],count:all.length,candidates:all.slice(0,this.data.limit).map(x=>catalog.card(x)),historyCount:(this.history||[]).length,prerequisite:v?fleet.prerequisiteStatus(store.load(),store.currentMember(),v.id):null,configured:v?fleet.prerequisiteConfig(store.load(),store.currentMember(),v.id).mode!=='ignore':false,route:v?fleet.resolveRoute(store.load(),store.currentMember(),v.id):null})
   },
   search(e){this.setData({query:e.detail.value,limit:30});this.refresh()},
   select(e){this.visit(e.currentTarget.dataset.id)},

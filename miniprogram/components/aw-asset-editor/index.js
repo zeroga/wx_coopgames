@@ -16,7 +16,7 @@ Component({
       this.keyboard({detail:{height:0}})
       const s = store.load(), current = store.currentMember()
       const members = s.members.filter(m => m.id === current && m.active)
-      this.setData({ members, playerIndex:0, memberId:current }); this.loadPlayer()
+      this.setData({ catalogRevision:catalog.revision, members, playerIndex:0, memberId:current }); this.loadPlayer()
     },
     loadPlayer() {
       const s = store.load(), m = this.data.members[this.data.playerIndex]
@@ -29,9 +29,9 @@ Component({
         const targets = Object.values(s.assignments).filter(t => {
           const v = s.assets[t.assetId]
           return v && v.memberId === m.id && v.vehicleId !== this.properties.vehicleId && t.roleId === r.id && ['primary', 'backup'].includes(t.level)
-        }).map(t => ({ id: t.id, name: (catalog.byId[s.assets[t.assetId].vehicleId] || {}).name || '未知车辆', checked: selected.includes(t.id) }))
+        }).map(t => ({ id: t.id, vehicleId:s.assets[t.assetId].vehicleId, name: (catalog.byId[s.assets[t.assetId].vehicleId] || {}).name || '未知车辆', checked: selected.includes(t.id) }))
         return { id: r.id, name: r.name, index: manual ? ['','primary','backup','transition'].indexOf(a.level) : 0, targets,
-          automatic: !!(a && a.source === 'tech_tree'), automaticTargets: a ? s.dependencies.filter(d=>d.assignmentId===a.id&&d.source==='tech_tree').map(d=>{const target=s.assignments[d.targetId];return target&&(catalog.byId[(s.assets[target.assetId]||{}).vehicleId]||{}).name}).filter(Boolean).join('、') : '' }
+          automatic: !!(a && a.source === 'tech_tree'), automaticVehicles:a?s.dependencies.filter(d=>d.assignmentId===a.id&&d.source==='tech_tree').map(d=>{const t=s.assignments[d.targetId],v=t&&s.assets[t.assetId];return v?{id:v.vehicleId,name:(catalog.byId[v.vehicleId]||{}).name}:null}).filter(Boolean):[], automaticTargets: a ? s.dependencies.filter(d=>d.assignmentId===a.id&&d.source==='tech_tree').map(d=>{const target=s.assignments[d.targetId];return target&&(catalog.byId[(s.assets[target.assetId]||{}).vehicleId]||{}).name}).filter(Boolean).join('、') : '' }
       })
       this.setData({ editable: store.canEdit(m.id), vehicleName: (catalog.byId[this.properties.vehicleId] || {}).displayName || (catalog.byId[this.properties.vehicleId] || {}).name || '', rows, statusIndex: !asset || asset.status === 'planned' ? 1 : 0, note: asset && asset.note || '', tokenRewards:tokenPlan.rewards(asset||{vehicleId:this.properties.vehicleId}), tokenAcquisition:asset&&asset.tokenAcquisition||'unknown',unlockPathId:asset&&asset.tokenUnlockPathId||'',unlockPaths:tokenPlan.pathCards(this.properties.vehicleId,asset&&asset.tokenUnlockPathId).filter(p=>catalog.rows('unlock_requirements','unlock_path_id',p.id).some(r=>r.token_id)) })
     },

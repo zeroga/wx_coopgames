@@ -1,3 +1,31 @@
-.backdrop{position:fixed;inset:0;background:rgba(20,24,28,.4);z-index:80}.sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:28rpx 28rpx 0 0;padding:28rpx 30rpx calc(24rpx + env(safe-area-inset-bottom));z-index:81;box-sizing:border-box}.head{display:flex;justify-content:space-between;align-items:center;gap:18rpx;margin-bottom:20rpx}.title{font-size:34rpx;font-weight:700}.muted{font-size:25rpx;color:#727b85;line-height:1.6}.content{box-sizing:border-box}.label{font-size:27rpx;font-weight:600;margin:28rpx 0 16rpx}.choice,.route,.ghost,.primary{font-size:28rpx;line-height:1.5;min-height:88rpx;padding:18rpx 22rpx;border-radius:16rpx;box-sizing:border-box}.choice,.route{background:#eef0f2;color:#4a535d;margin:12rpx 0}.choice{display:inline-block;margin-right:12rpx}.route{text-align:left;width:100%}.active{background:#ea7428;color:#fff;border:2rpx solid #ea7428}.ghost{background:#eef0f2;color:#4a535d;margin:16rpx 0}.small{min-height:88rpx;padding:12rpx 18rpx;margin:0;flex-shrink:0}.primary{background:#ea7428;color:#fff;width:100%}.footer{padding-top:18rpx}.note{margin:12rpx 0}.error{background:#fff1df;color:#805619;padding:18rpx;border-radius:12rpx;margin-bottom:14rpx}.custom-tag{display:inline-block;color:#6b5795;background:#f1ecf7;font-size:24rpx;border-radius:8rpx;padding:6rpx 14rpx}.search{font-size:28rpx;padding:20rpx;background:#f3f4f5;border-radius:14rpx;margin:18rpx 0}.choice::after,.route::after,.ghost::after,.primary::after{border:0}
-
-.active .muted{color:#fff3e9}
+/* Component isolation: reset native button defaults explicitly. */
+.backdrop { position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(28,26,30,.45); z-index:80; }
+.sheet { position:fixed; left:0; right:0; bottom:0; background:#fbfafc; color:#1c1a1e; border-radius:24rpx 24rpx 0 0; padding:26rpx 24rpx calc(24rpx + env(safe-area-inset-bottom)); z-index:81; box-sizing:border-box; }
+.head { display:flex; justify-content:space-between; align-items:flex-start; gap:12rpx; margin-bottom:18rpx; }
+.head-main { flex:1; min-width:0; }
+.title { margin:4rpx 0 8rpx; }
+.muted { font-size:23rpx; color:#6b6370; line-height:1.6; }
+.content { box-sizing:border-box; }
+.label { font-size:26rpx; font-weight:700; margin:26rpx 0 12rpx; }
+.choice,.route,.ghost,.primary { display:block; width:100%; margin:12rpx 0; font-size:26rpx; line-height:1.5; min-height:44px; padding:18rpx 20rpx; border:1rpx solid #dedbe0; border-radius:12rpx; box-sizing:border-box; text-align:left; }
+.choice,.route,.ghost { background:#f1f0f2; color:#1c1a1e; }
+.active { background:#fff2df; border-color:#ea7428; }
+.choice.active { background:#ea7428; color:#fff; }
+.ghost { background:#fbfafc; }
+.cancel-control { flex:none; width:auto; min-width:44px; min-height:44px; padding:8rpx 12rpx; margin:0; border:0; background:transparent; color:#6b6370; font-size:24rpx; line-height:1.4; }
+.small { width:auto; min-height:44px; padding:12rpx 18rpx; margin:0; }
+.primary { background:#1c1a1e; color:#fff; text-align:center; }
+.footer { padding-top:12rpx; }
+.footer .ghost { text-align:center; }
+.footer .primary,.footer .ghost { margin:0; }
+.note { margin:10rpx 0; }
+.error { background:#fff2df; color:#946126; padding:18rpx; border-radius:12rpx; margin-bottom:14rpx; }
+.custom-tag { display:inline-block; color:#6b5795; background:#f1ecf7; font-size:23rpx; border-radius:8rpx; padding:6rpx 14rpx; }
+.search { display:block; width:100%; box-sizing:border-box; font-size:26rpx; min-height:44px; padding:18rpx; background:#f1f0f2; border-radius:12rpx; margin:18rpx 0; }
+.choice::after,.route::after,.ghost::after,.primary::after,.cancel-control::after { border:0; }
+.choice[disabled],.route[disabled],.ghost[disabled],.primary[disabled],.cancel-control[disabled] { opacity:.45; }
+.route-vehicle { margin:4rpx 0; }
+.route .muted { margin-top:8rpx; }
+.choice-heading { display:flex; align-items:center; gap:12rpx; min-width:0; }
+.selection-mark { flex:none; width:24rpx; font-size:25rpx; color:#a94d16; text-align:right; line-height:1.4; }
+.choice.active .selection-mark { color:#fff; }

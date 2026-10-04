@@ -32,7 +32,7 @@ Page({
     ;[['penetration','穿深'],['speed','速度'],['view','视野'],['camo','隐蔽']].forEach(([key,name])=>{if(f[key] !== '') selected.push({key,value:f[key],name:name+' ≥ '+f[key]})})
     ;[['premium','高级车'],['researchable','当前可研发']].forEach(([key,name])=>{if(f[key]) selected.push({key,value:f[key],name:name+'：'+(f[key]==='yes'?'是':'否')})})
     const selection = {}; selected.forEach(x=>{selection[x.key+':'+x.value]=true})
-    this.setData({ count: all.length, selected, selection, results: all.slice(0,this.data.limit).map(v=>{
+    this.setData({catalogRevision:catalog.revision,  count: all.length, selected, selection, results: all.slice(0,this.data.limit).map(v=>{
       const c = catalog.card(v,f), summaries = s.members.length ? fleetSummary(s,v.id) : []
       return Object.assign(c,{ team: summaries.slice(0,2), extra: Math.max(0,summaries.length-2) })
     }), catalogInfo:updates.info(), source: '原始资料核对时间：'+catalog.checkedAt.slice(0,10) })

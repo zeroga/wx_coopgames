@@ -16,7 +16,7 @@ Page({
     if (!v) { this.setData({ vehicle: null }); return }
     const all = fleet.summary(store.load(), v.id), current = store.currentMember()
     all.sort((a,b)=>(b.memberId===current?1:0)-(a.memberId===current?1:0))
-    this.setData({ vehicle:v, prerequisite:fleet.prerequisiteStatus(store.load(),current,v.id), currentId:current, team:this.data.showTeam?all:all.slice(0,2), extra:this.data.showTeam?0:Math.max(0,all.length-2) })
+    this.setData({catalogRevision:catalog.revision,  vehicle:v, prerequisite:fleet.prerequisiteStatus(store.load(),current,v.id), currentId:current, team:this.data.showTeam?all:all.slice(0,2), extra:this.data.showTeam?0:Math.max(0,all.length-2) })
     wx.setNavigationBarTitle({title:v.displayName})
   },
   section(e) { const key=e.currentTarget.dataset.section;if(Object.prototype.hasOwnProperty.call(this.data.sections,key))this.setData({['sections.'+key]:!this.data.sections[key]}) },

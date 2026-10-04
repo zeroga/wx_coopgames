@@ -1,0 +1,5 @@
+<view class="vehicle-label {{variant === 'hero' ? 'vehicle-label-hero' : ''}}">
+  <view class="vehicle-class" aria-label="{{className}}"><text class="vehicle-class-icon">{{icon}}</text><text class="vehicle-class-code">{{classCode}}</text></view>
+  <text class="vehicle-tier">{{tierText}}</text>
+  <text class="vehicle-name">{{displayName}}</text>
+</view>
