@@ -84,9 +84,7 @@ function setPrerequisites(s,memberId,vehicleId,input) {
 function prerequisiteStatus(s,memberId,vehicleId) {
   const a=getAsset(s,memberId,vehicleId)||{},config=prerequisiteConfig(s,memberId,vehicleId)
   if(a.status==='owned'||tokenPlan.hasRecordedUnlock(a))return {needsPrerequisite:false,customPrerequisite:config.mode==='custom'}
-  const route=resolveRoute(s,memberId,vehicleId),node=route.nodes.find(n=>n.vehicleId===vehicleId)
-  const needs=!!(node.ignored||!route.complete||node.requirements.some(r=>r.token_id||r.source_vehicle_id&&(getAsset(s,memberId,r.source_vehicle_id)||{}).status!=='owned'||!r.source_vehicle_id&&!s.confirmedRequirements[assetKey(memberId,r.id)]))
-  return {needsPrerequisite:needs,customPrerequisite:config.mode==='custom'}
+  return {needsPrerequisite:a.status==='planned'&&config.mode==='ignore',customPrerequisite:config.mode==='custom'}
 }
 function targets(s, memberId) {
   return Object.values(s.assignments).filter(a => {
@@ -100,8 +98,8 @@ function recompute(s) {
   s.members.forEach(m => targets(s, m.id).forEach(t => {
     const targetAsset = s.assets[t.assetId], route = resolveRoute(s, m.id, targetAsset.vehicleId)
     route.nodes.filter(n => n.vehicleId !== targetAsset.vehicleId).forEach(n => {
-      const asset = ensureAsset(s, m.id, n.vehicleId), key = assignmentKey(asset.id, t.roleId)
-      if (!s.assignments[key]) s.assignments[key] = { id: key, assetId: asset.id, roleId: t.roleId, level: 'transition', source: 'tech_tree', note: '' }
+      const asset = ensureAsset(s, m.id, n.vehicleId), key = assignmentKey(asset.id, '')
+      if (!s.assignments[key]) s.assignments[key] = { id: key, assetId: asset.id, roleId: '', level: 'transition', source: 'tech_tree', note: '' }
       s.dependencies.push({ id: key + '>' + t.id, assignmentId: key, targetId: t.id, source: 'tech_tree', depth: route.depths[n.vehicleId], pathId: (n.path || {}).id || null })
     })
   }))
@@ -163,10 +161,10 @@ function summary(s, vehicleId) {
     const formal = assigned.find(x => ['primary', 'backup'].includes(x.level) && x.source !== 'tech_tree')
     const plan = a.status === 'planned' && formal ? memberPlan(s, a.memberId, formal.id) : null
     return Object.assign({}, a, prerequisiteStatus(s,a.memberId,a.vehicleId), { memberName: m.name + (m.active ? '' : '（停用）'), statusText: catalog.label(a.status),
-      roles: assigned.map(x => Object.assign({}, x, { name: (roles[x.roleId] || {}).name || '历史职责', levelText: catalog.label(x.level), sourceText: catalog.label(x.source),
+      roles: assigned.map(x => Object.assign({}, x, { name: x.roleId ? (roles[x.roleId] || {}).name || '历史职责' : '未定义职责', levelText: catalog.label(x.level), sourceText: catalog.label(x.source),
         targetVehicles: s.dependencies.filter(d => d.assignmentId === x.id).map(d => { const t=s.assignments[d.targetId], v=t&&s.assets[t.assetId]; return v?{id:v.vehicleId,name:(catalog.byId[v.vehicleId]||{}).name}:null }).filter(Boolean),
         targetNames: s.dependencies.filter(d => d.assignmentId === x.id).map(d => { const t = s.assignments[d.targetId], v = t && s.assets[t.assetId]; return v ? (catalog.byId[v.vehicleId] || {}).name : '' }).filter(Boolean).join('、') })),
-      roleText: assigned.map(x => (roles[x.roleId] || {}).name + '·' + catalog.label(x.level)).join(' / ') || '暂无车队职责',
+      roleText: assigned.map(x => (x.roleId ? (roles[x.roleId] || {}).name || '历史职责' : '未定义职责') + '·' + catalog.label(x.level)).join(' / ') || '暂无车队职责',
       planText: plan ? '前置 ' + plan.steps.filter(n => n.id !== vehicleId && n.owned).length + '/' + plan.steps.filter(n => n.id !== vehicleId).length + ' · ' + plan.status : '', planTargetId: formal && formal.id
     })
   }).sort((a, b) => a.memberName.localeCompare(b.memberName))

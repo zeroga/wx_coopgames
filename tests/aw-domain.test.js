@@ -51,11 +51,21 @@ test('all transitive prerequisites generated, owned preserved, backup also expan
 })
 test('shared prerequisites reference multiple targets; cancelling one retains the other and every asset',()=>{
   const s=state();target(s,'D');target(s,'E')
-  const b=fleet.assignmentKey(fleet.assetKey('m','B'),'r')
+  const b=fleet.assignmentKey(fleet.assetKey('m','B'),'')
   assert.equal(s.dependencies.filter(d=>d.assignmentId===b).length,2)
+  assert.equal(s.assignments[b].roleId,'')
+  assert.equal(fleet.summary(s,'B')[0].roleText,'未定义职责·过渡')
   fleet.saveAsset(s,'m','D','planned','',[])
   assert.equal(s.dependencies.filter(d=>d.assignmentId===b).length,1)
   assert(fleet.getAsset(s,'m','C'));assert(fleet.getAsset(s,'m','D'))
+})
+test('only planned vehicles that ignore prerequisites show the warning',()=>{
+  const s=state();target(s,'D')
+  assert.equal(fleet.prerequisiteStatus(s,'m','D').needsPrerequisite,false)
+  fleet.setPrerequisites(s,'m','D',{mode:'ignore'})
+  assert.equal(fleet.prerequisiteStatus(s,'m','D').needsPrerequisite,true)
+  fleet.saveAsset(s,'m','D','owned','',[{roleId:'r',level:'primary'}])
+  assert.equal(fleet.prerequisiteStatus(s,'m','D').needsPrerequisite,false)
 })
 test('independent role levels and rename remain keyed by stable IDs',()=>{
   const s=state();s.roles.push({id:'scout',name:'侦察',order:1})
