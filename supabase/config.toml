@@ -1,0 +1,3 @@
+[functions.aw-catalog]
+# This function validates the publishable apikey in its handler.
+verify_jwt = false

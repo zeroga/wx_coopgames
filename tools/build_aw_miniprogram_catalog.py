@@ -41,6 +41,20 @@ def apply_tech_tree_override(source_data, override_path):
         edge = find_edge(spec)
         edge['from_vehicle_id'] = vehicles[spec['new_from']]['id']
         edge['to_vehicle_id'] = vehicles[spec['new_to']]['id']
+        # Correct the same explicitly recorded prerequisite, without claiming
+        # that its XP / module / other conditions have become complete.
+        target_paths = {row['id'] for row in tables['unlock_paths']
+                        if row['vehicle_id'] == vehicles[spec['to']]['id']
+                        and not row.get('target_upgrade_id')}
+        matches = [row for row in tables['unlock_requirements']
+                   if row['unlock_path_id'] in target_paths
+                   and row.get('source_vehicle_id') == vehicles[spec['from']]['id']
+                   and row.get('requirement_type') == 'vehicle_progress']
+        if len(matches) != 1:
+            raise ValueError('replacement prerequisite must match exactly once')
+        matches[0]['source_vehicle_id'] = vehicles[spec['new_from']]['id']
+        matches[0]['source_note'] = ('2026-10-04 游戏内科技树总览确认前置车辆关系；'
+                                     'XP、模块与附加门槛仍待核实。')
 
     for spec in override.get('verified_edges', []):
         find_edge(spec)['verification_status'] = 'ingame_verified'

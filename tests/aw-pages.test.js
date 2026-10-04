@@ -187,9 +187,9 @@ test('first personal registration creates its own identity instead of falling ba
   const f=page('aw-fleet');f.onLoad({});f.editAsset(event({id:p.properties.vehicleId,member:previous}))
   assert.equal(f.data.editor,false)
 })
-test('vehicle browsing and tech tree use local resources without making a request',()=>{
+test('first render and tech tree use local resources without waiting for network',()=>{
   const old=wx.request;wx.request=()=>{throw Error('vehicle catalog must stay offline')}
-  try{const cp=page('aw-catalog');cp.onLoad();assert.equal(cp.data.count,298);assert.match(cp.data.source,/本地资料/)
+  try{const cp=page('aw-catalog');cp.onLoad();assert.equal(cp.data.count,298);assert.match(cp.data.source,/原始资料核对时间/);assert(cp.data.catalogInfo.version)
     const id=cp.data.results[0].id,vp=page('aw-vehicle');vp.onLoad({id});vp.section(event({section:'weapons'}));const tree=page('aw-tree');tree.onLoad({id});assert(vp.data.vehicle);assert(tree.data.vehicle)
     assert.equal(typeof s.loadCatalog,'undefined');assert.equal(typeof require('../miniprogram/utils/supabase').readCatalog,'undefined')
   }finally{wx.request=old}

@@ -5,6 +5,7 @@ const catalog = require('./catalog')
 const codes = require('./codes')
 const archives = require('./archives')
 let state=null,scope='',version=0,teamDirty=false,memberDirty={},busy=false,session=cache.get('aw.v2.session')||{},vault=cache.get('aw.v2.members')||{},teamName='我的车队',lastSyncError=''
+let catalogRevision = -1
 function key(){return 'aw.v2.'+(session.teamId||'local')}
 function write(k,v){if(!cache.set(k,v))throw new Error('本地存储失败，改动未保存')}
 function persist(){write(scope,{state,version,teamDirty,memberDirty,teamName})}
@@ -14,9 +15,12 @@ function load(){
     scope=key();const saved=cache.get(scope),r=cache.getRemote()
     const old=!saved&&!session.teamId?cache.get('aw.v1.'+(r.profileId||'local')):null
     state=fleet.clone(saved&&saved.state || old&&old.state || fleet.empty({}));state.schemaVersion=2
+    catalogRevision = -1
     version=saved&&saved.version||0;teamDirty=!!(saved&&saved.teamDirty);memberDirty=saved&&saved.memberDirty||{};teamName=saved&&saved.teamName||'我的车队'
     if(old){write('aw.v2.legacy-backup',old);teamDirty=true;state.members.forEach(m=>memberDirty[m.id]=true);persist()}
   }
+  // Rebuild only derived transitions in memory; no archive write or dirty flag.
+  if(catalogRevision!==catalog.revision){fleet.recompute(state);catalogRevision=catalog.revision}
   return state
 }
 function canEdit(memberId){load();return !!memberId && memberId===currentMember() && (!session.teamId || !!vault[memberId])}

@@ -2,9 +2,11 @@ const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
+const updates = require('../../utils/aw/catalog-update')
 Page({
   data:{id:'',query:'',vehicle:null,candidates:[],paths:[],related:[],limit:30,count:0,historyCount:0},
-  onLoad(o){this.history=[];this.scrollTop=0;this.setData({id:o.id||''});this.refresh()},
+  onLoad(o){updates.init();this.history=[];this.scrollTop=0;this.setData({id:o.id||''});this.refresh()},
+  async onShow(){try{await updates.check(false)}catch(_){}this.refresh()},
   onPageScroll(e){this.scrollTop=e.scrollTop},
   refresh(){
     const v=this.data.id&&catalog.detail(this.data.id),all=catalog.filter({query:this.data.query})

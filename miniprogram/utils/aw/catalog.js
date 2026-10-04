@@ -1,6 +1,6 @@
 const snapshot = require('../../data/aw/catalog')
-const presentation = require('../../data/aw/presentation')
-const ammoEvidence = require('../../data/aw/ammo-classification.js')
+let presentation = require('../../data/aw/presentation')
+let ammoEvidence = require('../../data/aw/ammo-classification.js')
 const labels = {
   default: '默认', research: '研发', upgrade: '升级', unknown: '待确认', absent: '确认不具备',
   public_verified: '公开资料已核验', needs_ingame_check: '待游戏内核实', ingame_verified: '游戏内已核验',
@@ -13,8 +13,9 @@ const labels = {
 function label(k) { return labels[k] || k || '未知' }
 function present(v) { return v !== null && v !== undefined && v !== '' }
 function rows(table, field, value) { return (tables[table] || []).filter(x => x[field] === value) }
-let tables = {}, checkedAt = '', byId = {}, capByCode = {}, traitByCode = {}
+let tables = {}, checkedAt = '', byId = {}, capByCode = {}, traitByCode = {}, revision = 0
 function install(data, stamp) {
+  revision++
   tables = data; checkedAt = stamp
   byId = {}; Object.keys(tables).forEach(k => (tables[k] || []).forEach(r => { if (r.id) byId[r.id] = r }))
   capByCode = {}; (tables.capabilities || []).forEach(r => { capByCode[r.code] = r })
@@ -24,6 +25,12 @@ function decode(pack) {
   const t = {}; Object.keys(pack.tables).forEach(k => {
     const x = pack.tables[k]; t[k] = x.rows.map(a => { const r = {}; x.columns.forEach((c, i) => { r[c] = typeof a[i] === 'string' && a[i][0] === '@' && pack.strings ? pack.strings[Number(a[i].slice(1))] : a[i] }); return r })
   }); return t
+}
+function installPackage(content) {
+  const decoded = decode(content.catalog)
+  install(decoded, content.catalog.checkedAt)
+  ammoEvidence = content.ammoEvidence
+  presentation = content.presentation
 }
 install(decode(snapshot), snapshot.checkedAt)
 function capabilities(vehicleId) {
@@ -150,8 +157,8 @@ function detail(id) {
     armor: rows('vehicle_armor', 'vehicle_id', id).map(a => ({ id: a.id, params: metrics(a, ['location', 'composition', 'thickness_mm', 'effective_ap_mm', 'effective_heat_mm']), source_url: a.source_url })),
     rewards: rows('vehicle_token_rewards', 'vehicle_id', id).map(r => Object.assign({}, r, { tokenName: (byId[r.token_id] || {}).name || 'Token' })),
     paths: rows('unlock_paths', 'vehicle_id', id).filter(p => !p.target_upgrade_id).map(p => Object.assign({}, p, { requirements: rows('unlock_requirements', 'unlock_path_id', p.id) })),
-    related: (tables.vehicle_progression_edges || []).filter(e => e.from_vehicle_id === id || e.to_vehicle_id === id).map(e => ({ id: e.from_vehicle_id === id ? e.to_vehicle_id : e.from_vehicle_id, direction: e.from_vehicle_id === id ? '后续' : '前置', name: (byId[e.from_vehicle_id === id ? e.to_vehicle_id : e.from_vehicle_id] || {}).name || '待补全' }))
+    related: (tables.vehicle_progression_edges || []).filter(e => e.from_vehicle_id === id || e.to_vehicle_id === id).map(e => ({ id: e.from_vehicle_id === id ? e.to_vehicle_id : e.from_vehicle_id, direction: e.from_vehicle_id === id ? '后续' : '前置', quality:label(e.verification_status), name: (byId[e.from_vehicle_id === id ? e.to_vehicle_id : e.from_vehicle_id] || {}).name || '待补全' }))
   })
 }
-module.exports = { label, present, rows, filter, detail, card, metrics, capabilityMatch, ammoFor, ammoMatch, tagName, ammoColor, weaponGroups, install,
-  get tables() { return tables }, get checkedAt() { return checkedAt }, get byId() { return byId } }
+module.exports = { label, present, rows, filter, detail, card, metrics, capabilityMatch, ammoFor, ammoMatch, tagName, ammoColor, weaponGroups, install, decode, installPackage,
+  get tables() { return tables }, get checkedAt() { return checkedAt }, get byId() { return byId }, get revision() { return revision } }

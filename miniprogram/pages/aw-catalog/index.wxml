@@ -4,7 +4,8 @@
   <input class="search-input" placeholder="搜索车辆名称" value="{{filters.query}}" data-key="query" bindinput="input"/>
   <view class="filter-toolbar"><button class="ghost filter-trigger" data-tab="base" bindtap="showFilters">筛选{{selected.length ? ' · ' + selected.length : ''}} ▾</button><text wx:if="{{selected.length}}" class="link" bindtap="clear">清空筛选</text></view>
   <view wx:if="{{selected.length}}" class="filters"><text wx:for="{{selected}}" wx:key="name" class="tag selected" data-key="{{item.key}}" data-value="{{item.value}}" bindtap="remove">{{item.name}} ×</text></view>
-  <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="muted">随包本地资料</text></view>
+  <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="muted">资料 {{catalogInfo.versionText}}</text></view>
+  <view wx:if="{{catalogInfo.error}}" class="warning">{{catalogInfo.status}} · {{catalogInfo.error}}</view>
   <view wx:if="{{error}}" class="warning">{{error}}</view>
   <view wx:for="{{results}}" wx:key="id" class="card vehicle-card" data-id="{{item.id}}" bindtap="open">
     <view class="row between"><text class="vehicle-name">{{item.displayName}}</text><text class="tag">{{item.is_legendary ? '传奇' : 'T' + item.tier}} · {{item.vehicle_class}}</text></view>

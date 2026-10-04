@@ -4,13 +4,15 @@ const catalog = require('../../utils/aw/catalog')
 const navigation = require('../../utils/aw/navigation')
 const identity = require('../../utils/aw/identity')
 const tokenPlan = require('../../utils/aw/token-plan')
+const updates = require('../../utils/aw/catalog-update')
 Component({
   properties: { vehicleId: String },
   data: { members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentHeight:410,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
-  lifetimes: { attached() { this.prepare() } },
+  lifetimes: { attached() { this.prepare() }, detached() { updates.release(this) } },
   observers: { 'vehicleId'() { if (this.properties.vehicleId) this.prepare() } },
   methods: {
     prepare() {
+      updates.hold(this)
       this.keyboard({detail:{height:0}})
       const s = store.load(), current = store.currentMember()
       const members = s.members.filter(m => m.id === current && m.active)
@@ -99,8 +101,8 @@ Component({
     reward(e) { if(this.data.saving)return;const {id,state}=e.currentTarget.dataset;if(this.data.statusIndex&&state!=='unearned'){this.setData({fieldError:'先登记为已拥有，再记录满经验或已领取'});return}this.setData({tokenRewards:this.data.tokenRewards.map(r=>Object.assign({},r,r.id===id?{state}:{})),fieldError:''}) },
     acquisition(e) { if(this.data.saving)return;this.setData({tokenAcquisition:e.currentTarget.dataset.value,unlockPathId:e.currentTarget.dataset.value==='token'?this.data.unlockPathId:'',fieldError:''}) },
     unlockPath(e) { if(!this.data.saving)this.setData({unlockPathId:e.currentTarget.dataset.id}) },
-    cancel() { if(!this.data.saving)this.triggerEvent('cancel') },
-    manage() { this.triggerEvent('cancel'); navigation.visit('pages/aw-fleet/index',{tab:'players'}) },
+    cancel() { if(!this.data.saving){updates.release(this);this.triggerEvent('cancel')} },
+    manage() { updates.release(this);this.triggerEvent('cancel'); navigation.visit('pages/aw-fleet/index',{tab:'players'}) },
     async save() {
       if(this.data.saving)return
       this.setData({fieldError:'',syncError:''})
@@ -116,7 +118,7 @@ Component({
         if(this.data.tokenAcquisition==='token'&&!this.data.unlockPathId)throw new Error('请选择实际消耗 Token 的解锁路线')
         tokenPlan.setUnlock(asset,this.data.tokenAcquisition,this.data.unlockPathId)
         this.setData({saving:true});await store.saveAndSync(next)
-        store.setCurrentMember(m.id); this.triggerEvent('saved'); wx.showToast({ title: store.syncInfo().ready?'已保存并同步':'已保存本地', icon: 'success' })
+        store.setCurrentMember(m.id); updates.release(this);this.triggerEvent('saved'); wx.showToast({ title: store.syncInfo().ready?'已保存并同步':'已保存本地', icon: 'success' })
       } catch (e) { this.setData({fieldError:e.localSaved?'':e.message,syncError:e.localSaved?'已保存本地，同步未完成：'+e.message:''}) }
       finally{this.setData({saving:false})}
     }

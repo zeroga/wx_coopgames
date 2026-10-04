@@ -1,11 +1,12 @@
 const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const store = require('../../utils/aw/store')
+const updates = require('../../utils/aw/catalog-update')
 function fresh() { return { query: '', tiers: [], classes: [], dealers: [], capabilities: [], ammoTypes: [], ammoTraits: [], acquisition: [], factory: false, penetration: '', speed: '', view: '', camo: '', premium: '', researchable: '' } }
 Page({
   data: { syncError:'', filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
-  onLoad() { this.buildFilterOptions(); this.refresh() },
-  async onShow() { this.refresh();try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}finally{this.refresh()} },
+  onLoad() { updates.init();this.buildFilterOptions(); this.refresh() },
+  async onShow() { this.refresh();await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.buildFilterOptions();this.refresh() },
   buildFilterOptions() {
     const caps = catalog.tables.capabilities.map(c => ({ value: c.code, name: c.name_zh, group: ['armor','defense'].includes(c.category) ? '防护' : ['recon','infantry'].includes(c.category) ? '侦察 / 支援' : c.category === 'weapon' ? '武器能力' : '车辆特性' }))
     this.setData({ groups: [
@@ -31,7 +32,7 @@ Page({
     this.setData({ count: all.length, selected, selection, results: all.slice(0,this.data.limit).map(v=>{
       const c = catalog.card(v,f), summaries = s.members.length ? fleetSummary(s,v.id) : []
       return Object.assign(c,{ team: summaries.slice(0,2), extra: Math.max(0,summaries.length-2) })
-    }), source: '本地资料 · 核对时间：'+catalog.checkedAt.slice(0,10) })
+    }), catalogInfo:updates.info(), source: '原始资料核对时间：'+catalog.checkedAt.slice(0,10) })
   },
   input(e) { const key=e.currentTarget.dataset.key; this.setData({ ['filters.'+key]:e.detail.value, limit:30 }); this.refresh() },
   toggle(e) { const {key,value}=e.currentTarget.dataset, values=this.data.filters[key].slice(), i=values.indexOf(value); if(i>=0) values.splice(i,1); else values.push(value); this.setData({['filters.'+key]:values,limit:30});this.refresh() },

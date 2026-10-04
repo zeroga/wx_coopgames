@@ -2,10 +2,11 @@ const catalog = require('../../utils/aw/catalog')
 const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
 const navigation = require('../../utils/aw/navigation')
+const updates = require('../../utils/aw/catalog-update')
 Page({
   data: { syncError:'', id: '', vehicle: null, team: [], extra: 0, showTeam: false, showMore: false, showBasis: false, sections: { performance:true, weapons:false, abilities:false, upgrades:false, acquisition:false, armor:false, sources:false }, expandedAmmo: {}, editor: false, editMemberId: '', currentId:'' },
-  onLoad(o) { this.setData({ id: o.id || '' }); this.refresh() },
-  async onShow() { if(this.data.editor)return;this.refresh();try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}finally{this.refresh()} },
+  onLoad(o) { updates.init();this.setData({ id: o.id || '' }); this.refresh() },
+  async onShow() { if(this.data.editor)return;this.refresh();await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.refresh() },
   refresh() {
     if (!this.data.id) return
     const v = catalog.detail(this.data.id)
@@ -22,7 +23,7 @@ Page({
   allTeam() { this.setData({showTeam:!this.data.showTeam});this.refresh() },
   ammo(e) { const id=e.currentTarget.dataset.id;this.setData({['expandedAmmo.'+id]:!this.data.expandedAmmo[id]}) },
   edit() { this.setData({ editor:true, editMemberId:store.currentMember() }) },
-  cancel() { this.setData({editor:false}) },
+  cancel() { this.setData({editor:false});this.refresh() },
   saved() { this.setData({editor:false});this.refresh() },
   fleet(e) { const m=e.currentTarget.dataset.member || store.currentMember();navigation.visit('pages/aw-fleet/index',{tab:e.currentTarget.dataset.plan?'plans':'players',member:m,target:e.currentTarget.dataset.target||''}) },
   tree() { navigation.visit('pages/aw-tree/index',{id:this.data.id}) },

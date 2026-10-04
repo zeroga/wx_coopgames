@@ -4,11 +4,13 @@ const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
 const identity = require('../../utils/aw/identity')
 const tokenPlan = require('../../utils/aw/token-plan')
+const updates = require('../../utils/aw/catalog-update')
+const refreshAll = require('../../utils/aw/refresh-all')
 function error(e) { wx.showModal({title:'操作未完成',content:e.message||String(e),showCancel:false}) }
 Page({
   data:{syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
-  onLoad(o){this.setData({tab:o.tab||'overview',memberId:o.member||store.currentMember(),targetId:o.target||''});this.refresh()},
-  async onShow(){if(this.data.editor||this.data.memberForm||this.data.roleForm)return;this.refresh();this.setData({busy:store.connected});try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}finally{this.setData({busy:false});this.refresh()}},
+  onLoad(o){updates.init();this.setData({tab:o.tab||'overview',memberId:o.member||store.currentMember(),targetId:o.target||''});this.refresh()},
+  async onShow(){if(this.data.editor||this.data.memberForm||this.data.roleForm)return;this.refresh();this.setData({busy:store.connected});await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.setData({busy:false});this.refresh()},
   receiveNavigation(o){this.setData({tab:o.tab||this.data.tab,memberId:o.member||this.data.memberId,targetId:o.target||''});this.refresh()},
   refresh(){
     const s=store.load(), members=s.members.slice().sort((a,b)=>a.order-b.order).map(m=>{
@@ -35,7 +37,7 @@ Page({
       return {vehicleId:step.id,name:step.name,paths:tokenPlan.pathCards(step.id,picked),index:ps.findIndex(p=>p.id===picked)}
     }).filter(Boolean).filter(c=>!choices.some(x=>x.vehicleId===c.vehicleId)):[]
     this.setData({archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,choices,routeOptions,
-      sync:store.syncInfo(),visibleMembers:members.filter(m=>m.name.toLowerCase().includes(this.data.memberSearch.toLowerCase())),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
+      sync:store.syncInfo(),catalogInfo:updates.info(),visibleMembers:members.filter(m=>m.name.toLowerCase().includes(this.data.memberSearch.toLowerCase())),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
   },
   async mutate(fn){
     if(store.busy||this.data.busy)return false
@@ -82,7 +84,7 @@ Page({
   },
   roleDragMove(){},
   editAsset(e){const member=e.currentTarget.dataset.member||this.data.memberId;if(member!==store.currentMember())return wx.showToast({title:'只能登记自己的车辆',icon:'none'});this.setData({editor:true,editVehicleId:e.currentTarget.dataset.id})},
-  cancel(){this.setData({editor:false})},
+  cancel(){this.setData({editor:false});this.refresh()},
   saved(){this.setData({editor:false});this.refresh()},
   removeAsset(e){const id=e.currentTarget.dataset.asset;if((store.load().assets[id]||{}).memberId!==store.currentMember())return error(new Error('只能移除自己的车辆'));wx.showModal({title:'移除我的车辆？',content:'移除该车辆及手工职责。若仍被目标路线引用，将重新建立计划前置。',success:r=>{if(r.confirm)this.mutate(s=>fleet.removeAsset(s,id))}})},
   tree(e){navigation.visit('pages/aw-tree/index',{id:e.currentTarget.dataset.id})},
@@ -107,7 +109,7 @@ Page({
   async refreshCloud(){
     if(this.data.editor||this.data.memberForm||this.data.roleForm){this.setData({syncError:'请先保存或取消编辑，再刷新'});return}
     this.setData({busy:true,syncError:''})
-    try{const done=await store.refresh();if(done)wx.showToast({title:'已刷新',icon:'success'});else this.setData({showArchives:true})}
+    try{const result=await refreshAll();this.setData({syncError:result.error});if(!result.error)wx.showToast({title:result.updated?'资料已更新':'已刷新',icon:'success'})}
     catch(e){this.setData({syncError:e.message})}finally{this.setData({busy:false});this.refresh()}
   },
   replaceCloud(){wx.showModal({title:'重新载入云端？',content:'备份包含存档码，请妥善保存。继续将用云端替换当前车队及成员资料的本地未同步版本。',success:async r=>{if(!r.confirm)return;this.setData({busy:true});try{await store.discardAndPull()}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}}})},
