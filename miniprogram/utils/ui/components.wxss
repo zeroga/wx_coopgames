@@ -47,3 +47,5 @@
 .ui-tag-danger { background:#fff0ef; color:#b72c28; }
 .ui-tag-info { background:#eef1fb; color:#425f9a; }
 .ui-tag-special { background:#f1ecf7; color:#6b5795; }
+/* Errors use one contained treatment on every page. */
+.ui-error { box-sizing:border-box; margin:16rpx 0; padding:18rpx; border:1rpx solid rgba(183,44,40,.18); border-radius:12rpx; background:#fff0ef; color:#b72c28; font-size:23rpx; line-height:1.6; }

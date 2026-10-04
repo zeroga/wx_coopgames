@@ -72,6 +72,8 @@ table{width:100%;border-collapse:collapse;font-size:11.5px}th,td{text-align:left
 .meta-badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 5px;border-radius:4px;font-size:9px;font-weight:800;line-height:1.2;background:#fff2df;color:#b45818;border:1px solid #efc79f;vertical-align:middle;margin-right:5px}
 .k02-tags{display:flex;flex-wrap:nowrap;gap:4px;margin-top:8px;min-width:0;overflow:hidden}.k02-tags .chip{flex:0 0 auto}.k02-tags .is-overflow{display:none}.k02-tags.has-overflow::after{content:"…";flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:12px;color:var(--muted);font-size:13px;font-weight:700}
 .k02-trail{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;align-items:flex-end;white-space:nowrap}
+.k02-aw .k02-lead{color:#aaa2ae}.aw-tier{display:inline-flex;align-items:center;justify-content:center;height:19px;padding:0 4px;border:1px solid #ea7428;border-radius:4px;color:#a94d16;font-size:14px;font-weight:900;line-height:1}.aw-markers{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:3px;max-width:115px}.aw-marker{padding:4px 5px;border-radius:4px;color:#fff;font-size:10px;font-weight:700;line-height:1}
+.ct-group{background:var(--card);border:1px solid var(--border);border-radius:11px;box-shadow:0 4px 13px rgba(28,26,30,.05);padding:12.5px}.ct-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.ct-head b{font-size:14px}.ct-body{margin-top:8px}.ct-body .k02{box-shadow:none}.ct-help{font-size:11px;color:var(--muted);line-height:1.5}.ct-filter{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.ct-result{border-top:1px dashed var(--border);padding-top:8px;margin-top:8px;color:var(--muted);font-size:11px}.gl-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);font-size:12px;font-weight:700}.gl-items{padding-top:6px}.gl-items .k02{margin-top:6px}
 
 /* Metrics */
 .metric-line{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px dashed var(--border)}.metric-line:last-child{border-bottom:0}.metric-line b{font-size:14px}
@@ -316,6 +318,15 @@ table{width:100%;border-collapse:collapse;font-size:11.5px}th,td{text-align:left
 <li>KR-04：标题和次信息单行省略号。</li>
 <li>KR-05：标签必须完整显示；放不下的整枚隐藏，并在行末显示独立“…”提示。</li>
 </ul>
+</div>
+<div class="panel span12">
+<div class="head"><h3>AW 车辆身份与内容容器</h3><span class="pill core">K-02 AW / CT-01 / GL-01</span></div>
+<div class="grid">
+<div class="span6 sample"><div class="sample-title"><b>等级与多人规划徽标</b><span class="id ok">K-02 AW</span></div><div class="k02 k02-aw"><div class="k02-lead">MBT</div><div class="k02-main"><div class="k02-title">M1A2C</div><div class="k02-meta">美国 · 经销商名称</div><div class="k02-tags"><span class="chip">ERA</span><span class="chip">APS</span></div></div><div class="k02-trail"><span class="aw-tier">T10</span><div class="aw-markers"><span class="aw-marker" style="background:#d96b27">主力</span><span class="aw-marker" style="background:#663171">备选</span></div></div></div><div class="small" style="margin-top:7px">等级盒约与标题字高一致；车型灰紫色可辨。每枚规划徽标对应一名玩家，颜色标身份、文字标级别。</div></div>
+<div class="span6 sample"><div class="sample-title"><b>成员详情不能悬空</b><span class="id ok">CT-01</span></div><div class="ct-group"><div class="ct-head"><b>Zero · 我</b><button class="btn-compact">修改名字</button></div><div class="ct-help">已拥有 3 · 计划 4</div></div><div class="small" style="margin-top:7px">姓名、操作与计数同属成员信息卡；下方车辆各自为独立卡。</div></div>
+<div class="span6 sample"><div class="sample-title"><b>筛选与结果工具容器</b><span class="id">CT-01 / TBAR-01</span></div><div class="ct-group"><div class="ct-filter"><input class="field72" style="flex:1;width:auto;min-width:120px" placeholder="搜索车辆"/><button class="btn-compact">筛选 · 2</button></div><div class="ct-result">找到 28 辆 · 资料已更新</div></div></div>
+<div class="span6 sample"><div class="sample-title"><b>无职责车辆默认收起</b><span class="id">GL-01</span></div><div class="ct-group"><button class="gl-toggle">未定义职责 · 3 辆 <span>⌄</span></button><div class="small" style="margin-top:8px">位于职责列表底部；展开后每车独立 K-02 卡。总览与成员详情一致。</div></div></div>
+</div>
 </div>
 <div class="panel span6">
 <div class="head"><h3>基础卡片 / 导航卡 / 警告卡</h3><span class="pill core">核心</span></div>

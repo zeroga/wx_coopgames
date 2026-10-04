@@ -1,21 +1,21 @@
 <view class="aw-page">
-  <view wx:if="{{syncError}}" class="warning">{{syncError}}</view>
+  <view wx:if="{{syncError}}" class="ui-error">{{syncError}}</view>
   <view class="hero"><view class="eyebrow">ARMORED WARFARE · VEHICLES</view><view class="title">车辆资料库</view><view class="subtitle">查车辆、比配置、安排车队职责</view></view>
-  <input class="ui-field search-input" placeholder="搜索车辆名称" value="{{filters.query}}" data-key="query" bindinput="input"/>
+  <view class="ui-card card catalog-tools"><input class="ui-field search-input" placeholder="搜索车辆名称" value="{{filters.query}}" data-key="query" bindinput="input"/>
   <view class="filter-toolbar"><button class="ui-button ui-compact ghost filter-trigger" data-tab="base" bindtap="showFilters">筛选{{selected.length ? ' · ' + selected.length : ''}} ▾</button><text wx:if="{{selected.length}}" class="link" bindtap="clear">清空筛选</text></view>
   <view wx:if="{{selected.length}}" class="filters"><view class="ui-option-grid"><view wx:for="{{selected}}" wx:key="name" class="ui-option selected" data-key="{{item.key}}" data-value="{{item.value}}" bindtap="remove"><view class="ui-option-face">{{item.name}} ×</view></view></view></view>
-  <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="muted">资料 {{catalogInfo.versionText}}</text></view>
+  <view class="row between result-meta"><text class="muted">找到 {{count}} 辆车辆</text><text class="muted">资料 {{catalogInfo.versionText}}</text></view></view>
   <view wx:if="{{catalogInfo.error}}" class="warning">{{catalogInfo.status}} · {{catalogInfo.error}}</view>
-  <view wx:if="{{error}}" class="warning">{{error}}</view>
+  <view wx:if="{{error}}" class="ui-error">{{error}}</view>
   <view wx:for="{{results}}" wx:key="id" class="ui-card vehicle-card" data-id="{{item.id}}" bindtap="open">
     <view class="vehicle-heading"><view class="vehicle-label-wrap"><aw-vehicle-label vehicle-id="{{item.id}}" tags="{{item.caps}}" markers="{{item.markers}}" catalog-revision="{{catalogRevision}}"/></view><text class="vehicle-chevron">›</text></view>
     <view wx:if="{{item.performance}}" class="muted">{{item.performance}}</view><view wx:if="{{item.ammoSummary}}" class="line">{{item.ammoSummary}}</view>
     <view wx:for="{{item.team}}" wx:for-item="member" wx:key="id" class="line"><view class="row between"><text><text class="member-dot" style="background:{{member.color}}"></text>{{member.memberName}} · {{member.statusText}}</text><button wx:if="{{member.status === 'planned'}}" class="ui-button {{member.needsPrerequisite ? 'prerequisite-alert' : 'quiet-control'}}" data-vehicle="{{item.id}}" data-member="{{member.memberId}}" catchtap="configurePrerequisites" aria-label="前置与 Token 配置"><image wx:if="{{member.needsPrerequisite}}" class="prerequisite-icon" src="/assets/icons/warning.svg"/><text wx:else="">前置配置</text></button></view><view wx:if="{{member.customPrerequisite}}" class="custom-prerequisite">自定义前置</view><view class="muted">{{member.roleText}}</view><view wx:if="{{member.planText}}" class="muted">{{member.planText}}</view></view>
     <view wx:if="{{item.extra}}" class="link">+{{item.extra}} 条车队记录</view>
   </view>
-  <view wx:if="{{!results.length}}" class="empty">没有符合条件的车辆。可减少筛选条件；资料未知也会影响命中。</view>
-  <view class="muted">缺少记录不代表没有该能力</view>
-  <view wx:if="{{count > results.length}}" class="empty">继续向下滚动加载</view>
+  <view wx:if="{{!results.length}}" class="ui-card card empty">没有符合条件的车辆。可减少筛选条件；资料未知也会影响命中。</view>
+  <view class="ui-card card catalog-note muted">缺少记录不代表没有该能力</view>
+  <view wx:if="{{count > results.length}}" class="ui-card card empty">继续向下滚动加载</view>
 </view>
 
 <block wx:if="{{filterTab}}">
@@ -35,6 +35,6 @@
   </view>
 </block>
 
-<view class="module-footer"><text class="link" bindtap="awHome">‹ AW 模块入口</text></view>
+<view class="ui-card card module-footer"><text class="link" bindtap="awHome">‹ AW 模块入口</text></view>
 
 <aw-prerequisites wx:if="{{prerequisiteForm}}" vehicle-id="{{prerequisiteForm.vehicleId}}" member-id="{{prerequisiteForm.memberId}}" bind:saved="prerequisitesSaved" bind:cancel="closePrerequisites"/>

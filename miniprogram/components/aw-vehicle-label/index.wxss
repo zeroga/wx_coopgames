@@ -1,5 +1,5 @@
 .vehicle-label { display:flex; align-items:flex-start; flex-wrap:nowrap; gap:20rpx; min-width:0; width:100%; box-sizing:border-box; text-align:left; color:#1c1a1e; line-height:1; }
-.vehicle-class { flex:none; display:flex; align-items:center; justify-content:flex-start; min-width:72rpx; color:#d7d3d9; font-size:36rpx; font-weight:900; line-height:1; }
+.vehicle-class { flex:none; display:flex; align-items:center; justify-content:flex-start; min-width:72rpx; color:#aaa2ae; font-size:36rpx; font-weight:900; line-height:1; }
 .vehicle-main { flex:1; min-width:0; overflow:hidden; display:flex; flex-direction:column; gap:9rpx; padding-top:2rpx; }
 .vehicle-name,.vehicle-meta { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .vehicle-name { font-size:32rpx; font-weight:800; line-height:1.2; }
@@ -9,7 +9,7 @@
 .vehicle-probes { position:absolute; left:0; top:0; display:flex; flex-direction:column; visibility:hidden; pointer-events:none; }
 .vehicle-overflow { flex:none; color:#6b6370; font-size:24rpx; line-height:1; }
 .vehicle-trail { flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:12rpx; max-width:38%; }
-.vehicle-tier { box-sizing:border-box; display:flex; align-items:center; justify-content:center; min-width:76rpx; height:54rpx; padding:0 8rpx; border:2rpx solid #ea7428; border-radius:9rpx; color:#a94d16; font-size:32rpx; font-weight:900; line-height:1; }
+.vehicle-tier { box-sizing:border-box; display:flex; align-items:center; justify-content:center; min-width:60rpx; height:38rpx; padding:0 7rpx; border:1rpx solid #ea7428; border-radius:8rpx; color:#a94d16; font-size:28rpx; font-weight:900; line-height:1; }
 .vehicle-markers { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:5rpx; }
 .vehicle-marker { display:inline-block; padding:7rpx 10rpx; border-radius:7rpx; color:#fff; font-size:20rpx; font-weight:700; line-height:1; white-space:nowrap; }
 .vehicle-label-hero { color:#fff; }

@@ -27,5 +27,17 @@
 .undefined-toggle { display:flex; justify-content:space-between; width:100%; }
 
 .role-group,.member-detail { margin:24rpx 0; }
+.role-group .vehicle-card:last-child { margin-bottom:0; }
+.member-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6rpx 12rpx; }
+.member-header .actions { margin:0; }
+.member-header .member-count { flex-basis:100%; }
+.member-undefined .vehicle-card:last-child,.undefined-group .vehicle-card:last-child { margin-bottom:0; }
+.member-search .ui-field,.planning-selector .ui-field { height:72rpx; min-height:72rpx; }
+.member-buttons { margin:10rpx 0 0; }
+.role-tools .muted { margin-top:8rpx; }
+.section-heading { padding-top:12rpx; padding-bottom:12rpx; }
+.section-heading .section-title { margin:0; }
+.section-heading .ui-button { margin-top:10rpx; }
+.member-token .ui-button { margin-top:12rpx; }
 
 @import "../../utils/ui/components.wxss";

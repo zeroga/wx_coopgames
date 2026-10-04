@@ -9,6 +9,11 @@
 .filter-tab { flex:1 0 auto; }
 .filter-content { padding-bottom:12rpx; }
 .vehicle-meta { margin:8rpx 0; }
+.catalog-tools .search-input { margin:0; height:72rpx; min-height:72rpx; }
+.catalog-tools .filter-toolbar { margin:12rpx 0 0; }
+.catalog-tools .filters { margin:12rpx 0 0; }
+.catalog-tools .result-meta { margin:12rpx 0 0; }
+.catalog-note { text-align:center; padding:12rpx 18rpx; }
 @import "../../utils/ui/components.wxss";
 
 .sheet { display:flex; flex-direction:column; }

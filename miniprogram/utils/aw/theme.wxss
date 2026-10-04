@@ -78,3 +78,5 @@ button.quiet-control.danger { color:#cf3a36; }
 .vehicle-toolbar .vehicle-meta { margin-right:auto; flex:1; min-width:150rpx; display:flex; align-items:center; flex-wrap:wrap; gap:4rpx 8rpx; }
 .custom-prerequisite { display:inline-block; background:#f1ecf7; color:#6b5795; border-radius:8rpx; font-size:23rpx; padding:6rpx 14rpx; margin:8rpx 0; }
 @import "./vehicle-card.wxss";
+/* Footer navigation is a compact content container rather than loose page text. */
+.ui-card.module-footer{margin:18rpx 24rpx 28rpx;padding:8rpx 18rpx;text-align:center}

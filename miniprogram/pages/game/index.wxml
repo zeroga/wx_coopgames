@@ -40,8 +40,8 @@
   </view>
 
   <view class="summary">
-    <view class="summary-box"><view class="summary-num">{{stats.vGot}}<text>/{{stats.vAll}}</text></view><view class="summary-label">车辆已获取</view></view>
-    <view class="summary-box"><view class="summary-num">{{stats.gDone}}<text>/{{stats.gAll}}</text></view><view class="summary-label">目标完成</view></view>
+    <view class="ui-card summary-box"><view class="summary-num">{{stats.vGot}}<text>/{{stats.vAll}}</text></view><view class="summary-label">车辆已获取</view></view>
+    <view class="ui-card summary-box"><view class="summary-num">{{stats.gDone}}<text>/{{stats.gAll}}</text></view><view class="summary-label">目标完成</view></view>
   </view>
 
   <view class="tabs">

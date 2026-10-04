@@ -6,9 +6,13 @@
   </view>
 
   <view class="ui-card form card">
+    <view class="field-label">赛季编号</view>
     <input class="input" placeholder="赛季编号，例如 S20" value="{{seasonKeyInput}}" data-field="seasonKeyInput" bindinput="inputField"/>
+    <view class="field-label">地区与中文名</view>
     <input class="input" placeholder="地区 / 中文名" value="{{seasonCnInput}}" data-field="seasonCnInput" bindinput="inputField"/>
+    <view class="field-label">英文标题（可选）</view>
     <input class="input" placeholder="英文标题（可选）" value="{{seasonEnInput}}" data-field="seasonEnInput" bindinput="inputField"/>
+    <view class="field-label">车辆名称</view>
     <textarea class="textarea" placeholder="车辆名称：每行一台，也可用逗号分隔" value="{{seasonVehiclesInput}}" data-field="seasonVehiclesInput" bindinput="inputField"></textarea>
     <view class="actions">
       <button class="ui-button btn btn-primary" bindtap="saveSeasonDefinition">保存资料</button>

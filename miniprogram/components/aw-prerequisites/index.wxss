@@ -42,3 +42,5 @@
 .sheet { display:flex; flex-direction:column; }
 .head,.current-vehicle,.footer { flex:none; }
 .content { flex:0 1 auto; min-height:0; }
+
+.search.ui-field { min-height:72rpx; height:72rpx; padding:0 20rpx; }

@@ -1,3 +1,9 @@
 @import "../../utils/aw/theme.wxss";
 
 @import "../../utils/ui/components.wxss";
+.tree-tools { display:flex; flex-direction:column; gap:12rpx; }
+.tree-route .label { margin-top:14rpx; }
+.tree-route .vehicle-card:first-child { margin-top:0; }
+.tree-route .vehicle-card:last-child { margin-bottom:0; }
+.results-head { display:flex; align-items:center; justify-content:space-between; gap:12rpx; }
+.load-card .ui-button { width:100%; }

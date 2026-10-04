@@ -17,3 +17,4 @@
 .assign-btn { box-sizing:border-box; text-align:center; }
 @import "../../utils/ui/components.wxss";
 .sr-option { margin:0; }
+.summary-box{box-sizing:border-box}

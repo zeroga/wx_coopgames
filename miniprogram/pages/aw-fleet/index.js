@@ -9,7 +9,7 @@ const refreshAll = require('../../utils/aw/refresh-all')
 const presentation = require('../../utils/aw/vehicle-presentation')
 function error(e) { wx.showModal({title:'操作未完成',content:e.message||String(e),showCancel:false}) }
 Page({
-  data:{draggingRole:'',prerequisiteForm:null,syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,undefinedExpanded:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
+  data:{draggingRole:'',prerequisiteForm:null,syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,undefinedExpanded:false,memberUndefinedExpanded:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
   configurePrerequisites(e){const d=e.currentTarget.dataset;this.setData({prerequisiteForm:{vehicleId:d.vehicle||d.id||this.data.id,memberId:d.member||store.currentMember()}})},
   closePrerequisites(){this.setData({prerequisiteForm:null});this.refresh()},
   prerequisitesSaved(){this.closePrerequisites()},
@@ -38,7 +38,7 @@ Page({
     const undefinedAsset=a=>(a.explicit||assignments.some(x=>x.assetId===a.id))&&!assignments.some(x=>x.assetId===a.id&&x.roleId)
     const undefinedIds=new Set(Object.values(s.assets).filter(undefinedAsset).map(a=>a.vehicleId))
     const undefinedVehicles=Array.from(undefinedIds).map(id=>{const v=catalog.byId[id]||{name:'资料待补全'},summaries=fleet.summary(s,id).filter(a=>undefinedAsset(a));return {id,name:v.name_zh||v.name,members:summaries.map(x=>Object.assign({},x,{color:presentation.memberColor(s,x.memberId)})),markers:presentation.markers(s,summaries)}})
-    this.setData({catalogRevision:catalog.revision, archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview,undefinedVehicles,targets,targetId,plan,unionPlan,planningWarnings:unionPlan?unionPlan.warnings.filter(x=>!x.includes('需要前置')).map(x=>x.replace(/待核实/g,'暂不可计算')):[],
+    this.setData({catalogRevision:catalog.revision, archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,memberAssignedAssets:assets.filter(a=>a.roles.some(r=>r.roleId)),memberUndefinedAssets:assets.filter(a=>!a.roles.some(r=>r.roleId)),roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview,undefinedVehicles,targets,targetId,plan,unionPlan,planningWarnings:unionPlan?unionPlan.warnings.filter(x=>!x.includes('需要前置')).map(x=>x.replace(/待核实/g,'暂不可计算')):[],
       sync:store.syncInfo(),catalogInfo:updates.info(),visibleMembers:members.filter(m=>m.name.toLowerCase().includes(this.data.memberSearch.toLowerCase())),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
   },
   async mutate(fn){
@@ -51,14 +51,15 @@ Page({
   mutateRoles(fn){return this.mutate(fn)},
   archives(){this.setData({showArchives:!this.data.showArchives})},
   toggleUndefined(){this.setData({undefinedExpanded:!this.data.undefinedExpanded})},
+  toggleMemberUndefined(){this.setData({memberUndefinedExpanded:!this.data.memberUndefinedExpanded})},
   memberSearch(e){this.setData({memberSearch:e.detail.value});this.refresh()},
   step(e){const id=e.currentTarget.dataset.id;this.setData({['expandedSteps.'+id]:!this.data.expandedSteps[id]})},
   tokenDetails(e){const id=e.currentTarget.dataset.id;this.setData({['expandedTokens.'+id]:!this.data.expandedTokens[id]})},
   keyboard(e){this.setData({keyboardHeight:Number(e.detail.height)||0})},
   tab(e){this.setData({tab:e.currentTarget.dataset.tab});this.refresh()},
   awHome(){navigation.visit('pages/aw-home/index')},
-  selectMember(e){this.setData({memberId:e.currentTarget.dataset.id,targetId:''});this.refresh()},
-  pickMember(e){const m=this.data.members[Number(e.detail.value)];this.setData({memberId:m.id,targetId:''});this.refresh()},
+  selectMember(e){this.setData({memberId:e.currentTarget.dataset.id,targetId:'',memberUndefinedExpanded:false});this.refresh()},
+  pickMember(e){const m=this.data.members[Number(e.detail.value)];this.setData({memberId:m.id,targetId:'',memberUndefinedExpanded:false});this.refresh()},
   newMember(){if(store.currentMember())return error(new Error('已经有自己的玩家档'));this.setData({fieldError:'',memberForm:{id:'',name:''}})},
   renameMember(){if(!store.canEdit(this.data.memberId))return error(new Error('只能修改自己的玩家信息'));if(this.data.member)this.setData({memberForm:{id:this.data.member.id,name:this.data.member.name}})},
   memberName(e){this.setData({'memberForm.name':e.detail.value})},
