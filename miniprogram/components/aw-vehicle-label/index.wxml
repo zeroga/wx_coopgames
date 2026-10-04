@@ -1,5 +1,9 @@
 <view class="vehicle-label {{variant === 'hero' ? 'vehicle-label-hero' : ''}}">
-  <view class="vehicle-badge vehicle-class" aria-label="{{className}}"><text class="vehicle-class-code">{{classCode}}</text></view>
-  <view class="vehicle-badge vehicle-tier"><text>{{tierText}}</text></view>
-  <text class="vehicle-name">{{displayName}}</text>
+  <view class="vehicle-class" aria-label="{{className}}"><text>{{classCode}}</text></view>
+  <view class="vehicle-main">
+    <text class="vehicle-name">{{displayName}}</text>
+    <text wx:if="{{metaText}}" class="vehicle-meta">{{metaText}}</text>
+    <view wx:if="{{tags.length}}" class="vehicle-tags"><text wx:for="{{visibleTags}}" wx:key="*this" class="vehicle-tag">{{item}}</text><text wx:if="{{hiddenTags}}" class="vehicle-overflow" aria-label="还有 {{hiddenTags}} 项能力">…</text><view class="vehicle-probes"><text wx:for="{{tags}}" wx:key="*this" class="vehicle-tag-probe">{{item}}</text></view></view>
+  </view>
+  <view class="vehicle-trail"><text class="vehicle-tier">{{tierText}}</text><view wx:if="{{markers.length}}" class="vehicle-markers"><text wx:for="{{markers}}" wx:key="id" class="vehicle-marker" style="background:{{item.color}}" aria-label="{{item.memberName}} · {{item.label}}">{{item.label}}</text></view></view>
 </view>

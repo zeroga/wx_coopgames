@@ -2,6 +2,7 @@ const navigation = require('../../utils/aw/navigation')
 const catalog = require('../../utils/aw/catalog')
 const store = require('../../utils/aw/store')
 const updates = require('../../utils/aw/catalog-update')
+const presentation = require('../../utils/aw/vehicle-presentation')
 function fresh() { return { query: '', tiers: [], classes: [], dealers: [], capabilities: [], ammoTypes: [], ammoTraits: [], acquisition: [], factory: false, penetration: '', speed: '', view: '', camo: '', premium: '', researchable: '' } }
 Page({
   data: { prerequisiteForm:null, syncError:'', filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
@@ -34,7 +35,7 @@ Page({
     const selection = {}; selected.forEach(x=>{selection[x.key+':'+x.value]=true})
     this.setData({catalogRevision:catalog.revision,  count: all.length, selected, selection, results: all.slice(0,this.data.limit).map(v=>{
       const c = catalog.card(v,f), summaries = s.members.length ? fleetSummary(s,v.id) : []
-      return Object.assign(c,{ team: summaries.slice(0,2), extra: Math.max(0,summaries.length-2) })
+      return Object.assign(c,{ team: summaries.slice(0,2).map(x=>Object.assign({},x,{color:presentation.memberColor(s,x.memberId)})), extra: Math.max(0,summaries.length-2), markers:presentation.markers(s,summaries) })
     }), catalogInfo:updates.info(), source: '原始资料核对时间：'+catalog.checkedAt.slice(0,10) })
   },
   input(e) { const key=e.currentTarget.dataset.key; this.setData({ ['filters.'+key]:e.detail.value, limit:30 }); this.refresh() },

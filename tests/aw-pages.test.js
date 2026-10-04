@@ -268,11 +268,16 @@ test('shared vehicle label reads live catalog identity, legendary tier and missi
   const original=c.byId[v.id],revision=c.revision
   try{
     c.byId[v.id]={...original,name:'线上更新后的车名',name_zh:null,vehicle_class:'TD',tier:9,is_legendary:true}
-    p.properties.catalogRevision=revision+1;def.observers['vehicleId, name, catalogRevision'].call(p)
+    p.properties.catalogRevision=revision+1;def.observers['vehicleId, name, catalogRevision, tags, markers'].call(p)
     assert.equal(p.data.displayName,'线上更新后的车名');assert.equal(p.data.classCode,'TD');assert.equal(p.data.tierText,'传奇');assert.equal(p.data.className,'坦克歼击车')
   }finally{c.byId[v.id]=original}
   p.properties={vehicleId:'missing',name:'历史车辆'};p.refresh()
   assert.equal(p.data.displayName,'历史车辆');assert.equal(p.data.tierText,'T—');assert.equal(p.data.classCode,'—')
+  p.properties.tags=['ERA','APS','烟幕']
+  let width=70
+  p.createSelectorQuery=()=>({select(){return this},selectAll(){return this},boundingClientRect(){return this},exec(fn){fn([{width},[{width:25},{width:25},{width:25}]])}})
+  p.measureTags();assert.deepEqual(p.data.visibleTags,['ERA']);assert.equal(p.data.hiddenTags,2)
+  width=85;p.measureTags();assert.deepEqual(p.data.visibleTags,['ERA','APS','烟幕']);assert.equal(p.data.hiddenTags,0)
   for(const dir of ['pages/aw-catalog','pages/aw-fleet','pages/aw-vehicle','pages/aw-tree','components/aw-prerequisites','components/aw-asset-editor']){
     const cfg=JSON.parse(fs.readFileSync(path.join(__dirname,'../miniprogram',dir,'index.json'),'utf8'))
     assert.equal(cfg.usingComponents['aw-vehicle-label'],'/components/aw-vehicle-label/index')

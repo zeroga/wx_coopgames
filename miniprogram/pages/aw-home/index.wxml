@@ -3,5 +3,5 @@
   <view class="ui-card card module-entry" data-page="catalog" bindtap="open"><view><view class="card-title">车辆资料库</view><view class="muted">筛选车辆 · 武器与弹药 · 科技树</view></view><text class="entry-arrow">›</text></view>
   <view class="ui-card card module-entry" data-page="fleet" bindtap="open"><view><view class="card-title">车队管理</view><view class="muted">成员存档 · 职责安排 · 获取规划</view></view><text class="entry-arrow">›</text></view>
   <view class="ui-card card"><view class="row between"><text class="card-title">资料更新</text><button class="ui-button ui-compact ghost small" disabled="{{busy || catalogInfo.busy}}" loading="{{busy || catalogInfo.busy}}" bindtap="refreshCloud">刷新</button></view><view class="muted">资料 {{catalogInfo.versionText}} · {{catalogInfo.source}}</view><view class="muted">发布于 {{catalogInfo.timeText}}</view><view class="muted">{{catalogInfo.status}}</view><view class="muted">进入 AW 自动检查；刷新同时同步存档和资料。</view><view wx:if="{{refreshError || catalogInfo.error}}" class="warning">{{refreshError || catalogInfo.error}}</view></view>
-  <view class="muted">测试版 2026.10.04.7 · 资料缓存后可离线使用</view>
+  <view class="muted">测试版 2026.10.05.1 · 资料缓存后可离线使用</view>
 </view>

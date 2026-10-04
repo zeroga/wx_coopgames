@@ -1,6 +1,11 @@
 @import "../../utils/aw/theme.wxss";
 .aw-page { padding-bottom:calc(170rpx + env(safe-area-inset-bottom)); }
 .section-head { display:flex; align-items:center; justify-content:space-between; gap:20rpx; min-height:60rpx; }
+.metrics { display:block; margin:12rpx 0; }
+.metric { display:flex; align-items:baseline; justify-content:space-between; gap:16rpx; padding:16rpx 0; border-bottom:1rpx dashed rgba(28,26,30,.12); border-radius:0; background:transparent; }
+.metric .value { flex:none; margin:0; font-size:28rpx; }
+.ammo-details .metrics { display:grid; grid-template-columns:1fr 1fr; gap:0 24rpx; }
+.ammo-details .metrics > view { display:flex; align-items:baseline; justify-content:space-between; gap:8rpx; min-width:0; padding:12rpx 0; border-bottom:1rpx dashed rgba(28,26,30,.12); font-size:24rpx; }
 .fold,.fold-light { flex:none; font-size:23rpx; color:#a94d16; }
 .fold-light { color:#eac9b5; }
 .weapon-name { font-size:28rpx; font-weight:800; line-height:1.5; overflow-wrap:break-word; min-width:0; }
