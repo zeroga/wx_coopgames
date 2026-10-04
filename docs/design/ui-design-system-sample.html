@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>微信小程序 UI 设计系统 · UI 设计样板 v2.1</title>
+<style>
+:root{
+  --page:#f1f0f2;--text:#1c1a1e;--muted:#6b6370;--accent:#ea7428;--member-b:#663171;
+  --success:#0c7156;--sync:#58ba9b;--danger:#cf3a36;--control:#ece9ed;--card:#fbfafc;
+  --input:#f6f4f7;--note:#f2eff3;--border:rgba(28,26,30,.12);--shadow:0 8px 26px rgba(28,26,30,.05);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#dedcdf}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:#ebe9ec}
+.shell{max-width:1480px;margin:auto;padding:22px}
+.hero{background:#1c1a1e;color:white;border-radius:18px;padding:24px 28px;margin-bottom:16px}
+.hero h1{margin:0 0 8px;font-size:30px}.hero p{margin:0;color:#c9c3cb;line-height:1.7;font-size:13px}
+.hero .meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}
+.pill.core{background:#eef7f3;color:#187458}.pill.conditional{background:#fff2df;color:#946126}.pill.module{background:#eee8f3;color:#663171}.pill.deprecated{background:#f0eeee;color:#817985}
+.nav{position:sticky;top:0;z-index:20;background:rgba(235,233,236,.96);backdrop-filter:blur(10px);padding:10px 0 12px;display:flex;gap:7px;flex-wrap:wrap}
+.nav a{text-decoration:none;color:#514a55;background:white;border:1px solid var(--border);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:700}
+.section{margin-top:16px}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px}
+.section-title h2{font-size:20px;margin:0}.section-title p{font-size:11px;color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.span12{grid-column:span 12}.span8{grid-column:span 8}.span7{grid-column:span 7}.span6{grid-column:span 6}.span5{grid-column:span 5}.span4{grid-column:span 4}.span3{grid-column:span 3}
+.head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.head h3{font-size:15px;margin:0}.id{padding:4px 7px;border-radius:999px;background:#1c1a1e;color:#fff;font-size:10px;font-weight:900;white-space:nowrap}
+.id.ok{background:#0c7156}.id.cond{background:#946126}.id.mod{background:#663171}
+.small{font-size:11px;color:var(--muted);line-height:1.55}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#59525c}
+.sample{background:#fafafa;border:1px solid #e4e0e5;border-radius:12px;padding:11px}
+.sample+.sample{margin-top:9px}
+.sample-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.sample-title b{font-size:12px}
+.callout{background:#fff9f2;border-left:3px solid var(--accent);padding:8px 10px;font-size:11px;line-height:1.6;border-radius:0 7px 7px 0}
+.rule-list{margin:0;padding-left:18px;font-size:12px;line-height:1.7}.rule-list li+li{margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}th,td{text-align:left;padding:8px 7px;border-bottom:1px solid #ece9ed;vertical-align:top}th{color:var(--muted);font-size:10.5px}
+
+/* Foundations */
+.swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.swatch{border:1px solid #ddd;border-radius:9px;padding:8px;background:#fff}.swatch-color{height:38px;border-radius:6px;margin-bottom:6px}.swatch b{font-size:11px}.swatch div:last-child{font-size:10px;color:var(--muted)}
+.type-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid #eee}.type-row:last-child{border:0}
+.radius-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.radius-box{height:48px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted)}
+
+/* Buttons and controls */
+.btn{appearance:none;border:0;border-radius:7px;font-size:13px;line-height:1;padding:9px 13px;background:#fff;color:var(--text);font-family:inherit}
+.btn-primary{background:var(--text);color:#fff}.btn-ghost{background:#fff;color:var(--text);border:1px solid var(--border)}.btn-danger{background:#fff;color:var(--danger);border:1px solid rgba(207,58,54,.2)}.btn:disabled{opacity:.45}
+.btn-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.btn-row.equal>*{flex:1;min-width:0}.btn-full{width:100%}
+.btn-compact{appearance:none;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text);font-family:inherit;font-size:11.5px;line-height:1;padding:7px 10px}
+.quiet-text{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:2px 4px;font-size:11.5px;color:var(--muted);font-weight:700}.quiet-text::before{content:"";position:absolute;inset:-8px}
+.tabs{display:flex;background:#dedbe0;border-radius:8px;padding:2.5px}.tab{flex:1;text-align:center;padding:8.5px 6px;border-radius:6px;font-weight:700;color:var(--muted);font-size:13px}.tab.active{background:#fff;color:var(--text);box-shadow:0 1.5px 5px rgba(28,26,30,.08)}
+.segment{display:inline-flex;background:var(--control);border-radius:6px;padding:1.5px}.seg{padding:5px 8.5px;border-radius:4.5px;font-size:11px;color:var(--muted);white-space:nowrap}.seg.a{background:var(--accent);color:#fff;font-weight:700}.seg.b{background:var(--member-b);color:#fff;font-weight:700}
+.chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:5px;background:var(--control);font-size:11px;color:var(--muted);white-space:nowrap}.chip.active{background:var(--accent);color:#fff;font-weight:700}.chip.warn{background:#fff2df;color:#946126}.chip.good{background:#eef7f3;color:#187458}.chip.danger{background:#fff0ef;color:#b72c28}
+.field88,.field72,.field62,.textarea{width:100%;border:0;outline:0;font-family:inherit;color:var(--text)}.field88{height:44px;background:var(--page);border-radius:7px;padding:0 10px;font-size:13px}.field72{height:36px;background:var(--page);border-radius:6px;padding:0 9px;font-size:12.5px}.field62{height:31px;background:var(--input);border-radius:5px;padding:0 7px;font-size:12px}.textarea{min-height:52px;background:var(--note);border-radius:6px;padding:8px;font-size:11.5px}
+
+/* Cards and list */
+.card{background:var(--card);border:1px solid var(--border);border-radius:11px;box-shadow:0 4px 13px rgba(28,26,30,.05);padding:12.5px}
+.nav-card{display:flex;align-items:center;justify-content:space-between;gap:10px}.nav-card .arrow{color:var(--accent);font-size:20px;font-weight:800}
+.row{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px dashed var(--border)}.row-solid{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(28,26,30,.10)}
+.check{width:17px;height:17px;border-radius:4.5px;border:1.5px solid rgba(28,26,30,.25);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex:none}.check.on{background:var(--success);border-color:var(--success);color:#fff}
+.warning-card{background:#fff2df;border:1px solid #e5c98f;border-radius:11px;padding:12px}
+
+/* K02 */
+.k02{display:flex;align-items:flex-start;flex-wrap:nowrap;gap:10px;padding:12.5px;background:var(--card);border:1px solid var(--border);border-radius:11px;box-shadow:0 4px 13px rgba(28,26,30,.05);min-width:0}
+.k02-lead{flex:0 0 auto;min-width:36px;font-size:19px;font-weight:900;color:#d7d3d9;line-height:1}
+.k02-main{flex:1 1 auto;min-width:0;overflow:hidden}.k02-title{font-size:16px;font-weight:900;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k02-meta{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta-badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 5px;border-radius:4px;font-size:9px;font-weight:800;line-height:1.2;background:#fff2df;color:#b45818;border:1px solid #efc79f;vertical-align:middle;margin-right:5px}
+.k02-tags{display:flex;flex-wrap:nowrap;gap:4px;margin-top:8px;min-width:0;overflow:hidden}.k02-tags .chip{flex:0 0 auto}.k02-tags .is-overflow{display:none}.k02-tags.has-overflow::after{content:"…";flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:12px;color:var(--muted);font-size:13px;font-weight:700}
+.k02-trail{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;align-items:flex-end;white-space:nowrap}
+
+/* Metrics */
+.metric-line{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px dashed var(--border)}.metric-line:last-child{border-bottom:0}.metric-line b{font-size:14px}
+.metric-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.metric-tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.metric-tile{background:#f1f0f2;border-radius:7px;padding:10px}.metric-tile .label{font-size:10.5px;color:var(--muted)}.metric-tile .value{font-size:18px;font-weight:900;margin-top:2px}
+
+/* Accordion / forms / states */
+.accordion{background:var(--card);border:1px solid var(--border);border-radius:11px;box-shadow:0 4px 13px rgba(28,26,30,.05)}.accordion-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12.5px;min-height:48px}.accordion-title{font-size:14px;font-weight:800}.accordion-action{font-size:11.5px;color:var(--accent);white-space:nowrap}.accordion-body{border-top:1px solid rgba(28,26,30,.08);padding:12.5px}
+.form-field{margin-bottom:13px}.form-label{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;margin-bottom:6px}.required{color:var(--danger)}.form-help{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.5}.form-error{font-size:10.5px;color:var(--danger);margin-top:5px}.field-error{border:1px solid rgba(207,58,54,.45)!important;background:#fff7f6!important}
+.statebox{padding:10px 12px;border-radius:8px;font-size:11.5px}.statebox.warn{background:#fff2df;border:1px solid #e5c98f;color:#7b4a1e}.statebox.err{background:#fff0ef;border:1px solid #efb9b6;color:#a32d29}.toast{padding:10px 12px;border-radius:8px;background:#1c1a1e;color:#fff;font-size:11.5px}
+.empty{text-align:center;padding:24px 10px;color:var(--muted);font-size:11.5px}.load-state{display:flex;align-items:center;justify-content:center;gap:7px;padding:16px 10px;border:1px dashed #d6d1d8;border-radius:8px;font-size:11px;color:var(--muted)}.spinner{width:14px;height:14px;border:2px solid #d7d2d9;border-top-color:var(--accent);border-radius:50%}
+
+/* Overlay */
+.sheet-stage{background:#e3e0e4;padding:36px 12px 0;border-radius:12px;overflow:hidden}.sheet{background:#fbfafc;border-radius:12px 12px 0 0;box-shadow:0 -7px 22px rgba(28,26,30,.12)}.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:13px 12px 9px}.sheet-title{font-size:14px;font-weight:800}.sheet-content{padding:0 12px;max-height:125px;overflow:hidden}.sheet-foot{padding:9px 12px 12px;border-top:1px solid rgba(28,26,30,.08)}
+.dialog-stage{background:#e3e0e4;padding:30px 12px;border-radius:12px}.dialog{max-width:310px;margin:auto;background:#fff;border-radius:11px;padding:14px;box-shadow:0 15px 36px rgba(28,26,30,.15)}.dialog h4{margin:0;font-size:14px}.dialog p{font-size:11px;color:var(--muted);line-height:1.55}
+.sort-row{display:flex;align-items:center;gap:5px;padding:8px 6px;border:1px solid var(--border);border-radius:8px;background:#fff}.sort-handle{width:26px;text-align:center;color:var(--muted);font-size:16px;font-weight:900}.sort-title{flex:1;font-size:12px;font-weight:800}.sort-actions{display:flex;gap:5px}.sort-chip{padding:4px 6px;border-radius:5px;background:#ece9ed;color:var(--muted);font-size:10px;font-weight:700}
+
+/* Responsive and sticky */
+.sticky-stage{height:180px;overflow:hidden;border-radius:10px;border:1px solid #ddd;background:var(--page);position:relative}.sticky-top{position:absolute;top:0;left:0;right:0;background:rgba(241,240,242,.96);border-bottom:1px solid rgba(28,26,30,.10);padding:8px 10px;z-index:2}.sticky-body{padding:52px 10px 58px}.sticky-bottom{position:absolute;bottom:0;left:0;right:0;background:#fbfafc;border-top:1px solid rgba(28,26,30,.12);padding:8px 10px;z-index:2}
+.resp{border:1px solid #ddd;border-radius:10px;padding:10px;background:var(--page)}.resp.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.resp.three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pagination{display:flex;align-items:center;gap:6px}.pagination-control{display:flex;align-items:center;justify-content:center;height:36px;min-width:36px;padding:0 11px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--text);font-family:inherit;font-size:13px;line-height:1}.pagination-label{display:flex;align-items:center;justify-content:center;height:36px;min-width:64px;padding:0 10px;border-radius:7px;background:var(--control);color:var(--muted);font-size:12px;font-weight:700}
+
+/* Module-specific */
+.aw-weapon{background:#f1f0f2;border:1px solid rgba(28,26,30,.08);padding:10px;border-radius:7px}.aw-ammo{margin-top:8px;padding:9px 10px;background:#fbfafc;border-left:3px solid #867e8a;border-radius:6px}.aw-ammo-head{display:flex;align-items:center;gap:6px}.aw-pill{padding:2px 5px;border-radius:4px;font-size:10px;font-weight:700}.aw-ammo-name{flex:1;min-width:0;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ap{border-left-color:#347bd1}.ap .aw-pill{background:#e2edff;color:#2462ad}.heat{border-left-color:#d24747}.heat .aw-pill{background:#ffe5e5;color:#b13232}.he{border-left-color:#e1812e}.he .aw-pill{background:#fff0df;color:#a9530b}.hesh{border-left-color:#3d945c}.hesh .aw-pill{background:#e3f3e7;color:#257341}
+.custom-purple{display:inline-flex;align-items:center;padding:4px 7px;border-radius:5px;background:#f1ecf7;color:#6b5795;font-size:11px;font-weight:700;border:1px solid #ddd1e8}
+.sr-complete{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;background:#eef7f3;border:1px solid rgba(43,139,108,.18);border-radius:7px;color:#187458;font-size:11px;font-weight:800}
+
+.scope{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fbfafc}.scope strong{display:block;font-size:12px;margin-bottom:4px}.scope p{margin:0;font-size:10.5px;color:var(--muted);line-height:1.55}
+
+@media(max-width:1000px){.span8,.span7,.span6,.span5,.span4,.span3{grid-column:span 12}.swatches{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.shell{padding:12px}.swatches{grid-template-columns:1fr 1fr}.radius-row{grid-template-columns:1fr 1fr}.metric-2col,.resp.two,.resp.three{grid-template-columns:1fr}}
+
+/* v2: global semantic tags, identity palette, true icon buttons, nested list */
+.tagset{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.tag-neutral{background:#ece9ed;color:#6b6370}
+.tag-accent{background:#fff2df;color:#9a571f}
+.tag-success{background:#e7f5ef;color:#0c7156}
+.tag-warning{background:#fff2df;color:#946126}
+.tag-danger{background:#fff0ef;color:#b72c28}
+.tag-info{background:#eef1fb;color:#425f9a}
+.tag-special{background:#f1ecf7;color:#6b5795}
+.tag-module{background:#eef0f6;color:#4f5769}
+.identity-palette{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.identity-color{border-radius:8px;padding:10px 8px;color:#fff;font-size:11px;font-weight:800;text-align:center;min-height:42px;display:flex;align-items:center;justify-content:center}
+.identity-a{background:#d96b27}.identity-b{background:#663171}.identity-c{background:#3f6fb5}.identity-d{background:#2d8e91}.identity-e{background:#b4567a}
+.identity-demo{display:flex;gap:7px;flex-wrap:wrap}.identity-dot{width:14px;height:14px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:5px}
+.icon-svg-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;background:transparent;color:var(--muted);padding:0}
+.icon-svg-btn::before{content:"";position:absolute;inset:-10px}
+.icon-svg-btn svg{width:16px;height:16px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.icon-svg-btn.danger{color:var(--danger)}.icon-svg-btn.accent{color:var(--accent)}
+.nested-list{background:#f1f0f2;border:1px solid rgba(28,26,30,.08);border-radius:8px;padding:10px}
+.nested-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nested-title{font-size:13px;font-weight:800}.nested-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+.nested-items{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.nested-item{background:#fbfafc;border-left:3px solid #b8b4bb;border-radius:6px;padding:8px 9px}
+.nested-item-head{display:flex;align-items:center;gap:6px}.nested-label{font-size:11px;font-weight:700}.nested-name{flex:1;min-width:0;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nested-detail{margin-top:7px;padding-top:7px;border-top:1px dashed rgba(28,26,30,.12);font-size:10.5px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="hero">
+<h1>微信小程序 UI 设计系统 · UI 设计样板 v2.1</h1>
+<p>与 ui-design-system.md 配套的可视化实现样板。用于锁定组件的具体尺寸、相对位置、密度与层级，避免只依据文字描述重新生成出不同 UI。</p>
+<div class="meta">
+<span class="pill core">核心规则：默认使用</span>
+<span class="pill conditional">条件规则：仅特定场景</span>
+<span class="pill module">模块专属：仅语义映射 / 游戏内配色</span>
+<span class="pill deprecated">已移除/被替代：不再列为主标准</span>
+</div>
+</div>
+<div class="nav">
+<a href="#foundation">基础语言</a><a href="#controls">操作控件</a><a href="#content">信息结构</a>
+<a href="#feedback">反馈状态</a><a href="#forms">表单与弹层</a><a href="#responsive">响应式</a>
+<a href="#module">游戏专属</a><a href="#pruned">删减说明</a>
+</div>
+<section class="section" id="foundation">
+<div class="section-title"><h2>1. 基础视觉语言</h2><p>全模块共享，游戏专属颜色除外</p></div>
+<div class="grid">
+<div class="panel span12">
+<div class="head"><h3>颜色</h3><span class="pill core">核心</span></div>
+<div class="swatches">
+<div class="swatch"><div class="swatch-color" style="background:#1c1a1e"></div><b>C-01 主文字 / 深色主操作</b><div>#1c1a1e</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#ea7428"></div><b>C-02 主强调橙</b><div>#ea7428</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#0c7156"></div><b>C-04 完成绿</b><div>#0c7156</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#cf3a36"></div><b>C-06 危险红</b><div>#cf3a36</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#6b6370"></div><b>C-07 次文字</b><div>#6b6370</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#ece9ed"></div><b>C-08 控件浅灰底</b><div>#ece9ed</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#f1f0f2"></div><b>C-09 页面背景</b><div>#f1f0f2</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#fbfafc"></div><b>C-10 卡片背景</b><div>#fbfafc</div></div>
+<div class="swatch"><div class="swatch-color" style="background:#58ba9b"></div><b>C-05 同步成功绿</b><div>#58ba9b</div></div>
+<div class="swatch"><div class="swatch-color" style="background:linear-gradient(90deg,#d96b27 0 20%,#663171 20% 40%,#3f6fb5 40% 60%,#2d8e91 60% 80%,#b4567a 80%)"></div><b>C-ID 成员身份色</b><div>全局身份色板，至少 5 色</div></div>
+</div>
+</div>
+<div class="panel span12">
+<div class="head"><h3>成员身份色</h3><span class="pill core">全局 · 至少 5 色</span></div>
+<div class="identity-palette">
+<div class="identity-color identity-a">成员色 1</div>
+<div class="identity-color identity-b">成员色 2</div>
+<div class="identity-color identity-c">成员色 3</div>
+<div class="identity-color identity-d">成员色 4</div>
+<div class="identity-color identity-e">成员色 5</div>
+</div>
+<div class="small" style="margin-top:8px">ID-C01~05：成员身份色属于全局识别体系，用于成员标签、归属标记、头像占位、计划归属等。与成功 / 警告 / 危险状态色分开。后续可增加“小功能：修改成员配色”，优先从预设色板中选择。</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>字体层级</h3><span class="pill core">核心</span></div>
+<div class="type-row"><span style="font-size:26px;font-weight:800">首页大标题</span><span class="code">T-01 · 52rpx / 800</span></div>
+<div class="type-row"><span style="font-size:24px;font-weight:900">页面标题</span><span class="code">T-02 · 48rpx / 900</span></div>
+<div class="type-row"><span style="font-size:17px;font-weight:900">卡片主标题</span><span class="code">T-03 · 34rpx / 900</span></div>
+<div class="type-row"><span style="font-size:13px">正文 / 输入</span><span class="code">T-04 · 25–28rpx</span></div>
+<div class="type-row"><span style="font-size:11px;color:#6b6370">辅助文字</span><span class="code">T-05 · 20–23rpx</span></div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>间距 / 圆角 / 阴影</h3><span class="pill core">核心</span></div>
+<table>
+<tr><th>编号</th><th>用途</th><th>值</th></tr>
+<tr><td>S-01</td><td>普通页面左右</td><td>24rpx</td></tr>
+<tr><td>S-02</td><td>首页左右</td><td>30rpx</td></tr>
+<tr><td>S-03</td><td>普通卡间距</td><td>18rpx</td></tr>
+<tr><td>S-04</td><td>推进卡间距</td><td>20rpx</td></tr>
+<tr><td>S-05</td><td>推进卡内边距</td><td>25rpx</td></tr>
+<tr><td>R-01</td><td>基础卡片圆角</td><td>22rpx</td></tr>
+<tr><td>R-02</td><td>按钮圆角</td><td>14rpx</td></tr>
+<tr><td>R-03</td><td>紧凑选项圆角</td><td>9rpx</td></tr>
+<tr><td>R-05</td><td>卡片阴影</td><td>0 8rpx 26rpx rgba(...,.05)</td></tr>
+</table>
+</div>
+</div>
+</section>
+<section class="section" id="controls">
+<div class="section-title"><h2>2. 操作与输入控件</h2><p>视觉高度与触摸命中区分离</p></div>
+<div class="grid">
+<div class="panel span8">
+<div class="head"><h3>普通按钮</h3><span class="pill core">核心 · B-01B</span></div>
+<div class="sample">
+<div class="sample-title"><b>基础按钮高度</b><span class="id ok">B-01B</span></div>
+<div class="btn-row"><button class="btn btn-primary">主操作</button><button class="btn btn-ghost">次操作</button><button class="btn btn-danger">删除</button><button class="btn btn-primary" disabled="">禁用</button></div>
+<div class="small" style="margin-top:8px">26rpx / line-height:1 / 上下 18rpx / 左右 26rpx / 圆角 14rpx / 不设固定高度。</div>
+</div>
+<div class="sample">
+<div class="sample-title"><b>按钮宽度</b><span class="id">BW-01~04</span></div>
+<div class="btn-row"><button class="btn btn-ghost">自然宽</button><button class="btn btn-primary">自然宽</button></div>
+<div class="btn-row equal" style="margin-top:8px"><button class="btn btn-ghost">取消</button><button class="btn btn-primary">保存</button></div>
+<button class="btn btn-primary btn-full" style="margin-top:8px">整行满宽主操作</button>
+<div class="small" style="margin-top:8px">宽度由父容器决定；公共按钮组件不默认 width:100%。</div>
+</div>
+</div>
+<div class="panel span4">
+<div class="head"><h3>紧凑 / 静默操作</h3><span class="pill core">核心</span></div>
+<div class="sample"><div class="sample-title"><b>紧凑按钮</b><span class="id">BC-01~03</span></div><div class="btn-row"><button class="btn-compact">刷新</button><button class="btn-compact">收起</button><button class="btn-compact" style="color:#cf3a36">移除</button></div></div>
+<div class="sample">
+<div class="sample-title"><b>图标操作</b><span class="id ok">IC-01~04</span></div>
+<div class="btn-row">
+<button aria-label="上移" class="icon-svg-btn" title="上移">
+<svg viewbox="0 0 24 24"><path d="M12 19V5"></path><path d="m6 11 6-6 6 6"></path></svg>
+</button>
+<button aria-label="下移" class="icon-svg-btn" title="下移">
+<svg viewbox="0 0 24 24"><path d="M12 5v14"></path><path d="m18 13-6 6-6-6"></path></svg>
+</button>
+<button aria-label="编辑" class="icon-svg-btn accent" title="编辑">
+<svg viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg>
+</button>
+<button aria-label="配置" class="icon-svg-btn" title="配置">
+<svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.1a1.7 1.7 0 0 0-1.4-1.6 1.7 1.7 0 0 0-1.5.4l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3V9.6h.1a1.7 1.7 0 0 0 1.6-1.4 1.7 1.7 0 0 0-.4-1.5l-.06-.06L7.07 3.8l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.1A1.7 1.7 0 0 0 15.8 4.7a1.7 1.7 0 0 0 1.5-.4l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.35.35.55.82.6 1.3H21v4h-.1a1.7 1.7 0 0 0-1.5.7Z"></path></svg>
+</button>
+<button aria-label="删除" class="icon-svg-btn danger" title="删除">
+<svg viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg>
+</button>
+</div>
+<div class="small" style="margin-top:8px">IC 规则：编辑固定使用“笔”图标。图标类操作必须使用统一 SVG / 图标组件，不得随意拿文字、汉字或符号冒充 icon；文字操作则按文本按钮处理。</div>
+</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>页签与紧凑选择</h3><span class="pill core">核心</span></div>
+<div class="sample"><div class="sample-title"><b>页签</b><span class="id">TB-01/02</span></div><div class="tabs"><div class="tab active">全部</div><div class="tab">已拥有</div><div class="tab">计划</div></div></div>
+<div class="sample"><div class="sample-title"><b>分段选择</b><span class="id">SG-01</span></div><div class="segment"><span class="seg a">用户 A</span><span class="seg">用户 B</span></div></div>
+<div class="sample"><div class="sample-title"><b>标签式选择</b><span class="id">SG-03</span></div><div class="btn-row"><span class="chip active">主力</span><span class="chip">备选</span><span class="chip">过渡</span></div></div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>输入控件</h3><span class="pill core">核心</span></div>
+<div class="sample"><div class="sample-title"><b>普通输入</b><span class="id">I-01</span></div><input class="field88" value="合作码 / 常规表单"/></div>
+<div class="sample"><div class="sample-title"><b>紧凑输入</b><span class="id">I-02</span></div><input class="field72" value="成员名 / Picker"/></div>
+<div class="sample"><div class="sample-title"><b>行内编辑</b><span class="id">I-03</span></div><input class="field62" value="任务行编辑"/></div>
+<div class="sample"><div class="sample-title"><b>搜索 / 数值筛选</b><span class="id">I-05/I-06</span></div><input class="field72" placeholder="搜索车辆 / 输入穿深"/></div>
+</div>
+<div class="panel span12">
+<div class="head"><h3>多色语义标签</h3><span class="pill core">全局标签体系</span></div>
+<div class="tagset">
+<span class="chip tag-neutral">中性属性</span>
+<span class="chip tag-accent">强调</span>
+<span class="chip tag-success">已完成</span>
+<span class="chip tag-warning">需处理</span>
+<span class="chip tag-danger">错误 / 风险</span>
+<span class="chip tag-info">信息</span>
+<span class="chip tag-special">自定义 / 特殊</span>
+<span class="chip tag-module">模块扩展</span>
+</div>
+<div class="small" style="margin-top:8px">TAG-01~08：CP-01/02 不再独立存在，合并到统一标签组件。结构、尺寸统一，颜色表达语义；业务可映射到不同语义色。AW 现有标签后续需要按这套重新梳理配色。</div>
+</div></div>
+
+</section>
+<section class="section" id="content">
+<div class="section-title"><h2>3. 信息容器与数据展示</h2><p>K-02 是跨模块高频核心结构</p></div>
+<div class="grid">
+<div class="panel span12">
+<div class="head"><h3>多标识内容卡 K-02</h3><span class="pill core">核心</span></div>
+<div class="grid">
+<div class="span6">
+<div class="sample"><div class="sample-title"><b>车辆资料卡</b><span class="id ok">K-02A</span></div>
+<div class="k02">
+<div class="k02-lead">MBT</div>
+<div class="k02-main"><div class="k02-title">M1A2C</div><div class="k02-meta"><span class="meta-badge">T10</span>美国 · 经销商名称</div><div class="k02-tags"><span class="chip">ERA</span><span class="chip">APS</span><span class="chip">烟幕</span></div></div>
+<div class="k02-trail"><span class="chip active">主力</span></div>
+</div>
+</div>
+</div>
+<div class="span6">
+<div class="sample"><div class="sample-title"><b>右侧强调内容可变</b><span class="id">K-02B/C/D</span></div>
+<div class="k02">
+<div class="k02-lead">MBT</div>
+<div class="k02-main"><div class="k02-title">M1A2C</div><div class="k02-meta"><span class="meta-badge">T10</span>美国 · 经销商名称</div><div class="k02-tags has-overflow"><span class="chip">ERA</span><span class="chip">APS</span><span class="chip is-overflow">烟幕</span></div></div>
+<div class="k02-trail"><span class="chip warn">需前置</span><span class="quiet-text" style="color:#ea7428">配置 ›</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout" style="margin-top:12px">固定的是信息层级与对齐方式，不固定字段。左侧主标识、次信息短标、标签区、右侧强调区都可按业务更换内容。</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>K-02 溢出规则</h3><span class="pill core">核心 · KR</span></div>
+<div class="sample" style="max-width:310px">
+<div class="k02">
+<div class="k02-lead">MBT</div>
+<div class="k02-main"><div class="k02-title">M1A2C Extremely Long Vehicle Name</div><div class="k02-meta"><span class="meta-badge">T10</span>美国 · 很长的经销商名称与获取来源</div><div class="k02-tags has-overflow"><span class="chip">ERA</span><span class="chip">APS</span><span class="chip is-overflow">烟幕</span><span class="chip is-overflow">步兵班</span></div></div>
+<div class="k02-trail"><span class="chip active">2 / 4</span></div>
+</div>
+</div>
+<ul class="rule-list" style="margin-top:10px">
+<li>KR-01/02/03：右侧强调区永不下沉。</li>
+<li>KR-04：标题和次信息单行省略号。</li>
+<li>KR-05：标签必须完整显示；放不下的整枚隐藏，并在行末显示独立“…”提示。</li>
+</ul>
+</div>
+<div class="panel span6">
+<div class="head"><h3>基础卡片 / 导航卡 / 警告卡</h3><span class="pill core">核心</span></div>
+<div class="sample"><div class="sample-title"><b>基础卡片</b><span class="id">K-01</span></div><div class="card"><b>普通信息卡</b><div class="small">22rpx 圆角、浅边框、轻阴影。</div></div></div>
+<div class="sample"><div class="sample-title"><b>导航卡</b><span class="id">K-06</span></div><div class="card nav-card"><div><b>车辆资料库</b><div class="small">298 辆车辆</div></div><span class="arrow">›</span></div></div>
+<div class="sample"><div class="sample-title"><b>警告卡</b><span class="id">K-05</span></div><div class="warning-card"><b>需要前置</b><div class="small">前置、Token、数据缺口。</div></div></div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>指标展示</h3><span class="pill core">按数量选择</span></div>
+<div class="sample">
+<div class="sample-title"><b>少量核心指标</b><span class="id ok">MT-01</span></div>
+<div class="metric-tile-grid"><div class="metric-tile"><div class="label">速度</div><div class="value">72</div></div><div class="metric-tile"><div class="label">视野</div><div class="value">430</div></div></div>
+<div class="small" style="margin-top:7px">正式组件：适合展示 2–3 个数据项，强调少量核心指标。</div>
+</div>
+<div class="sample">
+<div class="sample-title"><b>常规多项指标</b><span class="id ok">MT-02</span></div>
+<div class="metric-line"><span class="small">穿深</span><b>800 mm</b></div><div class="metric-line"><span class="small">装填</span><b>6.2 s</b></div>
+<div class="small" style="margin-top:7px">指标项较多时使用单列键值形式。</div>
+</div>
+<div class="sample">
+<div class="sample-title"><b>两列键值指标</b><span class="id ok">MT-03</span></div>
+<div class="metric-2col"><div><div class="metric-line"><span class="small">最高速度</span><b>72 km/h</b></div><div class="metric-line"><span class="small">转向</span><b>34°/s</b></div></div><div><div class="metric-line"><span class="small">视野</span><b>430 m</b></div><div class="metric-line"><span class="small">隐蔽</span><b>18%</b></div></div></div>
+<div class="small" style="margin-top:7px">数据较多且横向空间足够时使用；窄容器回落单列。</div>
+</div>
+</div>
+
+
+<div class="panel span6">
+<div class="head"><h3>折叠卡</h3><span class="pill core">核心 · AC</span></div>
+<div class="sample"><div class="accordion"><div class="accordion-head"><div class="accordion-title">核心性能</div><div class="accordion-action">收起 ∧</div></div><div class="accordion-body"><div class="metric-line"><span class="small">最高速度</span><b>72 km/h</b></div><div class="metric-line"><span class="small">视野</span><b>430 m</b></div></div></div></div>
+<div class="small" style="margin-top:8px">AC-01/02/03：标题区高度固定，展开内容从分隔线后开始；短内容可用紧凑 body。</div>
+</div><div class="panel span6">
+<div class="head"><h3>多级列表 / 嵌套选项</h3><span class="pill core">核心 · WA-01</span></div>
+<div class="sample">
+<div class="nested-list">
+<div class="nested-head"><div><div class="nested-title">一级对象 / 分组</div><div class="nested-sub">例如：AW 主炮、SnowRunner 变速箱</div></div><span class="quiet-text">展开 ∨</span></div>
+<div class="nested-items">
+<div class="nested-item"><div class="nested-item-head"><span class="chip tag-neutral">选项 A</span><span class="nested-name">二级可选项</span></div><div class="nested-detail">展开后展示三级参数、说明或进一步配置。</div></div>
+<div class="nested-item"><div class="nested-item-head"><span class="chip tag-neutral">选项 B</span><span class="nested-name">另一个二级选项</span></div></div>
+</div>
+</div>
+</div>
+<div class="small" style="margin-top:8px">WA-01 是全局结构，不是 AW 专属。层级、缩进、展开方式可以跨游戏复用；具体颜色由模块自己的语义映射决定。</div>
+</div><div class="panel span6">
+<div class="head"><h3>列表与分隔</h3><span class="pill core">核心</span></div>
+<div class="sample"><div class="sample-title"><b>任务行</b><span class="id">L-01</span></div><div class="row"><div class="check on">✓</div><input class="field62" value="完成合同目标"/><span style="color:#aaa">×</span></div></div>
+<div class="sample"><div class="sample-title"><b>目录行</b><span class="id">L-03</span></div><div class="row-solid"><b style="width:45px;color:#ea7428">S20</b><div style="flex:1"><b>地区中文名</b><div class="small">English title</div></div><span class="small">3 车 ›</span></div></div>
+<div class="small" style="margin-top:8px">L-04：同组任务可用虚线；L-05：目录 / 设置行用实线。两者不强行统一。</div>
+</div></div>
+
+
+
+</section><section class="section" id="feedback">
+<div class="section-title"><h2>4. 状态与反馈</h2><p>成功、警告、错误必须区分语义</p></div>
+<div class="grid">
+<div class="panel span6">
+<div class="head"><h3>状态样式</h3><span class="pill core">核心</span></div>
+<div class="btn-row"><span class="chip good">ST-01 已同步</span><span class="chip tag-success">ST-COMP 完成 / 已满足</span><span class="chip warn">ST-02 待处理</span><span class="chip danger">ST-03 同步失败</span><span class="chip">ST-04 未设置</span></div>
+<div class="sample"><div class="sample-title"><b>警告</b><span class="id">ST-05</span></div><div class="statebox warn">需要前置车辆或 Token。</div></div>
+<div class="sample"><div class="sample-title"><b>错误</b><span class="id">ST-06</span></div><div class="statebox err">保存失败，请重试。</div></div>
+</div>
+<div class="panel span12">
+<div class="head"><h3>全局完成态与成员身份色</h3><span class="pill core">全局语义</span></div>
+<div class="grid">
+<div class="span6 sample"><div class="sample-title"><b>完成 / 已满足</b><span class="id ok">ST-COMP</span></div><span class="chip tag-success">已完成</span> <span class="chip tag-success">已拥有</span> <span class="chip tag-success">条件已满足</span><div class="small" style="margin-top:8px">绿色完成语义跨模块复用。SnowRunner 的 COMPLETE 印章只是一个视觉变体。</div></div>
+<div class="span6 sample"><div class="sample-title"><b>成员身份</b><span class="id ok">ID-C01~05</span></div><div class="identity-demo"><span><i class="identity-dot identity-a"></i>成员 1</span><span><i class="identity-dot identity-b"></i>成员 2</span><span><i class="identity-dot identity-c"></i>成员 3</span><span><i class="identity-dot identity-d"></i>成员 4</span><span><i class="identity-dot identity-e"></i>成员 5</span></div><div class="small" style="margin-top:8px">身份色只用于“谁是谁”，不拿来表达成功、警告或危险。</div></div>
+</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>轻反馈 / 空状态 / 加载</h3><span class="pill core">核心</span></div>
+<div class="sample"><div class="sample-title"><b>Toast</b><span class="id">OV-01</span></div><div class="toast">已复制合作码</div></div>
+<div class="sample"><div class="sample-title"><b>空状态</b><span class="id">ST-08</span></div><div class="empty">暂无车辆计划</div></div>
+<div class="sample"><div class="sample-title"><b>无限滚动</b><span class="id">LS-01/02/03</span></div><div class="load-state"><span class="spinner"></span>正在加载更多车辆…</div></div>
+</div>
+<div class="panel span12">
+<div class="head"><h3>加载更多 / 分页</h3><span class="pill conditional">条件使用</span></div>
+<div class="grid">
+<div class="span6 sample"><div class="sample-title"><b>手动加载更多</b><span class="id">LS-04</span></div><button class="btn btn-ghost btn-full">加载更多（50 / 298）</button></div>
+<div class="span6 sample"><div class="sample-title"><b>分页</b><span class="id cond">F-06</span></div><div class="pagination"><button class="pagination-control">‹</button><span class="pagination-label">2 / 10</span><button class="pagination-control">›</button></div><div class="small" style="margin-top:7px">仅确实需要页码时使用；三项统一高度并垂直居中。</div></div>
+</div>
+</div>
+</div>
+</section><section class="section" id="forms">
+<div class="section-title"><h2>5. 表单、弹层与高风险操作</h2><p>表单结构与 Sheet/Dialog 统一</p></div>
+<div class="grid">
+<div class="panel span6">
+<div class="head"><h3>表单字段</h3><span class="pill core">核心 · FL</span></div>
+<div class="form-field"><div class="form-label">职责名称 <span class="required">*</span></div><input class="field88" placeholder="输入职责名称"/><div class="form-help">用于团队共同维护，可后续修改。</div></div>
+<div class="form-field"><div class="form-label">玩家码</div><input class="field88 field-error" value="AW-M-INVALID"/><div class="form-error">玩家码格式不正确。</div></div>
+<div class="small">FL-01~04：Label / 必填 / 帮助 / 错误各自承担独立语义。</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>Checkbox / Switch</h3><span class="pill core">核心 · CS</span></div>
+<div class="row-solid"><div style="flex:1"><b>折叠已完成</b><div class="small">Complete 后自动收起</div></div><div style="width:38px;height:22px;background:#58ba9b;border-radius:999px;padding:2px"><div style="width:18px;height:18px;background:white;border-radius:50%;margin-left:16px"></div></div></div>
+<div class="row-solid"><div style="flex:1"><b>过渡目标车辆</b><div class="small">可多选</div></div><div class="check on">✓</div></div>
+<div class="small">CS-01~03：保持微信原生交互语义，主要统一布局和文字关系。</div>
+</div>
+<div class="panel span8">
+<div class="head"><h3>底部 Sheet</h3><span class="pill core">核心 · SH</span></div>
+<div class="sheet-stage"><div class="sheet"><div class="sheet-head"><div><div class="sheet-title">筛选车辆</div><div class="small">可选副说明</div></div><span class="quiet-text">取消</span></div><div class="sheet-content"><input class="field72" placeholder="搜索车辆"/><div class="small" style="margin-top:8px">内容区独立滚动，Header / Footer 不参与滚动。</div></div><div class="sheet-foot"><div class="btn-row equal"><button class="btn btn-ghost">重置</button><button class="btn btn-primary">查看 42 辆</button></div></div></div></div>
+<div class="small" style="margin-top:8px">SH-01/02：复杂编辑/筛选采用固定 Header + 可滚动内容 + 固定 Footer；SH-03：短选择可无固定 Footer。</div>
+</div>
+<div class="panel span4">
+<div class="head"><h3>确认 Dialog</h3><span class="pill core">核心 · DG</span></div>
+<div class="dialog-stage"><div class="dialog"><h4>删除职责？</h4><p>该职责正在被 4 台车辆使用。删除后相关关系将被移除。</p><div class="btn-row equal"><button class="btn btn-ghost">取消</button><button class="btn btn-danger">确认删除</button></div></div></div>
+<div class="small" style="margin-top:8px">DG-03：不可逆、影响关联数据、退出共享关系时强制二次确认。</div>
+</div>
+<div class="panel span12">
+<div class="head"><h3>拖拽 / 排序</h3><span class="pill core">核心 · DR</span></div>
+<div class="grid">
+<div class="span6 sample"><div class="sort-row"><div class="sort-handle">≡</div><div class="sort-title">主力输出</div><div class="sort-actions"><span class="sort-chip">编辑</span><span class="sort-chip" style="color:#cf3a36">删除</span></div></div><div class="small" style="margin-top:8px">DR-01：拖拽为主，减少常驻 ↑↓。</div></div>
+<div class="span6 sample"><div class="sort-row"><div class="sort-handle">≡</div><div class="sort-title">侦察</div><div class="sort-actions"><span class="sort-chip">↑</span><span class="sort-chip">↓</span><span class="sort-chip">编辑</span></div></div><div class="small" style="margin-top:8px">DR-02：在不便拖拽的设备保留辅助上下移。</div></div>
+</div>
+</div>
+</div>
+</section><section class="section" id="responsive">
+<div class="section-title"><h2>6. 响应式与固定区域</h2><p>优先看组件实际容器宽度，而不是只看 viewport</p></div>
+<div class="grid">
+<div class="panel span6">
+<div class="head"><h3>Sticky 顶部 / 底部</h3><span class="pill core">核心 · SK</span></div>
+<div class="sticky-stage"><div class="sticky-top"><div class="tabs"><div class="tab active">总览</div><div class="tab">成员</div><div class="tab">职责</div></div></div><div class="sticky-body"><div class="card">页面内容</div></div><div class="sticky-bottom"><button class="btn btn-primary btn-full">登记我的车辆与职责</button></div></div>
+<div class="small" style="margin-top:8px">SK-01~03：固定区不额外加高；底部统一处理安全区，页面预留同等空间。</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>横屏 / 宽容器</h3><span class="pill core">核心 · RS</span></div>
+<div class="sample"><div class="resp two"><div class="card">主内容</div><div class="card">辅助内容</div></div><div class="small" style="margin-top:7px">RS-02：中宽容器可双栏。</div></div>
+<div class="sample"><div class="resp three"><div class="card">卡 1</div><div class="card">卡 2</div><div class="card">卡 3</div></div><div class="small" style="margin-top:7px">RS-03：只有满足最小可用宽度才增加列数。</div></div>
+<div class="callout" style="margin-top:10px">RS-05：响应式优先依据组件实际容器宽度；空间不足就换列/改单列，不允许把内容继续压窄。</div>
+</div>
+</div>
+</section><section class="section" id="module">
+<div class="section-title"><h2>7. 游戏模块专属规则</h2><p>只保留真正不能跨游戏复用的语义映射</p></div>
+<div class="grid">
+<div class="panel span6">
+<div class="head"><h3>AW 游戏内弹药配色</h3><span class="pill module">AW 专属 · SC-01</span></div>
+<div class="sample">
+<div class="aw-weapon">
+<b>120 mm 主炮</b><div class="small">这里复用全局 WA-01 结构，但二级项使用 AW 自己的游戏内配色。</div>
+<div class="aw-ammo ap"><div class="aw-ammo-head"><span class="aw-pill">AP</span><span class="aw-ammo-name">M829A4 APFSDS</span><span>∨</span></div></div>
+<div class="aw-ammo heat"><div class="aw-ammo-head"><span class="aw-pill">HEAT</span><span class="aw-ammo-name">串联破甲弹</span><span>∨</span></div></div>
+<div class="aw-ammo he"><div class="aw-ammo-head"><span class="aw-pill">HE</span><span class="aw-ammo-name">温压 / HE 类弹药</span><span>∨</span></div></div>
+<div class="aw-ammo hesh"><div class="aw-ammo-head"><span class="aw-pill">HESH</span><span class="aw-ammo-name">HESH / HEP</span><span>∨</span></div></div>
+</div>
+</div>
+<div class="callout" style="margin-top:10px">SC-01 只定义 AW 游戏内语义映射，不定义产品级颜色。WOWS 例如 AP 为红色、HE 为橙色，因此不能继承 AW 映射。</div>
+</div>
+<div class="panel span6">
+<div class="head"><h3>模块标签配色</h3><span class="pill module">模块覆盖</span></div>
+<div class="sample">
+<div class="tagset">
+<span class="chip tag-neutral">通用属性</span>
+<span class="chip tag-special">自定义前置</span>
+<span class="chip tag-warning">需前置</span>
+<span class="chip tag-info">特殊来源</span>
+</div>
+</div>
+<div class="small" style="margin-top:8px">CP-01/02 已并入全局多色标签。AW 后续需要重新梳理现有标签配色，但标签结构本身不再做 AW 专属组件。</div>
+</div>
+<div class="panel span12">
+<div class="head"><h3>跨游戏复用示意</h3><span class="pill core">结构全局复用</span></div>
+<div class="grid">
+<div class="span6 sample">
+<b>AW</b>
+<div class="nested-list" style="margin-top:8px"><div class="nested-head"><div><div class="nested-title">主炮</div><div class="nested-sub">一级对象</div></div></div><div class="nested-items"><div class="nested-item ap" style="border-left-color:#347bd1"><div class="nested-item-head"><span class="aw-pill" style="background:#e2edff;color:#2462ad">AP</span><span class="nested-name">弹药选项</span></div></div></div></div>
+</div>
+<div class="span6 sample">
+<b>SnowRunner</b>
+<div class="nested-list" style="margin-top:8px"><div class="nested-head"><div><div class="nested-title">变速箱</div><div class="nested-sub">一级对象</div></div></div><div class="nested-items"><div class="nested-item"><div class="nested-item-head"><span class="chip tag-neutral">高速</span><span class="nested-name">可选择变速箱型号</span></div><div class="nested-detail">齿比、档位、油耗等三级参数。</div></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="section" id="pruned">
+<div class="section-title"><h2>8. 本次整合中主动删除 / 合并的项目</h2><p>避免重复标准和历史草案继续干扰实现</p></div>
+<div class="panel">
+<table>
+<tr><th>历史项</th><th>处理</th><th>原因</th></tr>
+<tr><td>B-01A / B-01C</td><td>移出主标准</td><td>只作为高度对照；B-01B 已确认。</td></tr>
+<tr><td>OV-03 / OV-04</td><td>删除</td><td>已分别被 SH 系 Sheet 与 DG 系 Dialog 正式规则取代。</td></tr>
+<tr><td>F-05</td><td>删除</td><td>被 LS-04“加载更多”取代。</td></tr>
+<tr><td>F-13 / F-14</td><td>删除</td><td>被 SK-01/02/03 Sticky 规则取代。</td></tr>
+<tr><td>F-16</td><td>删除</td><td>被 DG-02/03 破坏性确认规则取代。</td></tr>
+<tr><td>F-12</td><td>删除</td><td>被 RS-01~05 响应式体系取代。</td></tr>
+<tr><td>F-09 / F-10</td><td>从 K-02 场景移除</td><td>K-02 已由 KR-04/05 明确标题、次信息、标签的溢出规则。普通正文仍可单独使用文本截断。</td></tr>
+<tr><td>ST-07 Skeleton</td><td>不纳入核心</td><td>当前本地数据优先，真正需要加载时用 LS 状态即可；若以后出现明显骨架屏需求再单独建标准。</td></tr>
+<tr><td>F-08 浮动主操作按钮</td><td>不纳入当前标准</td><td>当前业务没有明确需要，容易与底部 Sticky 主操作冲突。</td></tr>
+<tr><td>F-11 只读数据表</td><td>不纳入移动端核心</td><td>常规参数默认采用 MT-02/03；复杂表格以后按具体模块和横屏需求再设计。</td></tr>
+<tr><td>MT-01</td><td>保留为正式组件</td><td>用于 2–3 个少量数据项；MT-02/03 用于指标更多的场景。</td></tr>
+<tr><td>CP-01/02</td><td>取消独立组件</td><td>并入全局多色语义标签体系；AW 仅保留业务配色映射。</td></tr>
+<tr><td>WA-01</td><td>提升为全局组件</td><td>定义多级列表 / 嵌套选项结构；AW 只保留弹种等游戏内配色。</td></tr>
+<tr><td>SnowRunner 用户 A/B 色</td><td>提升为全局成员身份色</td><td>第一版至少 5 色；后续允许用户调整身份配色。</td></tr>
+<tr><td>SnowRunner 完成态</td><td>拆分</td><td>“完成 / 成功”绿色语义提升为全局；COMPLETE 印章只是 SnowRunner 的表现变体。</td></tr>
+<tr><td>F-06 Pagination</td><td>保留为条件组件</td><td>虽然当前不是主要模式，但对未来管理类列表可能有用，且已经确认对齐规则。</td></tr>
+</table>
+</div>
+</section><section class="section">
+<div class="section-title"><h2>9. 实现与复核重点</h2><p>Work 实现及后续 UI 复核时重点检查这些项目</p></div>
+<div class="panel">
+<ul class="rule-list">
+<li><b>B-01B</b> 是否正式作为所有普通按钮默认视觉高度。</li>
+<li><b>K-02 + KR</b> 是否正式作为跨游戏“多标识内容卡”核心组件。</li>
+<li><b>MT-01 / MT-02 / MT-03</b> 是否按“2–3 项 / 常规单列 / 多项两列”正式进入全局标准。</li>
+<li><b>WA-01</b> 是否正式作为跨游戏多级列表 / 嵌套选项核心结构。</li>
+<li><b>多色标签</b> 是否正式吸收 CP-01/02，并作为全局标签体系。</li>
+<li><b>成员身份色</b> 是否正式采用至少 5 色的全局色板，并预留后续修改配色功能。</li>
+<li><b>完成态</b> 是否正式作为全局状态语义，游戏只定义各自表现变体。</li>
+<li><b>IC-01~04</b> 是否正式采用统一图标资源规则，编辑固定使用笔图标。</li>
+<li><b>SH / DG / SK / RS</b> 是否可以直接进入全局标准。</li>
+<li><b>SC-01</b> 是否确认只归 AW 游戏内配色映射，不提升成全局颜色规则。</li>
+</ul>
+</div>
+</section></div>
+
+
+
+
+
+
+
+
+</body>
+</html>
