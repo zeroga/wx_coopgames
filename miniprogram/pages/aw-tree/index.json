@@ -1,1 +1,6 @@
-{"navigationBarTitleText":"AW · 科技树"}
+{
+  "navigationBarTitleText": "AW · 科技树",
+  "usingComponents": {
+    "aw-prerequisites": "../../components/aw-prerequisites/index"
+  }
+}

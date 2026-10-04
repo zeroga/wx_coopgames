@@ -30,7 +30,7 @@ test('all local require targets resolve to bundled JS without Node JSON fallback
   assert.throws(() => resolveScript(path.join(mini, 'utils/aw/catalog.js'), '../../data/aw/ammo-classification.json'), /Missing bundled JS module/)
 })
 
-test('all app pages and AW editor register using a JS-only module loader', () => {
+test('all app pages and AW components register using a JS-only module loader', () => {
   const cache = new Map(), registrations = { app: 0, pages: [], components: [] }
   const context = vm.createContext({
     wx: { getStorageSync() {}, request() { throw new Error('Startup must not request network') } },
@@ -50,9 +50,10 @@ test('all app pages and AW editor register using a JS-only module loader', () =>
   const routes = JSON.parse(fs.readFileSync(path.join(mini, 'app.json'), 'utf8')).pages
   for (const route of routes) load(path.join(mini, route + '.js'))
   load(path.join(mini, 'components/aw-asset-editor/index.js'))
+  load(path.join(mini, 'components/aw-prerequisites/index.js'))
   assert.equal(registrations.app, 1)
   assert.equal(registrations.pages.length, routes.length)
-  assert.equal(registrations.components.length, 1)
+  assert.equal(registrations.components.length, 2)
   assert.equal(typeof registrations.components[0].methods.saveRole, 'function')
   const catalog = load(path.join(mini, 'utils/aw/catalog.js'))
   assert.equal(catalog.tables.vehicles.length, 298)

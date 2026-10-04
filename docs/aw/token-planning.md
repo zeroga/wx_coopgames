@@ -50,3 +50,13 @@
 JS-only 加载测试、静态 WXML/事件/路由/样式检查、资料重建和全项目 wcc/wcsc 编译通过。`tests/aw-archives.sql` 以 anon 使用合成数据验证新增资产字段随 RPC 创建、上传及另一车队读取，整个事务回滚；真实存档数量与校验值不变。
 
 375px 静态渲染检查主要布局；尚未在微信开发者工具、Android/iOS 真机或真实设备联网运行。原生键盘高度事件、滚动恢复时机和触控需继续实测。本次只是 GitHub 测试分支版本更新，没有上传微信体验版。
+
+## 2026.10.04.6 前置配置实现
+
+配置在个人资产 `prerequisites` 中保存，不增加顶层存档字段或修改数据库结构：`mode` 为 `ignore / known / custom`，`pathId` 指向已有解锁路线，`customVehicleIds` 保存临时前置车辆，`tokenSourceVehicleIds` 保存本路线对应 Token 的已选来源车。个人存档投影保留整个明确登记资产；派生车队职责仍使用 `source: tech_tree`，不上传为手工职责。已有 `routes` 选择继续读取，新配置保存时替换对应旧路线键。
+
+`fleet.saveAsset` 为新计划保存 ignore。`fleet.resolveRoute` 在忽略模式只保留目标，不展开源车辆，并明确标记 `ignored`；已知模式按实际 requirement 展开，自定义模式只替换来源车辆关系，保留 Token 和其他已知条件。`setPrerequisites` 校验车辆、来源 Token 匹配、去重与循环，在副本检查通过后才保存。`memberPlan` 合并节点，`token-plan.build` 对 ignored 节点阻止免费获取和奖励预测，仍计算单一已知路线中的真实 Token 需求；不把未知多路线猜成某种消耗。
+
+`aw-prerequisites` 编辑层使用独立草稿：第一层已知路线/来源，第二层明确进入自定义后才搜索全部车辆。取消不写入，保存复查个人权限，再复用 `saveAndSync`；打开期间 hold 资料更新，保存/取消/销毁 release。页面 onShow 不在编辑期间读取云端。临时关系随个人码在设备间恢复，公共目录及其核验状态完全独立。
+
+本版 80 项回归含默认忽略、忽略后派生职责清理、旧路线兼容、匹配来源、去重、自定义/循环、取消、权限及真实存档接口的双设备模拟同步；没有执行真实数据库事务或修改线上资料服务。

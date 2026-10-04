@@ -8,35 +8,31 @@ const updates = require('../../utils/aw/catalog-update')
 const refreshAll = require('../../utils/aw/refresh-all')
 function error(e) { wx.showModal({title:'操作未完成',content:e.message||String(e),showCancel:false}) }
 Page({
-  data:{syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
+  data:{prerequisiteForm:null,syncError:'',tab:'overview',memberId:'',targetId:'',editor:false,editVehicleId:'',editMemberId:'',memberForm:null,roleForm:null,busy:false,teamCodeInput:'',teamNameInput:'',memberCodeInput:'',showArchives:false,memberSearch:'',expandedSteps:{},expandedTokens:{},fieldError:'',keyboardHeight:0},
+  configurePrerequisites(e){const d=e.currentTarget.dataset;this.setData({prerequisiteForm:{vehicleId:d.vehicle||d.id||this.data.id,memberId:d.member||store.currentMember()}})},
+  closePrerequisites(){this.setData({prerequisiteForm:null});this.refresh()},
+  prerequisitesSaved(){this.closePrerequisites()},
   onLoad(o){updates.init();this.setData({tab:o.tab||'overview',memberId:o.member||store.currentMember(),targetId:o.target||''});this.refresh()},
-  async onShow(){if(this.data.editor||this.data.memberForm||this.data.roleForm)return;this.refresh();this.setData({busy:store.connected});await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.setData({busy:false});this.refresh()},
+  async onShow(){if(this.data.editor||this.data.prerequisiteForm||this.data.memberForm||this.data.roleForm)return;this.refresh();this.setData({busy:store.connected});await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.setData({busy:false});this.refresh()},
   receiveNavigation(o){this.setData({tab:o.tab||this.data.tab,memberId:o.member||this.data.memberId,targetId:o.target||''});this.refresh()},
   refresh(){
     const s=store.load(), members=s.members.slice().sort((a,b)=>a.order-b.order).map(m=>{
-      const a=Object.values(s.assets).filter(x=>x.memberId===m.id)
+      const a=Object.values(s.assets).filter(x=>x.memberId===m.id&&(x.explicit||Object.values(s.assignments).some(a=>a.assetId===x.id)))
       return Object.assign({},m,{owned:a.filter(x=>x.status==='owned').length,planned:a.filter(x=>x.status==='planned').length})
     })
     let memberId=this.data.memberId
     if(!members.some(m=>m.id===memberId)) memberId=(members.find(m=>m.active)||members[0]||{}).id||''
     const member=members.find(m=>m.id===memberId)||null
-    const assets=Object.values(s.assets).filter(a=>a.memberId===memberId).map(a=>{
+    const assets=Object.values(s.assets).filter(a=>a.memberId===memberId&&(a.explicit||Object.values(s.assignments).some(x=>x.assetId===a.id))).map(a=>{
       const v=catalog.byId[a.vehicleId]||{name:'资料待补全'}
       return Object.assign({},fleet.summary(s,a.vehicleId).find(x=>x.id===a.id),{name:v.name_zh||v.name})
     }).sort((a,b)=>a.name.localeCompare(b.name))
-    const targets=fleet.planningTargets(s,memberId).map(t=>Object.assign({},t,{name:(catalog.byId[s.assets[t.assetId].vehicleId]||{}).name,roleName:(s.roles.find(r=>r.id===t.roleId)||{}).name||'车辆计划',levelText:t.level==='planned'?'未分配职责':catalog.label(t.level)}))
+    const targets=fleet.planningTargets(s,memberId).map(t=>Object.assign({},t,{vehicleId:s.assets[t.assetId].vehicleId,prerequisite:fleet.prerequisiteStatus(s,memberId,s.assets[t.assetId].vehicleId),name:(catalog.byId[s.assets[t.assetId].vehicleId]||{}).name,roleName:(s.roles.find(r=>r.id===t.roleId)||{}).name||'车辆计划',levelText:t.level==='planned'?'未分配职责':catalog.label(t.level)}))
     let targetId=this.data.targetId
     if(!targets.some(t=>t.id===targetId))targetId=''
     const unionPlan=memberId?fleet.memberPlan(s,memberId):null
     const plan=targetId?fleet.memberPlan(s,memberId,targetId):unionPlan
-    const choices=plan?plan.choices.map(c=>({vehicleId:c.vehicleId,name:c.name,paths:tokenPlan.pathCards(c.vehicleId,s.routes[fleet.assetKey(memberId,c.vehicleId)]),index:-1})):[]
-    const routeOptions=plan?plan.steps.map(step=>{
-      const ps=fleet.paths(step.id)
-      if(ps.length<2)return null
-      const picked=s.routes[fleet.assetKey(memberId,step.id)]
-      return {vehicleId:step.id,name:step.name,paths:tokenPlan.pathCards(step.id,picked),index:ps.findIndex(p=>p.id===picked)}
-    }).filter(Boolean).filter(c=>!choices.some(x=>x.vehicleId===c.vehicleId)):[]
-    this.setData({archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,choices,routeOptions,
+    this.setData({archive:store.remoteInfo(),selfName:(members.find(m=>m.id===store.currentMember())||{}).name||'',selfArchive:store.memberInfo(store.currentMember()),memberArchive:store.memberInfo(memberId),canEditMember:store.canEdit(memberId),members,memberId,member,memberIndex:members.findIndex(m=>m.id===memberId),playerAssets:assets,roles:s.roles.slice().sort((a,b)=>a.order-b.order),overview:fleet.overview(s),targets,targetId,plan,unionPlan,planningWarnings:unionPlan?unionPlan.warnings.filter(x=>!x.includes('需要前置')).map(x=>x.replace(/待核实/g,'暂不可计算')):[],
       sync:store.syncInfo(),catalogInfo:updates.info(),visibleMembers:members.filter(m=>m.name.toLowerCase().includes(this.data.memberSearch.toLowerCase())),currentId:store.currentMember(),connected:store.connected,dirty:store.dirty,legacyCount:s.legacyAudit.length})
   },
   async mutate(fn){
@@ -91,11 +87,9 @@ Page({
   detail(e){navigation.visit('pages/aw-vehicle/index',{id:e.currentTarget.dataset.id})},
   addVehicle(){navigation.visit('pages/aw-catalog/index')},
   target(e){this.setData({targetId:e.currentTarget.dataset.id||''});this.refresh()},
-  pickRoute(e){const {vehicle,id}=e.currentTarget.dataset;return this.mutate(s=>{if(!fleet.paths(vehicle).some(p=>p.id===id))throw new Error('路线不存在');s.routes[fleet.assetKey(this.data.memberId,vehicle)]=id})},
-  routeChoice(e){return this.pickRoute(e)},
   confirmRequirement(e){return this.mutate(s=>{s.confirmedRequirements[fleet.assetKey(this.data.memberId,e.currentTarget.dataset.id)]=e.currentTarget.dataset.value==='yes'})},
   rewardState(e){return this.mutate(s=>{const {vehicle,id,state}=e.currentTarget.dataset;const a=fleet.ensureAsset(s,this.data.memberId,vehicle);tokenPlan.setReward(a,id,state)})},
-  addTokenSource(e){return this.mutate(s=>{const a=fleet.ensureAsset(s,this.data.memberId,e.currentTarget.dataset.id);a.explicit=true;a.tokenSupply=true})},
+  addTokenSource(e){return this.mutate(s=>{const a=fleet.ensureAsset(s,this.data.memberId,e.currentTarget.dataset.id);a.explicit=true;a.tokenSupply=true;a.prerequisites={mode:'ignore',pathId:'',customVehicleIds:[],tokenSourceVehicleIds:[]}})},
   archiveField(e){this.setData({[e.currentTarget.dataset.key]:e.detail.value})},
   async runArchive(fn){this.setData({busy:true});try{const result=await fn();if(result!==false)wx.showToast({title:'操作完成',icon:'success'})}catch(e){error(e)}finally{this.setData({busy:false});this.refresh()}},
   createTeam(){return this.runArchive(()=>store.createTeam(this.data.teamNameInput||'我的车队'))},
@@ -107,7 +101,7 @@ Page({
   switchLocal(){wx.showModal({title:'切换到本地车队？',content:'当前车队及未上传改动会留在本机缓存中，个人存档不会删除。',success:r=>{if(r.confirm){store.localTeam();this.setData({memberId:'',targetId:''});this.refresh()}}})},
   unlinkMember(){const id=store.currentMember();if(!id)return;wx.showModal({title:'退出车队？',content:'移除你在此车队的职责安排，保留自己的玩家码、车辆和其他车队记录。',success:r=>{if(r.confirm)this.runArchive(async()=>{await store.unlinkMember(id);this.setData({memberId:'',memberCodeInput:''})})}})},
   async refreshCloud(){
-    if(this.data.editor||this.data.memberForm||this.data.roleForm){this.setData({syncError:'请先保存或取消编辑，再刷新'});return}
+    if(this.data.editor||this.data.prerequisiteForm||this.data.memberForm||this.data.roleForm){this.setData({syncError:'请先保存或取消编辑，再刷新'});return}
     this.setData({busy:true,syncError:''})
     try{const result=await refreshAll();this.setData({syncError:result.error});if(!result.error)wx.showToast({title:result.updated?'资料已更新':'已刷新',icon:'success'})}
     catch(e){this.setData({syncError:e.message})}finally{this.setData({busy:false});this.refresh()}

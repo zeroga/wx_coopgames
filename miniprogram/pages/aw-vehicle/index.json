@@ -1,1 +1,7 @@
-{"navigationBarTitleText":"AW · 车辆详情","usingComponents":{"aw-asset-editor":"/components/aw-asset-editor/index"}}
+{
+  "navigationBarTitleText": "AW · 车辆详情",
+  "usingComponents": {
+    "aw-asset-editor": "/components/aw-asset-editor/index",
+    "aw-prerequisites": "../../components/aw-prerequisites/index"
+  }
+}

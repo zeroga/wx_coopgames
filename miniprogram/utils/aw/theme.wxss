@@ -63,3 +63,7 @@ button.choice.active { background:#ea7428; color:#fff; }
 .tabs .tab { min-height:60rpx; padding:20rpx 5rpx; }
 .route-card { border:2rpx solid #dedbe0; border-radius:14rpx; padding:22rpx; margin:12rpx 0; }
 .route-card.selected { border-color:#ea7428; background:#fff2df; }
+
+/* Unified prerequisites / Token configuration entry. */
+button.prerequisite-alert { flex:none; display:inline-flex; align-items:center; justify-content:center; width:88rpx; min-width:88rpx; height:88rpx; padding:0; border-radius:50%; background:#ffdc69; color:#735005; font-size:40rpx; font-weight:900; }
+.custom-prerequisite { display:inline-block; background:#f1ecf7; color:#6b5795; border-radius:8rpx; font-size:23rpx; padding:6rpx 14rpx; margin:8rpx 0; }

@@ -4,9 +4,12 @@ const store = require('../../utils/aw/store')
 const updates = require('../../utils/aw/catalog-update')
 function fresh() { return { query: '', tiers: [], classes: [], dealers: [], capabilities: [], ammoTypes: [], ammoTraits: [], acquisition: [], factory: false, penetration: '', speed: '', view: '', camo: '', premium: '', researchable: '' } }
 Page({
-  data: { syncError:'', filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
+  data: { prerequisiteForm:null, syncError:'', filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
+  configurePrerequisites(e){const d=e.currentTarget.dataset;this.setData({prerequisiteForm:{vehicleId:d.vehicle||d.id||this.data.id,memberId:d.member||store.currentMember()}})},
+  closePrerequisites(){this.setData({prerequisiteForm:null});this.refresh()},
+  prerequisitesSaved(){this.closePrerequisites()},
   onLoad() { updates.init();this.buildFilterOptions(); this.refresh() },
-  async onShow() { this.refresh();await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.buildFilterOptions();this.refresh() },
+  async onShow() { if(this.data.prerequisiteForm)return;this.refresh();await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.buildFilterOptions();this.refresh() },
   buildFilterOptions() {
     const caps = catalog.tables.capabilities.map(c => ({ value: c.code, name: c.name_zh, group: ['armor','defense'].includes(c.category) ? '防护' : ['recon','infantry'].includes(c.category) ? '侦察 / 支援' : c.category === 'weapon' ? '武器能力' : '车辆特性' }))
     this.setData({ groups: [

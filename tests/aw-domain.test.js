@@ -22,7 +22,7 @@ let data
 beforeEach(()=>{data=fixture();catalog.install(data,'test')})
 after(()=>catalog.install(original,stamp))
 function state() {const s=fleet.empty({m:'玩家'});s.roles.push({id:'r',name:'抗线',order:0});return s}
-function target(s,v,level='primary') {fleet.saveAsset(s,'m',v,'planned','',[{roleId:'r',level}]);return fleet.assignmentKey(fleet.assetKey('m',v),'r')}
+function target(s,v,level='primary') {fleet.saveAsset(s,'m',v,'planned','',[{roleId:'r',level}]);fleet.setPrerequisites(s,'m',v,{mode:'known',pathId:'p'+v});return fleet.assignmentKey(fleet.assetKey('m',v),'r')}
 function tokenCost(v,amount=1,token='token') {data.unlock_requirements.push({id:'t'+v,unlock_path_id:'p'+v,token_id:token,required_value:amount,requirement_type:'dealer_token',verification_status:'public_verified',sort_order:1})}
 test('filter combines group OR and inter-group AND; null values do not become zero',()=>{
   assert.deepEqual(catalog.filter({tiers:['5','6'],classes:['AFV']}).map(v=>v.id),['A'])
@@ -70,8 +70,8 @@ test('manual transitions may serve multiple formal targets',()=>{
 })
 test('multiple complete routes require selection; incomplete routes remain incomplete',()=>{
   data.unlock_paths.push({id:'pD2',vehicle_id:'D',name:'第二路线',is_complete:true,sort_order:1})
-  const s=state();target(s,'D');assert.equal(fleet.memberPlan(s,'m').choices.length,1);assert.equal(fleet.memberPlan(s,'m').complete,false)
-  s.routes[fleet.assetKey('m','D')]='pD';fleet.recompute(s);assert.equal(s.dependencies.length,3)
+  const s=state();target(s,'D');fleet.getAsset(s,'m','D').prerequisites={mode:'known',pathId:''};assert.equal(fleet.memberPlan(s,'m').choices.length,1);assert.equal(fleet.memberPlan(s,'m').complete,false)
+  fleet.setPrerequisites(s,'m','D',{mode:'known',pathId:'pD'});assert.equal(s.dependencies.length,3)
   data.unlock_paths.find(p=>p.id==='pC').is_complete=false
   assert.equal(fleet.memberPlan(s,'m').complete,false)
 })
@@ -111,12 +111,12 @@ test('actual unlock consumption is separate from ownership and removes future ex
 test('unassigned planned source is included only after choosing it; independent source breaks token cycle',()=>{
   tokenCost('B');reward('C',2);reward('X',2);const s=state();const tid=target(s,'D');let p=fleet.memberPlan(s,'m',tid)
   assert.equal(p.tokens[0].gained,2);assert(p.tokens[0].candidates.some(x=>x.vehicleId==='X'));assert.equal(p.executable,false)
-  fleet.saveAsset(s,'m','X','planned','',[]);fleet.getAsset(s,'m','X').tokenSupply=true;p=fleet.memberPlan(s,'m',tid)
+  fleet.saveAsset(s,'m','X','planned','',[]);fleet.setPrerequisites(s,'m','X',{mode:'known',pathId:'pX'});fleet.getAsset(s,'m','X').tokenSupply=true;p=fleet.memberPlan(s,'m',tid)
   assert.equal(p.tokens[0].gained,4);assert.equal(p.tokens[0].processOk,true);assert.equal(p.executable,true)
   assert(p.actions.findIndex(x=>x.vehicleId==='X'&&x.kind==='reward')<p.actions.findIndex(x=>x.vehicleId==='B'))
 })
 test('different token types cannot fund each other and unverified quantities stay unknown',()=>{
-  tokenCost('D');reward('A',4,'other');reward('X',null);const s=state();target(s,'D');fleet.saveAsset(s,'m','X','planned','',[])
+  tokenCost('D');reward('A',4,'other');reward('X',null);const s=state();target(s,'D');fleet.saveAsset(s,'m','X','planned','',[]);fleet.setPrerequisites(s,'m','X',{mode:'known',pathId:'pX'})
   const p=fleet.memberPlan(s,'m');assert.equal(p.tokens.find(x=>x.id==='token').shortfall,1);assert.equal(p.executable,false);assert(p.warnings.some(x=>x.includes('数量待核实')))
 })
 test('planned vehicles cannot claim rewards; claimed records survive personal archive roundtrip',()=>{
@@ -131,12 +131,12 @@ test('legacy import is idempotent, preserves unmappable metadata and inactive re
   assert.equal(s.legacyAudit.length,2);assert.equal(s.legacyAudit[0].role,'unknown_role');assert.equal(fleet.getAsset(s,'m','A').status,'owned');assert(!fleet.getAsset(s,'m','B'))
 })
 test('provider-first ordering avoids spending the only starting token on a non-producing target',()=>{
- tokenCost('D');tokenCost('X');reward('A');reward('X',2);const s=state();fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');target(s,'D');fleet.saveAsset(s,'m','X','planned','',[])
+ tokenCost('D');tokenCost('X');reward('A');reward('X',2);const s=state();fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');target(s,'D');fleet.saveAsset(s,'m','X','planned','',[]);fleet.setPrerequisites(s,'m','X',{mode:'known',pathId:'pX'})
  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].processOk,true);assert.equal(p.executable,true);assert(p.actions.findIndex(a=>a.id==='unlock:X')<p.actions.findIndex(a=>a.id==='unlock:D'))
 })
 test('unknown route rewards do not become currently obtainable or actionable',()=>{
- reward('X',2);data.unlock_paths.find(p=>p.vehicle_id==='X').is_complete=false;const s=state();fleet.saveAsset(s,'m','X','planned','',[])
- const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2);assert.equal(p.tokens[0].reachableGained,0);assert.equal(p.actions.length,0);assert.equal(p.complete,false);assert.match(p.blocked[0].reason,/路线待补全/)
+ reward('X',2);data.unlock_paths.find(p=>p.vehicle_id==='X').is_complete=false;const s=state();fleet.saveAsset(s,'m','X','planned','',[]);fleet.getAsset(s,'m','X').prerequisites={mode:'known',pathId:'pX'}
+ const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].gained,2);assert.equal(p.tokens[0].reachableGained,0);assert.equal(p.actions.length,0);assert.equal(p.complete,false);assert.match(p.blocked[0].reason,/需要前置/)
 })
 test('ordering backtracks when the first reward source consumes the seed token but yields another type',()=>{
  tokenCost('X');tokenCost('B');tokenCost('D');reward('A');reward('X',1,'other');reward('B',3);const s=state();fleet.saveAsset(s,'m','A','owned','',[]);progress(s,'A','claimed');target(s,'X');target(s,'D')
@@ -144,5 +144,56 @@ test('ordering backtracks when the first reward source consumes the seed token b
 })
 test('unknown token cost stops acquisition and downstream earnings',()=>{
  tokenCost('B',null);reward('B',2);const s=state();target(s,'D');const p=fleet.memberPlan(s,'m')
- assert.equal(p.tokens[0].reachableGained,0);assert.equal(p.complete,false);assert(p.blocked.some(x=>x.vehicleId==='B'&&x.reason.includes('数量待核实')))
+ assert.equal(p.tokens[0].reachableGained,0);assert.equal(p.complete,false);assert(p.blocked.some(x=>x.vehicleId==='B'&&x.reason.includes('用量未知')))
+})
+
+test('new planned target ignores prerequisites; no automatic assets, chain or future rewards',()=>{
+  reward('D',2);tokenCost('D');const s=state()
+  fleet.saveAsset(s,'m','D','planned','',[{roleId:'r',level:'primary'}])
+  assert.equal(fleet.prerequisiteConfig(s,'m','D').mode,'ignore')
+  assert.deepEqual(Object.values(s.assets).map(a=>a.vehicleId),['D']);assert.equal(s.dependencies.length,0)
+  const p=fleet.memberPlan(s,'m');assert.equal(p.steps.length,1);assert.equal(p.steps[0].ignored,true)
+  assert.equal(p.tokens[0].consumed,1);assert.equal(p.tokens[0].gained,0);assert.equal(p.tokens[0].reachableGained,0)
+  assert.equal(p.actions.length,0);assert.equal(p.executable,false);assert.equal(p.blocked[0].reason,'需要前置')
+  assert.equal(fleet.prerequisiteStatus(s,'m','D').needsPrerequisite,true)
+})
+test('known selection expands chain; ignore removes derived duties and survives status/note edit',()=>{
+  const s=state();fleet.saveAsset(s,'m','D','planned','',[{roleId:'r',level:'primary'}])
+  fleet.setPrerequisites(s,'m','D',{mode:'known',pathId:'pD'});assert.equal(s.dependencies.length,3)
+  fleet.setPrerequisites(s,'m','D',{mode:'ignore'});assert.equal(s.dependencies.length,0)
+  fleet.saveAsset(s,'m','D','planned','新备注',[{roleId:'r',level:'backup'}]);assert.equal(s.dependencies.length,0)
+  assert.equal(fleet.prerequisiteConfig(s,'m','D').mode,'ignore')
+})
+test('custom prerequisite replaces catalog relation locally; persistence and no fabricated Token',()=>{
+  tokenCost('D');reward('A',4);const s=state();target(s,'D')
+  const before=JSON.stringify(catalog.tables)
+  fleet.setPrerequisites(s,'m','D',{mode:'custom',pathId:'pD',customVehicleIds:['X']})
+  const route=fleet.resolveRoute(s,'m','D');assert.deepEqual(route.nodes.map(n=>n.vehicleId),['X','D'])
+  assert.equal(fleet.prerequisiteStatus(s,'m','D').customPrerequisite,true)
+  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens[0].consumed,1);assert.equal(p.tokens[0].gained,0);assert.equal(p.executable,false)
+  const archives=require('../miniprogram/utils/aw/archives'),saved=archives.personal(s,'m'),other=fleet.empty({m:'玩家'})
+  archives.memberInto(other,{id:'m',name:'玩家',data:saved});fleet.recompute(other)
+  assert.deepEqual(fleet.prerequisiteConfig(other,'m','D'),fleet.prerequisiteConfig(s,'m','D'))
+  assert.deepEqual(fleet.resolveRoute(other,'m','D').nodes.map(n=>n.vehicleId),['X','D']);assert.equal(JSON.stringify(catalog.tables),before)
+})
+test('known Token providers selectable only for matching type and counts deduplicate shared rewards',()=>{
+  tokenCost('D');reward('X',3);reward('A',2,'other');const s=state();target(s,'D')
+  const option=fleet.prerequisiteOptions('D')[0];assert.deepEqual(option.providers.map(p=>p.vehicleId),['X']);assert.match(option.name,/C/)
+  assert.throws(()=>fleet.setPrerequisites(s,'m','D',{mode:'known',pathId:'pD',tokenSourceVehicleIds:['A']}),/来源车辆/)
+  fleet.setPrerequisites(s,'m','D',{mode:'known',pathId:'pD',tokenSourceVehicleIds:['X','X']})
+  const p=fleet.memberPlan(s,'m');assert.equal(p.tokens.find(t=>t.id==='token').gained,3);assert.equal(p.tokens.find(t=>t.id==='token').consumed,1)
+  assert.equal(p.actions.filter(a=>a.id==='reward:rewardX').length,1)
+})
+test('custom self-reference, unknown vehicle and indirect cycles fail without mutation',()=>{
+  const s=state();target(s,'D');const before=JSON.stringify(s)
+  for(const ids of [['D'],['missing']])assert.throws(()=>fleet.setPrerequisites(s,'m','D',{mode:'custom',customVehicleIds:ids}),/无效/)
+  assert.equal(JSON.stringify(s),before)
+  fleet.setPrerequisites(s,'m','X',{mode:'custom',customVehicleIds:['D']});const selected=JSON.stringify(s)
+  assert.throws(()=>fleet.setPrerequisites(s,'m','D',{mode:'custom',customVehicleIds:['X']}),/循环/)
+  assert.equal(JSON.stringify(s),selected)
+})
+test('old explicit route survives migration while older unconfigured plans ignore',()=>{
+  const s=state();const a=fleet.ensureAsset(s,'m','D');a.explicit=true
+  assert.equal(fleet.resolveRoute(s,'m','D').nodes.length,1)
+  s.routes[a.id]='pD';assert.equal(fleet.prerequisiteConfig(s,'m','D').mode,'known');assert.equal(fleet.resolveRoute(s,'m','D').nodes.length,4)
 })

@@ -4,13 +4,16 @@ const fleet = require('../../utils/aw/fleet')
 const store = require('../../utils/aw/store')
 const updates = require('../../utils/aw/catalog-update')
 Page({
-  data:{id:'',query:'',vehicle:null,candidates:[],paths:[],related:[],limit:30,count:0,historyCount:0},
+  data:{prerequisiteForm:null,id:'',query:'',vehicle:null,candidates:[],paths:[],related:[],limit:30,count:0,historyCount:0},
+  configurePrerequisites(e){const d=e.currentTarget.dataset;this.setData({prerequisiteForm:{vehicleId:d.vehicle||d.id||this.data.id,memberId:d.member||store.currentMember()}})},
+  closePrerequisites(){this.setData({prerequisiteForm:null});this.refresh()},
+  prerequisitesSaved(){this.closePrerequisites()},
   onLoad(o){updates.init();this.history=[];this.scrollTop=0;this.setData({id:o.id||''});this.refresh()},
-  async onShow(){try{await updates.check(false)}catch(_){}this.refresh()},
+  async onShow(){if(this.data.prerequisiteForm)return;try{await updates.check(false)}catch(_){}this.refresh()},
   onPageScroll(e){this.scrollTop=e.scrollTop},
   refresh(){
     const v=this.data.id&&catalog.detail(this.data.id),all=catalog.filter({query:this.data.query})
-    this.setData({vehicle:v||null,paths:v?v.paths:[],related:v?v.related:[],count:all.length,candidates:all.slice(0,this.data.limit).map(x=>catalog.card(x)),historyCount:(this.history||[]).length,route:v?fleet.resolveRoute(store.load(),store.currentMember(),v.id):null})
+    this.setData({vehicle:v||null,paths:v?v.paths:[],related:v?v.related:[],count:all.length,candidates:all.slice(0,this.data.limit).map(x=>catalog.card(x)),historyCount:(this.history||[]).length,prerequisite:v?fleet.prerequisiteStatus(store.load(),store.currentMember(),v.id):null,configured:v?fleet.prerequisiteConfig(store.load(),store.currentMember(),v.id).mode!=='ignore':false,route:v?fleet.resolveRoute(store.load(),store.currentMember(),v.id):null})
   },
   search(e){this.setData({query:e.detail.value,limit:30});this.refresh()},
   select(e){this.visit(e.currentTarget.dataset.id)},

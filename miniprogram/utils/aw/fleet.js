@@ -14,32 +14,79 @@ function ensureAsset(s, memberId, vehicleId) {
   return s.assets[key]
 }
 function paths(vehicleId) { return catalog.rows('unlock_paths', 'vehicle_id', vehicleId).filter(p => !p.target_upgrade_id).sort((a, b) => a.sort_order - b.sort_order) }
+function prerequisiteConfig(s, memberId, vehicleId) {
+  const a = getAsset(s, memberId, vehicleId) || {}, saved = a.prerequisites
+  if (saved && ['ignore', 'known', 'custom'].includes(saved.mode)) return Object.assign({pathId:'',customVehicleIds:[],tokenSourceVehicleIds:[]}, saved)
+  const route = s.routes[assetKey(memberId, vehicleId)]
+  return {mode:route ? 'known' : a.explicit === false && Object.values(s.assignments).some(x=>x.assetId===a.id&&x.source==='tech_tree') ? 'known' : 'ignore', pathId:route || '', customVehicleIds:[], tokenSourceVehicleIds:[]}
+}
+function prerequisiteOptions(vehicleId) {
+  return paths(vehicleId).filter(p=>p.is_complete||catalog.rows('unlock_requirements','unlock_path_id',p.id).some(r=>r.source_vehicle_id||r.token_id)).map(p => {
+    const requirements = catalog.rows('unlock_requirements','unlock_path_id',p.id)
+    const sources = Array.from(new Set(requirements.map(r=>r.source_vehicle_id).filter(id=>catalog.byId[id])))
+    const tokens = Array.from(new Set(requirements.map(r=>r.token_id).filter(Boolean)))
+    const providers = catalog.tables.vehicle_token_rewards.filter(r=>tokens.includes(r.token_id)&&catalog.byId[r.vehicle_id]&&r.vehicle_id!==vehicleId).map(r=>({id:r.id,vehicleId:r.vehicle_id,name:catalog.byId[r.vehicle_id].displayName||catalog.byId[r.vehicle_id].name,tokenName:(catalog.byId[r.token_id]||{}).name||'Token',quantity:r.quantity}))
+    const names = sources.map(id=>catalog.byId[id].displayName||catalog.byId[id].name)
+    const tokenText = requirements.filter(r=>r.token_id).map(r=>((catalog.byId[r.token_id]||{}).name||'Token')+' ×'+(r.required_value == null ? '—' : r.required_value)).join('、')
+    return {id:p.id,name:names.length?'从 '+names.join(' / ')+' 研发':tokenText?'使用 '+tokenText:p.name, sources:sources.map(id=>({id,name:catalog.byId[id].displayName||catalog.byId[id].name})),tokenText,providers}
+  })
+}
 function resolveRoute(s, memberId, vehicleId) {
   const visited = {}, stack = {}, nodes = [], warnings = [], choices = [], depths = {}
   let complete = true
-  function visit(vid, depth) {
+  function visit(vid, depth, derived) {
     depths[vid] = Math.max(depths[vid] || 0, depth)
-    if (stack[vid]) { complete = false; warnings.push('获取路线存在循环，需核对资料'); return }
+    if (stack[vid]) { complete = false; warnings.push('前置配置存在循环'); return }
     if (visited[vid]) return
     stack[vid] = true
-    const owned = (getAsset(s, memberId, vid) || {}).status === 'owned'
-    const known = paths(vid), full = known.filter(p => p.is_complete)
-    const selected = s.routes[assetKey(memberId, vid)]
-    let path = known.find(p => p.id === selected)
-    if (!path && full.length === 1) path = full[0]
-    if (!path && full.length > 1) {
-      choices.push({ vehicleId: vid, name: (catalog.byId[vid] || {}).name || '未知车辆', paths: full })
-      if (!owned) { complete = false; warnings.push('请为 ' + (catalog.byId[vid] || {}).name + ' 选择获取路线') }
-    } else if (!path && known.length === 1) path = known[0]
-    if ((!path || !path.is_complete) && !owned) { complete = false; warnings.push((catalog.byId[vid] || {}).name + ' 获取路线待补全') }
-    const reqs = path ? catalog.rows('unlock_requirements', 'unlock_path_id', path.id).sort((a, b) => a.sort_order - b.sort_order) : []
-    // Only explicit requirement relations are prerequisites. Display edges are not proof of unlock requirements.
-    if (!owned && !tokenPlan.hasRecordedUnlock(getAsset(s,memberId,vid)||{})) reqs.forEach(r => { if (r.source_vehicle_id) visit(r.source_vehicle_id, depth + 1) })
-    nodes.push({ vehicleId: vid, vehicle: catalog.byId[vid] || { name: '资料待补全' }, owned, path, requirements: reqs, depth })
-    visited[vid] = true; delete stack[vid]
+    const asset = getAsset(s,memberId,vid), owned = (asset || {}).status === 'owned'
+    const known = paths(vid)
+    const config = prerequisiteConfig(s,memberId,vid)
+    if (derived && (!asset || !asset.explicit && !asset.prerequisites) && !s.routes[assetKey(memberId,vid)]) config.mode='known'
+    const ignored = !owned && !tokenPlan.hasRecordedUnlock(asset||{}) && config.mode==='ignore'
+    let path = known.find(p=>p.id===config.pathId)
+    if (!path && known.length===1) path=known[0]
+    if (!path && config.mode==='known' && !owned) choices.push({vehicleId:vid,name:(catalog.byId[vid]||{}).name,paths:known})
+    let reqs = path ? catalog.rows('unlock_requirements','unlock_path_id',path.id).slice().sort((a,b)=>a.sort_order-b.sort_order) : []
+    if(config.mode==='custom') {
+      reqs=reqs.filter(r=>!r.source_vehicle_id).concat(config.customVehicleIds.map(id=>({id:'custom:'+vid+':'+id,source_vehicle_id:id,requirement_type:'own_vehicle',description:'拥有 '+(catalog.byId[id]||{}).name,custom:true})))
+    }
+    const routeKnown = !ignored && (config.mode==='custom' ? !!config.customVehicleIds.length && (!known.some(p=>catalog.rows('unlock_requirements','unlock_path_id',p.id).some(r=>r.token_id)) || !!path) : !!(path&&path.is_complete))
+    if (!owned && !tokenPlan.hasRecordedUnlock(asset||{}) && !routeKnown) {complete=false;warnings.push((catalog.byId[vid]||{}).name+'：需要前置')}
+    if (!owned && !ignored && !tokenPlan.hasRecordedUnlock(asset||{})) {
+      reqs.forEach(r=>{if(r.source_vehicle_id)visit(r.source_vehicle_id,depth+1,true)})
+      config.tokenSourceVehicleIds.forEach(id=>visit(id,depth+1,true))
+    }
+    nodes.push({vehicleId:vid,vehicle:catalog.byId[vid]||{name:'车辆资料缺失'},owned,path,requirements:reqs,depth,ignored,custom:config.mode==='custom',routeKnown})
+    visited[vid]=true;delete stack[vid]
   }
-  visit(vehicleId, 0)
-  return { nodes, warnings: Array.from(new Set(warnings)), choices, complete, depths }
+  visit(vehicleId,0,false)
+  return {nodes,warnings:Array.from(new Set(warnings)),choices,complete,depths}
+}
+function setPrerequisites(s,memberId,vehicleId,input) {
+  if(!s.members.some(m=>m.id===memberId&&m.active)||!catalog.byId[vehicleId])throw new Error('请选择有效玩家和车辆')
+  if(!['ignore','known','custom'].includes(input.mode))throw new Error('前置配置无效')
+  const config={mode:input.mode,pathId:input.pathId||'',customVehicleIds:Array.from(new Set(input.customVehicleIds||[])),tokenSourceVehicleIds:Array.from(new Set(input.tokenSourceVehicleIds||[]))}
+  const options=prerequisiteOptions(vehicleId),option=options.find(p=>p.id===config.pathId)
+  if(config.mode==='known'&&!option)throw new Error('请选择数据已知的获取路线')
+  if(config.mode==='custom'&&!config.customVehicleIds.length)throw new Error('请选择自定义前置车辆')
+  if(config.mode==='ignore'){config.pathId='';config.customVehicleIds=[];config.tokenSourceVehicleIds=[]}
+  if(config.mode!=='custom')config.customVehicleIds=[]
+  if(config.customVehicleIds.some(id=>!catalog.byId[id]||id===vehicleId))throw new Error('自定义前置车辆无效')
+  if(config.tokenSourceVehicleIds.some(id=>!option||!option.providers.some(r=>r.vehicleId===id)))throw new Error('请选择该路线已知的 Token 来源车辆')
+  const next=clone(s),a=ensureAsset(next,memberId,vehicleId);a.prerequisites=config;a.explicit=true
+  delete next.routes[assetKey(memberId,vehicleId)]
+  if(resolveRoute(next,memberId,vehicleId).warnings.some(x=>x.includes('循环')))throw new Error('前置配置存在循环，请调整选择')
+  const saved=ensureAsset(s,memberId,vehicleId);saved.prerequisites=config;saved.explicit=true
+  delete s.routes[assetKey(memberId,vehicleId)]
+  return recompute(s)
+}
+function prerequisiteStatus(s,memberId,vehicleId) {
+  const a=getAsset(s,memberId,vehicleId)||{},config=prerequisiteConfig(s,memberId,vehicleId)
+  if(a.status==='owned'||tokenPlan.hasRecordedUnlock(a))return {needsPrerequisite:false,customPrerequisite:config.mode==='custom'}
+  const route=resolveRoute(s,memberId,vehicleId),node=route.nodes.find(n=>n.vehicleId===vehicleId)
+  const needs=!!(node.ignored||!route.complete||node.requirements.some(r=>r.token_id||r.source_vehicle_id&&(getAsset(s,memberId,r.source_vehicle_id)||{}).status!=='owned'||!r.source_vehicle_id&&!s.confirmedRequirements[assetKey(memberId,r.id)]))
+  return {needsPrerequisite:needs,customPrerequisite:config.mode==='custom'}
 }
 function targets(s, memberId) {
   return Object.values(s.assignments).filter(a => {
@@ -66,6 +113,7 @@ function saveAsset(s, memberId, vehicleId, status, note, roles) {
   if (!catalog.byId[vehicleId]) throw new Error('车辆不存在')
   if (['owned', 'planned'].indexOf(status) < 0) throw new Error('车辆状态无效')
   const asset = ensureAsset(s, memberId, vehicleId)
+  if (!asset.explicit && !asset.prerequisites && !s.routes[asset.id]) asset.prerequisites={mode:'ignore',pathId:'',customVehicleIds:[],tokenSourceVehicleIds:[]}
   asset.status = status; asset.note = note || ''; asset.explicit = true
   const old = Object.values(s.assignments).filter(a => a.assetId === asset.id && a.source !== 'tech_tree')
   old.forEach(a => { delete s.assignments[a.id] })
@@ -103,7 +151,9 @@ function memberPlan(s, memberId, targetId) {
     context.complete=context.complete&&route.complete;context.warnings.push.apply(context.warnings,route.warnings);context.choices.push.apply(context.choices,route.choices)
     route.nodes.forEach(n=>{if(!seen.has(n.vehicleId)){seen.add(n.vehicleId);nodes.push(n)}})
   })
-  return tokenPlan.build(s,memberId,nodes,context)
+  const plan=tokenPlan.build(s,memberId,nodes,context)
+  plan.steps.forEach(step=>Object.assign(step,prerequisiteStatus(s,memberId,step.id)))
+  return plan
 }
 function summary(s, vehicleId) {
   const roles = {}; s.roles.forEach(r => { roles[r.id] = r })
@@ -112,7 +162,7 @@ function summary(s, vehicleId) {
     const assigned = Object.values(s.assignments).filter(x => x.assetId === a.id)
     const formal = assigned.find(x => ['primary', 'backup'].includes(x.level) && x.source !== 'tech_tree')
     const plan = a.status === 'planned' && formal ? memberPlan(s, a.memberId, formal.id) : null
-    return Object.assign({}, a, { memberName: m.name + (m.active ? '' : '（停用）'), statusText: catalog.label(a.status),
+    return Object.assign({}, a, prerequisiteStatus(s,a.memberId,a.vehicleId), { memberName: m.name + (m.active ? '' : '（停用）'), statusText: catalog.label(a.status),
       roles: assigned.map(x => Object.assign({}, x, { name: (roles[x.roleId] || {}).name || '历史职责', levelText: catalog.label(x.level), sourceText: catalog.label(x.source),
         targetNames: s.dependencies.filter(d => d.assignmentId === x.id).map(d => { const t = s.assignments[d.targetId], v = t && s.assets[t.assetId]; return v ? (catalog.byId[v.vehicleId] || {}).name : '' }).filter(Boolean).join('、') })),
       roleText: assigned.map(x => (roles[x.roleId] || {}).name + '·' + catalog.label(x.level)).join(' / ') || '暂无车队职责',
@@ -148,4 +198,4 @@ function importLegacy(s, entries, users) {
   })
   return recompute(s)
 }
-module.exports = { clone, id, empty, assetKey, assignmentKey, getAsset, ensureAsset, paths, resolveRoute, recompute, saveAsset, deleteRole, removeAsset, targets, planningTargets, memberPlan, summary, overview, importLegacy }
+module.exports = { clone, id, empty, assetKey, assignmentKey, getAsset, ensureAsset, paths, prerequisiteConfig, prerequisiteOptions, setPrerequisites, prerequisiteStatus, resolveRoute, recompute, saveAsset, deleteRole, removeAsset, targets, planningTargets, memberPlan, summary, overview, importLegacy }

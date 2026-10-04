@@ -26,7 +26,8 @@ test('screenshots correct both displayed and planned XM800T prerequisite without
   assert(!detail.related.some(r=>r.id===ids.lav_150&&r.direction==='前置'))
   assert.equal(detail.paths[0].requirements[0].source_vehicle_id,ids.m113_acav)
   assert.equal(detail.paths[0].is_complete,false);assert.equal(detail.paths[0].requirements[0].verification_status,'needs_ingame_check')
-  const route=fleet.resolveRoute(fleet.empty({test:'Test'}),'test',ids.xm800t_law)
+  const state=fleet.empty({test:'Test'});fleet.setPrerequisites(state,'test',ids.xm800t_law,{mode:'known',pathId:detail.paths[0].id})
+  const route=fleet.resolveRoute(state,'test',ids.xm800t_law)
   assert(route.nodes.some(n=>n.vehicleId===ids.m113_acav));assert.equal(route.complete,false)
 })
 test('new release installs complete data, caches in bounded chunks and reloads offline without any save request',async()=>{

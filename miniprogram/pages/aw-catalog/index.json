@@ -1,1 +1,6 @@
-{"navigationBarTitleText":"AW · 车辆资料库"}
+{
+  "navigationBarTitleText": "AW · 车辆资料库",
+  "usingComponents": {
+    "aw-prerequisites": "../../components/aw-prerequisites/index"
+  }
+}

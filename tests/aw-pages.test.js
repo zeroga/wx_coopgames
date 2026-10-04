@@ -34,7 +34,7 @@ test('create member and role, edit asset with two roles, cancel without mutation
   assert.equal(messages.filter(r=>r.title==='操作未完成'||r.title==='无法保存').length,0)
 })
 test('all AW event bindings and referenced routes resolve',()=>{
-  const dirs=['pages/aw-home','pages/aw-catalog','pages/aw-vehicle','pages/aw-tree','pages/aw-fleet','components/aw-asset-editor']
+  const dirs=['pages/aw-home','pages/aw-catalog','pages/aw-vehicle','pages/aw-tree','pages/aw-fleet','components/aw-asset-editor','components/aw-prerequisites']
   for(const dir of dirs){const file=path.join(__dirname,'../miniprogram',dir,'index.wxml'),text=fs.readFileSync(file,'utf8');let def
     if(dir.startsWith('components'))global.Component=d=>{def=d};else global.Page=d=>{def=d}
     const script=path.join(path.dirname(file),'index.js');delete require.cache[require.resolve(script)];require(script)
@@ -223,7 +223,7 @@ test('new registration defaults planned; state choices, boolean filters and tree
  const editor=hydrate(def,true);editor.properties={vehicleId:c.tables.vehicles.at(-1).id};editor.prepare();assert.equal(editor.data.statusIndex,1)
  const cp=page('aw-catalog');cp.onLoad();cp.bool(event({key:'premium',value:1}));assert.equal(cp.data.filters.premium,'yes');cp.bool(event({key:'premium',value:0}));assert.equal(cp.data.filters.premium,'')
  const tree=page('aw-tree');tree.onLoad({});assert.equal(tree.data.candidates.length,30);tree.loadMore();assert.equal(tree.data.candidates.length,60);tree.onPageScroll({scrollTop:600});tree.select(event({id:c.tables.vehicles[0].id}));assert.equal(tree.data.historyCount,1);tree.back();assert.equal(tree.data.id,'');assert.equal(tree.data.limit,60);assert.equal(tree.data.candidates.length,60)
- for(const dir of ['pages/aw-catalog','pages/aw-fleet','components/aw-asset-editor'])assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'../miniprogram',dir,'index.wxml'),'utf8'),/<picker\b/)
+ for(const dir of ['pages/aw-catalog','pages/aw-fleet','components/aw-asset-editor','components/aw-prerequisites'])assert.doesNotMatch(fs.readFileSync(path.join(__dirname,'../miniprogram',dir,'index.wxml'),'utf8'),/<picker\b/)
 })
 test('open vehicle or form draft prevents automatic cloud read; keyboard adjusts available editor height',async()=>{
  const old=s.refreshIfClean;let calls=0;s.refreshIfClean=async()=>{calls++;return true}
@@ -231,4 +231,30 @@ test('open vehicle or form draft prevents automatic cloud read; keyboard adjusts
  const vp=page('aw-vehicle');vp.onLoad({id:c.tables.vehicles[0].id});vp.edit();await vp.onShow();assert.equal(calls,0)
  let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script);const editor=hydrate(def,true);editor.properties={vehicleId:c.tables.vehicles[0].id};editor.prepare();const h=editor.data.sheetHeight;editor.keyboard({detail:{height:300}});assert(editor.data.sheetHeight<h);assert(editor.data.contentHeight>0)
  }finally{s.refreshIfClean=old}
+})
+
+test('prerequisite sheet keeps all-vehicle search in custom second layer and cancel is transactional',async()=>{
+  const fleet=require('../miniprogram/utils/aw/fleet'),vid=c.tables.vehicles.find(v=>v.name==='Boxer RIWP').id
+  let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-prerequisites/index';delete require.cache[require.resolve(script)];require(script)
+  const p=hydrate(def,true);p.properties={vehicleId:vid,memberId:s.currentMember()};p.prepare()
+  const before=s.exportText();assert.equal(p.data.stage,'known');assert.equal(p.data.candidates.length,0)
+  p.custom();assert.equal(p.data.stage,'custom');assert.equal(p.data.candidates.length,30)
+  const selected=p.data.candidates[0].id;p.toggleCustom(event({id:selected}));assert.equal(p.data.draft.mode,'custom');assert.equal(p.data.customNames.length,1)
+  p.back();assert.equal(p.data.stage,'known');assert.equal(p.data.candidates.length,0)
+  p.cancel();assert.equal(s.exportText(),before)
+  p.prepare();p.custom();p.toggleCustom(event({id:selected}));p.back();await p.save()
+  assert.equal(fleet.prerequisiteConfig(s.load(),s.currentMember(),vid).mode,'custom')
+  assert.equal(fleet.summary(s.load(),vid).find(a=>a.memberId===s.currentMember()).customPrerequisite,true)
+  p.prepare();p.ignore();await p.save();assert.equal(fleet.prerequisiteConfig(s.load(),s.currentMember(),vid).mode,'ignore')
+  const edit=s.canEdit;s.canEdit=()=>false
+  try{p.prepare();const b=s.exportText();p.custom();assert.equal(p.data.stage,'known');await p.save();assert.equal(s.exportText(),b)}finally{s.canEdit=edit;p.cancel()}
+})
+test('all configuration entries register component; frontend omits verification metadata',()=>{
+  for(const name of ['aw-catalog','aw-vehicle','aw-tree','aw-fleet']){
+    const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/pages',name,'index.wxml'),'utf8')
+    assert.match(markup,/<aw-prerequisites/);assert.match(markup,/prerequisite-alert/)
+    assert.doesNotMatch(markup,/\.quality|verification_status|公开资料已核验|游戏内已核验|来源与核验状态|资料完整|路线待补全/)
+    const config=JSON.parse(fs.readFileSync(path.join(__dirname,'../miniprogram/pages',name,'index.json')))
+    assert(config.usingComponents['aw-prerequisites'])
+  }
 })

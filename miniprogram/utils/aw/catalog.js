@@ -139,7 +139,7 @@ function detail(id) {
     const key = w.configuration_key || 'unknown'; if (!configs[key]) configs[key] = []
     const ammo = ammoFor(id).filter(a => a.weapon_id === w.id).map(a => Object.assign({}, a, {
       colorClass: ammoColor(a), typeLabel: (a.ammo_type || '未知').toUpperCase(),
-      warheadLabel: a.classification ? ({kinetic:'动能',heat:'HEAT',tandem_heat:'串联 HEAT',thermobaric:'温压',he:'HE',hesh:'HESH / HEP',pele:'PELE',smoke:'烟幕',unknown:'弹头待核实'})[a.classification.warhead_type] : '',
+      warheadLabel: a.classification ? ({kinetic:'动能',heat:'HEAT',tandem_heat:'串联 HEAT',thermobaric:'温压',he:'HE',hesh:'HESH / HEP',pele:'PELE',smoke:'烟幕',unknown:''})[a.classification.warhead_type] : '',
       tagNames: a.traits.map(tagName), params: metrics(a, ['damage', 'penetration', 'velocity', 'range', 'reload_seconds', 'magazine_size', 'rate_of_fire', 'intra_clip_reload', 'accuracy_deg', 'module_damage', 'module_damage_bonus_pct', 'explosion_radius_m', 'penetration_reference_m'], w),
       guidance: rows('ammo_guidance_modes', 'ammo_id', a.id).filter(x => present(x.lock_time_seconds)).map(x => tagName(x.mode_code) + ' · 锁定 ' + x.lock_time_seconds + ' s'),
       quality: label(a.verification_status), availabilityText: a.requires_research === true ? '研发' : a.requires_research === false ? '默认' : '待确认'

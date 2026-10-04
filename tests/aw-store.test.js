@@ -155,3 +155,17 @@ test('published personal archive auto-syncs and refreshes without a connected te
  await store.saveAndSync(next);assert.equal(Object.values(m.data.assets)[0].note,'个人自动上传');assert.equal(store.memberInfo(id).dirty,false)
  m.name='另一设备修改';m.version++;assert.equal(await store.refreshIfClean(),true);assert.equal(store.load().members[0].name,'另一设备修改');assert.equal(store.memberInfo(id).version,m.version)
 })
+
+test('known and custom prerequisites auto-sync across devices and ignore removes derived duties',async()=>{
+ localMember();await store.createTeam('Shared');const a=store,tc=a.remoteInfo().teamCode,id=a.currentMember(),mc=a.memberInfo(id).code;let am=snapshotMemory()
+ memory.clear();const b=freshStore();await b.openTeam(tc);await b.attachMember(mc);let bm=snapshotMemory()
+ useMemory(am);const next=fleet.clone(a.load()),target=catalog.tables.vehicles.find(v=>v.name==='XM800T LAW'),path=fleet.paths(target.id)[0],source=path&&catalog.rows('unlock_requirements','unlock_path_id',path.id).find(r=>r.source_vehicle_id).source_vehicle_id
+ fleet.saveAsset(next,id,target.id,'planned','',[{roleId:'role',level:'backup'}]);assert.equal(fleet.prerequisiteConfig(next,id,target.id).mode,'ignore')
+ fleet.setPrerequisites(next,id,target.id,{mode:'known',pathId:path.id});await a.saveAndSync(next);am=snapshotMemory()
+ useMemory(bm);await b.refreshIfClean();assert.equal(fleet.prerequisiteConfig(b.load(),id,target.id).pathId,path.id);assert(fleet.resolveRoute(b.load(),id,target.id).nodes.some(n=>n.vehicleId===source));bm=snapshotMemory()
+ useMemory(am);const custom=fleet.clone(a.load()),vid=catalog.tables.vehicles.find(v=>v.id!==source&&v.id!==target.id).id
+ fleet.setPrerequisites(custom,id,target.id,{mode:'custom',pathId:path.id,customVehicleIds:[vid]});await a.saveAndSync(custom);am=snapshotMemory()
+ useMemory(bm);await b.refreshIfClean();assert.deepEqual(fleet.prerequisiteConfig(b.load(),id,target.id).customVehicleIds,[vid]);assert(fleet.summary(b.load(),target.id).find(x=>x.memberId===id).customPrerequisite);bm=snapshotMemory()
+ useMemory(am);const ignored=fleet.clone(a.load());fleet.setPrerequisites(ignored,id,target.id,{mode:'ignore'});await a.saveAndSync(ignored)
+ useMemory(bm);await b.refreshIfClean();assert.equal(fleet.resolveRoute(b.load(),id,target.id).nodes.length,1);assert(!b.load().dependencies.some(d=>d.source==='tech_tree'));assert.equal(b.dirty,false)
+})

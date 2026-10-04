@@ -44,7 +44,7 @@ function build(s,memberId,nodes,context) {
       catalog.rows('unlock_requirements','unlock_path_id',p.id).filter(r=>r.token_id).forEach(r=>{const n=cost(r,(catalog.byId[a.vehicleId]||{}).name);if(n!==null)bucket(r.token_id).historicalSpent+=n})
     }else if(a.tokenAcquisition==='token'){warn('请记录实际 Token 解锁路线：'+(catalog.byId[a.vehicleId]||{}).name)}else if(a.status==='owned'&&a.tokenAcquisition!=='other'&&catalog.rows('unlock_paths','vehicle_id',a.vehicleId).some(p=>catalog.rows('unlock_requirements','unlock_path_id',p.id).some(r=>r.token_id))){warn('请记录实际获取方式：'+(catalog.byId[a.vehicleId]||{}).name)}
   })
-  const nodeIds=new Set(nodes.map(n=>n.vehicleId)),sourceIds=new Set()
+  const nodeIds=new Set(nodes.map(n=>n.vehicleId)),ignoredIds=new Set(nodes.filter(n=>n.ignored).map(n=>n.vehicleId)),sourceIds=new Set()
   // Owned sources are relevant even when outside the selected target's route.
   const sourceAssets=ownedAssets.concat(nodes.filter(n=>!n.owned).map(n=>s.assets[key(n.vehicleId)]||{vehicleId:n.vehicleId,status:'planned'}))
   sourceAssets.forEach(a=>rewards(a).forEach(r=>{
@@ -54,12 +54,12 @@ function build(s,memberId,nodes,context) {
     if(!verified(r)||!quantity(r.quantity)){b.unknownSources++;warn('奖励数量待核实：'+name)}
     else if(r.state!=='claimed'){
       if(a.status==='owned'&&r.state==='unknown'){b.uncertain+=Number(r.quantity);warn('请记录奖励进度：'+name)}
-      else{row.forecast=true;b.gained+=Number(r.quantity)}
+      else if(!ignoredIds.has(a.vehicleId)){row.forecast=true;b.gained+=Number(r.quantity)}
     }
     b.sources.push(row)
   }))
   nodes.forEach(n=>{
-    const a=s.assets[key(n.vehicleId)]||{}, step={id:n.vehicleId,name:n.vehicle.displayName||n.vehicle.name_zh||n.vehicle.name,owned:n.owned,pathName:n.path&&n.path.name,routeKnown:!!(n.owned||hasRecordedUnlock(a)||!a.tokenUnlockPathId&&a.tokenAcquisition!=='token'&&n.path&&n.path.is_complete),requirements:n.requirements.map(r=>Object.assign({},r,{confirmed:!!s.confirmedRequirements[key(r.id)]})),rewards:rewards(Object.assign({vehicleId:n.vehicleId},a)),changes:[],blocked:false,uncertain:false,costUnknown:false,costs:[]}
+    const a=s.assets[key(n.vehicleId)]||{}, step={id:n.vehicleId,name:n.vehicle.displayName||n.vehicle.name_zh||n.vehicle.name,owned:n.owned,ignored:!!n.ignored,custom:!!n.custom,pathName:n.path&&n.path.name,routeKnown:!!(n.owned||hasRecordedUnlock(a)||!a.tokenUnlockPathId&&a.tokenAcquisition!=='token'&&(n.routeKnown === undefined ? n.path&&n.path.is_complete : n.routeKnown)),requirements:n.requirements.map(r=>Object.assign({},r,{confirmed:!!s.confirmedRequirements[key(r.id)]})),rewards:rewards(Object.assign({vehicleId:n.vehicleId},a)),changes:[],blocked:false,uncertain:false,costUnknown:false,costs:[]}
     if(!n.owned&&!hasRecordedUnlock(a))n.requirements.forEach(r=>{
       if(r.token_id){const b=bucket(r.token_id),amount=cost(r,step.name);if(amount===null){step.uncertain=true;step.costUnknown=true;return}b.consumed+=amount;b.consumers.push({vehicleId:n.vehicleId,name:step.name,quantity:amount});step.costs.push({tokenId:r.token_id,quantity:amount});step.changes.push(b.name+' 消耗 '+amount)}
       else if(r.requirement_type==='own_vehicle'&&r.source_vehicle_id&&!r.source_upgrade_id){}
@@ -105,7 +105,7 @@ function build(s,memberId,nodes,context) {
     return Object.assign(b,{final,shortfall,reserveShortfall,totalOk:final>=0,bufferOk:!b.consumed||final>0,candidates:catalog.rows('vehicle_token_rewards','token_id',b.id).filter(r=>!sourceIds.has(r.id)).map(r=>Object.assign({},r,{vehicleId:r.vehicle_id,name:(catalog.byId[r.vehicle_id]||{}).displayName||(catalog.byId[r.vehicle_id]||{}).name,known:verified(r)&&quantity(r.quantity)}))})
   })
   const tokenOk=tokens.every(b=>b.totalOk&&b.processOk),bufferOk=tokens.every(b=>b.bufferOk)
-  const blocked=pending.map(step=>({vehicleId:step.id,name:step.name,reason:step.costUnknown?'Token 消耗数量待核实，不能推断可支付':!step.routeKnown?'获取路线待补全或未选择，不能推断免费获取':step.costs.some(c=>bucket(c.tokenId).balance<c.quantity)?'此步骤 Token 不足；需先练已有来源或补充独立来源，未来奖励不能提前支付':'前置尚未获取；检查路线循环和前置条件'}))
+  const blocked=pending.map(step=>({vehicleId:step.id,name:step.name,reason:step.costUnknown?'Token 用量未知，暂不能计算可支付数量':step.ignored?'需要前置':!step.routeKnown?'需要前置':step.costs.some(c=>bucket(c.tokenId).balance<c.quantity)?'此步骤 Token 不足；需先练已有来源或补充独立来源，未来奖励不能提前支付':'前置尚未获取；检查路线循环和前置条件'}))
   const status=!tokenOk||blocked.length?'Token 不足 / 路线受阻':!complete?'记录 / 条件待确认':!bufferOk?'可支付，需增加规划余量':'已知条件通过'
   return {steps,tokens,actions,blocked,choices:context.choices.filter((c,i)=>context.choices.findIndex(x=>x.vehicleId===c.vehicleId)===i),warnings:Array.from(new Set(warnings)),complete,status,executable:complete&&tokenOk&&bufferOk&&!blocked.length,ownedCount:nodes.filter(n=>n.owned).length,count:nodes.length,missing:steps.filter(x=>!x.owned).length,bufferOk}
 }
