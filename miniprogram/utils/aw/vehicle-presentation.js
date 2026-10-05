@@ -42,4 +42,20 @@ function markerPreview(markers, limit) {
   const shown=new Set(visible.map(m=>m.memberId||m.memberName))
   return {visibleMarkers:visible,hiddenMembers:all.size-shown.size}
 }
-module.exports = {colors,markers,memberColor,scopeSummaries,layout,markerPreview,markerForeground}
+function tagPreview(widths, width, gap, overflow) {
+  // Fill the first row before considering disclosure on the second row.
+  const end=(start,reserve)=>{
+    let used=0,i=start
+    for(;i<widths.length;i++){
+      const next=used+(i>start?gap:0)+Math.min(widths[i],width)
+      if(next+reserve>width)break
+      used=next
+    }
+    return i
+  }
+  const firstCount=end(0,0)
+  let visibleCount=end(firstCount,0)
+  if(visibleCount<widths.length)visibleCount=end(firstCount,overflow+gap)
+  return {firstCount,visibleCount,hiddenCount:widths.length-visibleCount}
+}
+module.exports = {colors,markers,memberColor,scopeSummaries,layout,markerPreview,markerForeground,tagPreview}

@@ -57,6 +57,20 @@ test('actual-container resize changes planning mode while name width ignores mar
   width=310;p.measureLayout();assert.equal(p.data.resolvedPlanMode,'details')
   assert.deepEqual(p.events.filter(e=>e.name==='planlayout').map(e=>e.detail.mode),['details','summary','details'])
 })
+test('capability rows use both lines before folding, reserving disclosure only on the second',()=>{
+  const fit=presentation.tagPreview([82,38,104],160,4,16)
+  assert.deepEqual(fit,{firstCount:2,visibleCount:3,hiddenCount:0})
+  assert.deepEqual(presentation.tagPreview([76,76,76,76,76],160,4,16),{firstCount:2,visibleCount:3,hiddenCount:2})
+  assert.deepEqual(presentation.tagPreview([76,76,76,76],160,4,16),{firstCount:2,visibleCount:4,hiddenCount:0})
+  assert.deepEqual(presentation.tagPreview([200,76,76],160,4,16),{firstCount:1,visibleCount:3,hiddenCount:0})
+  assert.deepEqual(presentation.tagPreview([],160,4,16),{firstCount:0,visibleCount:0,hiddenCount:0})
+})
+test('component keeps the first row intact and updates second-row disclosure on resize',()=>{
+  const p=label({tags:['步兵班','烟幕','APS','ERA','攻顶']});p.refresh();let width=160
+  p.createSelectorQuery=()=>({select(){return this},selectAll(){return this},boundingClientRect(){return this},exec(fn){fn([{width},p.properties.tags.map(()=>({width:76})),{width:16}])}})
+  p.measureTags();assert.deepEqual(p.data.tagRows.map(r=>r.tags),[['步兵班','烟幕'],['APS']]);assert.equal(p.data.hiddenTags,2)
+  width=240;p.measureTags();assert.deepEqual(p.data.tagRows.map(r=>r.tags),[['步兵班','烟幕','APS'],['ERA','攻顶']]);assert.equal(p.data.hiddenTags,0)
+})
 test('summary sheet preserves every player and dispatches configuration to the selected identity',()=>{
   const p=label({plans,markers:presentation.markers(state,plans),planMode:'summary'});p.refresh();const before=JSON.stringify(plans)
   p.showPlans();assert.equal(p.data.planSheet,true);p.closePlans();assert.equal(p.data.planSheet,false)

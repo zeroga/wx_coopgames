@@ -286,8 +286,8 @@ test('shared vehicle label reads live catalog identity, legendary tier and missi
   p.properties.tags=['ERA','APS','烟幕']
   let width=70
   p.createSelectorQuery=()=>({select(){return this},selectAll(){return this},boundingClientRect(){return this},exec(fn){fn([{width},[{width:25},{width:25},{width:25}]])}})
-  p.measureTags();assert.deepEqual(p.data.visibleTags,['ERA']);assert.equal(p.data.hiddenTags,2)
-  width=85;p.measureTags();assert.deepEqual(p.data.visibleTags,['ERA','APS','烟幕']);assert.equal(p.data.hiddenTags,0)
+  p.measureTags();assert.deepEqual(p.data.tagRows.map(r=>r.tags),[['ERA','APS'],['烟幕']]);assert.equal(p.data.hiddenTags,0)
+  width=85;p.measureTags();assert.deepEqual(p.data.tagRows.map(r=>r.tags),[['ERA','APS','烟幕'],[]]);assert.equal(p.data.hiddenTags,0)
   for(const dir of ['pages/aw-catalog','pages/aw-fleet','pages/aw-vehicle','pages/aw-tree','components/aw-prerequisites','components/aw-asset-editor']){
     const cfg=JSON.parse(fs.readFileSync(path.join(__dirname,'../miniprogram',dir,'index.json'),'utf8'))
     assert.equal(cfg.usingComponents['aw-vehicle-label'],'/components/aw-vehicle-label/index')

@@ -4,7 +4,7 @@ const classes = { MBT:'主战坦克', LT:'轻型坦克', TD:'坦克歼击车', A
 Component({
   options:{virtualHost:true},
   properties:{ vehicleId:String, name:String, variant:String, catalogRevision:Number, tags:{type:Array,value:[]}, markers:{type:Array,value:[]}, plans:{type:Array,value:[]}, planMode:{type:String,value:'none'} },
-  data:{ displayName:'', classCode:'', className:'', tierText:'', metaText:'', visibleTags:[], hiddenTags:0, mainWidthRpx:0, resolvedPlanMode:'none', visibleMarkers:[], hiddenMembers:0, planMemberCount:0, needsPrerequisite:false,planSheet:false },
+  data:{ displayName:'', classCode:'', className:'', tierText:'', metaText:'', tagRows:[{id:'first',tags:[]},{id:'second',tags:[]}], hiddenTags:0, mainWidthRpx:0, resolvedPlanMode:'none', visibleMarkers:[], hiddenMembers:0, planMemberCount:0, needsPrerequisite:false,planSheet:false },
   observers:{ 'vehicleId, name, catalogRevision, tags, markers'(){this.refresh()}, 'plans, planMode'(){this.refresh()} },
   lifetimes:{ attached(){this.refresh()}, ready(){this.measureLayout()}, detached(){this._detached=true} },
   pageLifetimes:{ show(){this.refresh()}, resize(){this.measureLayout()} },
@@ -16,7 +16,7 @@ Component({
       const preview=presentation.markerPreview(markers,2)
       if(markers.length&&plans.length)preview.hiddenMembers=new Set(plans.map(p=>p.memberId)).size-new Set(preview.visibleMarkers.map(m=>m.memberId)).size
       const mode=this.properties.planMode==='auto'?(this.data.resolvedPlanMode==='summary'?'summary':'details'):this.properties.planMode||'none'
-      this.setData(Object.assign({displayName:v.name_zh||v.name||this.properties.name||'车辆资料缺失',classCode:code||'—',className:type,tierText:v.is_legendary?'传奇':catalog.present(v.tier)?'T'+v.tier:'T—',metaText:[v.nation,dealer].filter(Boolean).join(' · '),visibleTags:[],hiddenTags:tags.length,resolvedPlanMode:mode,planMemberCount:new Set(plans.map(p=>p.memberId)).size,needsPrerequisite:plans.some(p=>p.status==='planned'&&p.needsPrerequisite)},preview))
+      this.setData(Object.assign({displayName:v.name_zh||v.name||this.properties.name||'车辆资料缺失',classCode:code||'—',className:type,tierText:v.is_legendary?'传奇':catalog.present(v.tier)?'T'+v.tier:'T—',metaText:[v.nation,dealer].filter(Boolean).join(' · '),tagRows:[{id:'first',tags:[]},{id:'second',tags:[]}],hiddenTags:tags.length,resolvedPlanMode:mode,planMemberCount:new Set(plans.map(p=>p.memberId)).size,needsPrerequisite:plans.some(p=>p.status==='planned'&&p.needsPrerequisite)},preview))
       if(typeof wx!=='undefined'&&wx.nextTick)wx.nextTick(()=>this.measureLayout())
     },
     measureLayout(){
@@ -40,15 +40,10 @@ Component({
       query.select('.vehicle-tags').boundingClientRect();query.selectAll('.vehicle-tag-probe').boundingClientRect();query.select('.vehicle-overflow-probe').boundingClientRect()
       query.exec(rects=>{
         const row=rects&&rects[0],chips=rects&&rects[1],probe=rects&&rects[2]
-        if(!row||!chips||chips.length!==tags.length||this._detached||generation!==this._tagGeneration)return
+        if(!row||!row.width||!chips||chips.length!==tags.length||this._detached||generation!==this._tagGeneration)return
         const gap=8*(this._unit||.5),overflow=probe&&probe.width||20
-        let used=0,count=0
-        for(let i=0;i<chips.length;i++){
-          const remaining=tags.length-i-1,reserve=remaining?overflow+gap:0,next=used+(i?gap:0)+chips[i].width
-          if(next+reserve>row.width)break
-          used=next;count++
-        }
-        this.setData({visibleTags:tags.slice(0,count),hiddenTags:tags.length-count})
+        const fit=presentation.tagPreview(chips.map(c=>c.width),row.width,gap,overflow)
+        this.setData({tagRows:[{id:'first',tags:tags.slice(0,fit.firstCount)},{id:'second',tags:tags.slice(fit.firstCount,fit.visibleCount)}],hiddenTags:fit.hiddenCount})
       })
     },
     showIdentity(){wx.showModal({title:'车辆信息',content:[this.data.displayName,this.data.className+' · '+this.data.tierText,this.data.metaText].filter(Boolean).join('\n'),showCancel:false,confirmText:'关闭'})},
