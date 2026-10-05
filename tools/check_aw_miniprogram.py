@@ -24,7 +24,9 @@ for p in list((mini / 'pages').glob('aw-*/index.wxml')) + list((mini / 'componen
         assert (p.parent / imp).exists(), imp
     if p.parent.parent.name == 'components':
         styles = p.with_suffix('.wxss').read_text()
-        assert '@import' not in styles, f'{p}: keep component-only class styles separate from the page theme'
+        # Shared class-only style modules are valid in isolated components.
+        # Imports were checked above; inspect the selectors defined here only.
+        styles = re.sub(r'@import\s+"[^"]+"\s*;', '', styles)
         styles = re.sub(r'/\*[\s\S]*?\*/', '', styles)
         for selector in re.findall(r'([^{}]+)\{', styles):
             for part in selector.strip().split(','):

@@ -9,7 +9,7 @@
 .filter-tab { flex:1 0 auto; }
 .filter-content { padding-bottom:12rpx; }
 .vehicle-meta { margin:8rpx 0; }
-.catalog-tools .search-input { margin:0; height:72rpx; min-height:72rpx; }
+.catalog-tools .search-input { margin:0; }
 .catalog-tools .filter-toolbar { margin:12rpx 0 0; }
 .catalog-tools .filters { margin:12rpx 0 0; }
 .catalog-tools .result-meta { margin:12rpx 0 0; }
@@ -19,3 +19,6 @@
 .sheet { display:flex; flex-direction:column; }
 .sheet-head,.filter-scroll,.sheet .actions { flex:none; }
 .sheet-content { flex:0 1 auto; min-height:0; }
+.inline-chevron { display:inline-block; width:24rpx; height:24rpx; margin-left:4rpx; vertical-align:middle; }
+.vehicle-grid { display:flex; flex-wrap:wrap; gap:18rpx; }
+.vehicle-grid > .vehicle-card { flex:1 1 320px; min-width:0; margin:0; }

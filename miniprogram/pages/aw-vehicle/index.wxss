@@ -6,8 +6,11 @@
 .metric .value { flex:none; margin:0; font-size:28rpx; }
 .ammo-details .metrics { display:grid; grid-template-columns:1fr 1fr; gap:0 24rpx; }
 .ammo-details .metrics > view { display:flex; align-items:baseline; justify-content:space-between; gap:8rpx; min-width:0; padding:12rpx 0; border-bottom:1rpx dashed rgba(28,26,30,.12); font-size:24rpx; }
-.fold,.fold-light { flex:none; font-size:23rpx; color:#a94d16; }
+.fold,.fold-light { flex:none; display:inline-flex; align-items:center; gap:6rpx; font-size:23rpx; color:#a94d16; }
 .fold-light { color:#eac9b5; }
+.fold-icon,.inline-chevron { display:inline-block; width:26rpx; height:26rpx; vertical-align:middle; }
+.entry-chevron { display:block; width:30rpx; height:30rpx; }
+.fold-link { display:inline-flex; align-items:center; gap:6rpx; }
 .weapon-name { font-size:28rpx; font-weight:800; line-height:1.5; overflow-wrap:break-word; min-width:0; }
 .param { margin:10rpx 18rpx 10rpx 0; font-size:26rpx; display:inline-block; }
 .weapon-group { margin-top:18rpx; }
@@ -27,6 +30,7 @@
 .vehicle-actions { position:fixed; bottom:0; left:0; right:0; padding:18rpx 24rpx calc(18rpx + env(safe-area-inset-bottom)); background:#fbfafc; border-top:1rpx solid rgba(28,26,30,.12); z-index:5; }
 
 .ammo-title { display:flex; align-items:center; flex-wrap:nowrap; gap:12rpx; }
+.ammo-arrow { width:26rpx; height:26rpx; }
 .ammo-name { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .ammo-arrow { flex-shrink:0; color:#777; }
 .ammo-details { margin-top:18rpx; }

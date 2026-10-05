@@ -1,6 +1,6 @@
 /* Class-only styles also work in isolated editing components. */
 .vehicle-card { display:block; box-sizing:border-box; width:100%; min-width:0; padding:25rpx; margin:18rpx 0; border:1rpx solid rgba(28,26,30,.12); border-radius:22rpx; background:#fbfafc; color:#1c1a1e; font-size:28rpx; text-align:left; line-height:1.5; }
 .vehicle-card.vehicle-heading { display:flex; }
-.vehicle-card.selected,.vehicle-card.active { border-color:#ea7428; background:#fff2df; }
+.vehicle-card.selected,.vehicle-card.active { border-color:#ea7428; background:#fbfafc; }
 .vehicle-card.vehicle-warning { border-color:#e5c98f; background:#fff2df; }
 .vehicle-card-note { padding-left:152rpx; margin-top:8rpx; color:#6b6370; font-size:23rpx; line-height:1.6; }

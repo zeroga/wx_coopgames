@@ -57,7 +57,7 @@ Component({
     roleManager() { if(this.data.saving)return; this.setData({showRoleManager:!this.data.showRoleManager,roleForm:null,fieldError:''}) },
     newRole() { if(this.data.saving)return; this.setData({roleForm:{id:'',name:'',description:''}}) },
     editRole(e) { if(this.data.saving)return; const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);if(r)this.setData({roleForm:fleet.clone(r)}) },
-    roleField(e) { this.setData({['roleForm.'+e.currentTarget.dataset.key]:e.detail.value}) },
+    roleField(e) { this.setData({['roleForm.'+e.currentTarget.dataset.key]:e.detail.value,fieldError:''}) },
     cancelRole() { this.setData({roleForm:null,fieldError:''}) },
     async retrySync(){this.setData({saving:true});try{await store.push();this.setData({syncError:''});this.refreshRoles()}catch(e){this.setData({syncError:e.message})}finally{this.setData({saving:false})}},
     refreshRoles() {

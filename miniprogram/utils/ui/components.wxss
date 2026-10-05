@@ -1,7 +1,7 @@
 /* Shared component rules extracted from SnowRunner's app/game styles.
    Repeated class selectors intentionally beat native style-v2 button defaults. */
 .ui-card.ui-card { background:#fbfafc; color:#1c1a1e; border:1rpx solid rgba(28,26,30,.12); border-radius:22rpx; box-shadow:0 8rpx 26rpx rgba(28,26,30,.05); box-sizing:border-box; }
-.ui-card.selected { border-color:#ea7428; }
+.ui-card.selected { border-color:#ea7428; background:#fbfafc; }
 .ui-button.ui-button { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; width:auto; max-width:100%; min-width:0; min-height:0; padding:18rpx 26rpx; margin:0; border:0; border-radius:14rpx; font-size:26rpx; font-weight:400; line-height:1; text-align:center; white-space:normal; }
 .ui-button.ui-full { display:flex; width:100%; max-width:100%; }
 .ui-button::after { border:0; }
@@ -16,7 +16,7 @@
 .ui-button.cancel-control { white-space:nowrap; }
 .ui-button.prerequisite-alert { flex:none; width:60rpx; min-width:60rpx; height:60rpx; padding:14rpx; margin:-10rpx; border:0; background:transparent; }
 .ui-button.vehicle-card { display:block; width:100%; padding:25rpx; margin:18rpx 0; text-align:left; border:1rpx solid rgba(28,26,30,.12); border-radius:22rpx; background:#fbfafc; color:#1c1a1e; }
-.ui-button.vehicle-card.active,.ui-button.vehicle-card.selected { border-color:#ea7428; background:#fff2df; }
+.ui-button.vehicle-card.active,.ui-button.vehicle-card.selected { border-color:#ea7428; background:#fbfafc; }
 .ui-button.vehicle-route { display:block; width:100%; padding:0; margin:18rpx 0; border:0; background:transparent; text-align:left; }
 .ui-button.route { text-align:left; }
 .ui-button[disabled] { opacity:.45; }
@@ -26,13 +26,19 @@
 .ui-option { display:inline-flex; align-items:center; justify-content:center; vertical-align:middle; box-sizing:border-box; min-width:0; max-width:100%; padding:0; margin:0 12rpx 0 0; }
 .ui-option-face { display:flex; align-items:center; justify-content:center; box-sizing:border-box; min-height:56rpx; min-width:56rpx; max-width:100%; padding:10rpx 17rpx; border-radius:9rpx; background:#ece9ed; color:#6b6370; font-size:26rpx; line-height:1.3; text-align:center; overflow-wrap:break-word; }
 .ui-option.selected .ui-option-face,.ui-option.active .ui-option-face { background:#ea7428; color:#fff; font-weight:700; }
-.ui-icon-touch { display:inline-flex; align-items:center; justify-content:center; flex:none; box-sizing:content-box; width:34rpx; height:34rpx; padding:8rpx; margin:-8rpx; }
+.ui-icon-touch { display:inline-flex; align-items:center; justify-content:center; flex:none; box-sizing:content-box; width:34rpx; height:34rpx; padding:13rpx; margin:-13rpx; }
 .ui-action-icon { display:block; width:30rpx; height:30rpx; }
+.ui-choice-icon { display:block; width:26rpx; height:26rpx; margin-right:6rpx; }
+.ui-option.selected .ui-choice-icon { margin:0 0 0 6rpx; }
+.inline-chevron { display:inline-block; width:24rpx; height:24rpx; vertical-align:middle; }
+.ui-card.ui-card .ui-card.vehicle-card { box-shadow:none; }
 .ui-tap-row { display:flex; align-items:center; box-sizing:border-box; }
 .ui-divider { border-bottom:1rpx dashed rgba(28,26,30,.12); }
-.ui-field.ui-field { box-sizing:border-box; width:100%; height:88rpx; min-height:44px; padding:0 20rpx; border:0; border-radius:14rpx; background:#f1f0f2; color:#1c1a1e; font-size:26rpx; line-height:1.4; }
-.ui-field.search-input,.filter-content .ui-field,.aw-page > .ui-field,.form .ui-field { height:72rpx; min-height:72rpx; }
-.ui-textarea.ui-textarea { box-sizing:border-box; width:100%; min-height:104rpx; padding:16rpx; border:0; border-radius:12rpx; background:#f2eff3; color:#514a55; font-size:23rpx; line-height:1.55; }
+.ui-field.ui-field { box-sizing:border-box; width:100%; height:88rpx; min-height:0; padding:0 20rpx; border:1rpx solid transparent; border-radius:14rpx; background:#f6f4f7; color:#1c1a1e; font-size:26rpx; line-height:1.4; }
+.ui-field.search-input,.filter-content .ui-field,.aw-page > .ui-field,.form .ui-field { height:72rpx; min-height:0; }
+.ui-field.ui-field:focus,.ui-textarea.ui-textarea:focus { border-color:#ea7428; }
+.ui-field.ui-field.invalid { border-color:#cf3a36; background:#fff7f6; }
+.ui-textarea.ui-textarea { box-sizing:border-box; width:100%; min-height:104rpx; padding:16rpx; border:1rpx solid transparent; border-radius:12rpx; background:#f2eff3; color:#6b6370; font-size:23rpx; line-height:1.55; }
 .ui-card.vehicle-warning { border-color:#e5c98f; background:#fff2df; }
 .ui-button.archive-toggle { margin-top:16rpx; }
 .ui-button.choice { min-height:0; }
@@ -41,11 +47,13 @@
 .ui-option-grid,.tags { display:flex; flex-wrap:wrap; align-items:center; gap:0 12rpx; min-width:0; }
 .ui-option-grid .ui-option,.tags .ui-option { flex:0 0 auto; margin:0; }
 .actions,.cloud-actions,.add-season-actions,.segments { align-items:stretch; }
-.ui-tag { display:inline-flex; align-items:center; box-sizing:border-box; padding:8rpx 14rpx; border-radius:9rpx; background:#ece9ed; color:#6b6370; font-size:22rpx; line-height:1; white-space:nowrap; }
+.ui-tag { display:inline-flex; align-items:center; box-sizing:border-box; padding:10rpx 16rpx; border-radius:10rpx; background:#ece9ed; color:#6b6370; font-size:22rpx; line-height:1; white-space:nowrap; }
+.ui-tag-accent { background:#fff6ec; color:#9a571f; }
 .ui-tag-warning { background:#fff2df; color:#946126; }
 .ui-tag-success { background:#e7f5ef; color:#0c7156; }
 .ui-tag-danger { background:#fff0ef; color:#b72c28; }
 .ui-tag-info { background:#eef1fb; color:#425f9a; }
 .ui-tag-special { background:#f1ecf7; color:#6b5795; }
+.ui-tag-module { background:#eef0f6; color:#4f5769; }
 /* Errors use one contained treatment on every page. */
 .ui-error { box-sizing:border-box; margin:16rpx 0; padding:18rpx; border:1rpx solid rgba(183,44,40,.18); border-radius:12rpx; background:#fff0ef; color:#b72c28; font-size:23rpx; line-height:1.6; }

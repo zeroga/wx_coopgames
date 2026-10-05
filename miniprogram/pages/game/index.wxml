@@ -64,7 +64,7 @@
 
       <view class="complete-summary" wx:if="{{item.collapsed}}" data-id="{{item.id}}" bindtap="toggleStepCollapse">
         <view class="complete-summary-main"><text class="complete-badge">✓ COMPLETE</text><text class="complete-count">目标 {{item.gDone}}/{{item.gAll}} · 车辆 {{item.vGot}}/{{item.vAll}}</text></view>
-        <text class="complete-expand">展开⌄</text>
+        <view class="complete-expand">展开 <image class="inline-chevron" src="/assets/icons/chevron-down.svg"/></view>
       </view>
 
       <block wx:else>
@@ -74,7 +74,7 @@
           <view class="col">
             <view class="col-head"><text>目标</text><text>{{item.gDone}}/{{item.gAll}}</text></view>
             <view class="row" wx:for="{{item.goals}}" wx:key="id" wx:for-item="goal" wx:for-index="gi">
-              <view class="ui-icon-touch" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="toggleGoal"><view class="check {{goal.done?'checked':''}}">{{goal.done?'✓':''}}</view></view>
+              <view class="ui-icon-touch" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="toggleGoal"><view class="check {{goal.done?'checked':''}}"><image wx:if="{{goal.done}}" class="check-icon" src="/assets/icons/check-white.svg"/></view></view>
               <input class="row-input {{goal.done?'done':''}}" value="{{goal.text}}" data-id="{{item.id}}" data-gi="{{gi}}" bindblur="editGoal"/>
               <view class="ui-icon-touch x" data-id="{{item.id}}" data-gi="{{gi}}" bindtap="deleteGoal" aria-label="删除目标"><image class="ui-action-icon" src="/assets/icons/delete.svg"/></view>
             </view>
@@ -84,7 +84,7 @@
           <view class="col">
             <view class="col-head"><text>车辆</text><text>{{item.vGot}}/{{item.vAll}}</text></view>
             <view class="vehicle" wx:for="{{item.vehicles}}" wx:key="id" wx:for-item="vehicle" wx:for-index="vi">
-              <view class="vehicle-main"><view class="ui-icon-touch" data-id="{{item.id}}" data-vi="{{vi}}" bindtap="toggleVehicle"><view class="check {{vehicle.got?'checked':''}}">{{vehicle.got?'✓':''}}</view></view><text class="vehicle-name {{vehicle.got?'done':''}}">{{vehicle.name}}</text></view>
+              <view class="vehicle-main"><view class="ui-icon-touch" data-id="{{item.id}}" data-vi="{{vi}}" bindtap="toggleVehicle"><view class="check {{vehicle.got?'checked':''}}"><image wx:if="{{vehicle.got}}" class="check-icon" src="/assets/icons/check-white.svg"/></view></view><text class="vehicle-name {{vehicle.got?'done':''}}">{{vehicle.name}}</text></view>
               <view class="assign"><view class="ui-option sr-option" data-id="{{item.id}}" data-vi="{{vi}}" data-slot="A" bindtap="setOwner"><view class="assign-btn {{vehicle.owner==='A'?'assign-a':''}}">{{state.userNames.A}}</view></view><view class="ui-option sr-option" data-id="{{item.id}}" data-vi="{{vi}}" data-slot="B" bindtap="setOwner"><view class="assign-btn {{vehicle.owner==='B'?'assign-b':''}}">{{state.userNames.B}}</view></view></view>
             </view>
             <view class="empty muted" wx:if="{{item.vehicles.length===0}}">本阶段没有单列车辆</view>
@@ -93,7 +93,7 @@
 
         <textarea class="note" placeholder="备注" value="{{item.note}}" data-id="{{item.id}}" bindblur="editNote" auto-height></textarea>
         <view class="ui-tap-row complete-open-row" wx:if="{{item.complete}}" data-id="{{item.id}}" bindtap="toggleStepCollapse">
-          <text class="stamp-inline">✓ COMPLETE</text><text>收起⌃</text>
+          <text class="stamp-inline">✓ COMPLETE</text><view class="complete-expand">收起 <image class="inline-chevron" src="/assets/icons/chevron-up.svg"/></view>
         </view>
         <view class="stamp" wx:if="{{item.complete}}">COMPLETE</view>
       </block>

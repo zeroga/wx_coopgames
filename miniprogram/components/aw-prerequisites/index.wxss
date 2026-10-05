@@ -10,7 +10,7 @@
 .label { font-size:26rpx; font-weight:700; margin:26rpx 0 12rpx; }
 .choice,.route,.ghost,.primary { display:block; width:100%; margin:12rpx 0; font-size:26rpx; line-height:1; padding:18rpx 20rpx; border:1rpx solid #dedbe0; border-radius:14rpx; box-sizing:border-box; text-align:left; }
 .choice,.route,.ghost { background:#f1f0f2; color:#1c1a1e; }
-.active { background:#fff2df; border-color:#ea7428; }
+.active { background:#fbfafc; border-color:#ea7428; }
 .choice.active { background:#ea7428; color:#fff; }
 .ghost { background:#fbfafc; }
 .cancel-control { flex:none; width:auto; padding:8rpx 12rpx; margin:0; border:0; background:transparent; color:#6b6370; font-size:23rpx; line-height:1; }
@@ -20,19 +20,18 @@
 .footer .ghost { text-align:center; }
 .footer .primary,.footer .ghost { margin:0; }
 .note { margin:10rpx 0; }
-.error { background:#fff2df; color:#946126; padding:18rpx; border-radius:12rpx; margin-bottom:14rpx; }
 .custom-tag { display:inline-block; color:#6b5795; background:#f1ecf7; font-size:23rpx; border-radius:8rpx; padding:6rpx 14rpx; }
 .search { display:block; width:100%; box-sizing:border-box; font-size:26rpx; min-height:88rpx; padding:18rpx; background:#f1f0f2; border-radius:14rpx; margin:18rpx 0; }
 .choice::after,.route::after,.ghost::after,.primary::after,.cancel-control::after { border:0; }
 .choice[disabled],.route[disabled],.ghost[disabled],.primary[disabled],.cancel-control[disabled] { opacity:.45; }
 .choice-heading { display:flex; align-items:center; gap:12rpx; min-width:0; }
-.selection-mark { flex:none; width:24rpx; font-size:25rpx; color:#a94d16; text-align:right; line-height:1.4; }
+.selection-mark { flex:none; width:28rpx; height:28rpx; }
 @import "../../utils/aw/vehicle-card.wxss";
 .vehicle-card::after { border:0; }
 .vehicle-card[disabled] { opacity:.45; }
 .vehicle-route { padding:0; border:0; background:transparent; }
 .vehicle-route .vehicle-card { margin:0 0 18rpx; }
-.vehicle-route.active .vehicle-card { border-color:#ea7428; background:#fff2df; }
+.vehicle-route.active .vehicle-card { border-color:#ea7428; background:#fbfafc; }
 .route-note { padding:0 20rpx 12rpx; }
 .route-summary { font-size:26rpx; }
 .current-vehicle { margin:0 0 18rpx; }
