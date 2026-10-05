@@ -43,3 +43,5 @@
 .content { flex:0 1 auto; min-height:0; }
 
 .search.ui-field { min-height:72rpx; height:72rpx; padding:0 20rpx; }
+
+.choice-vehicle-label { flex:1; min-width:0; }
