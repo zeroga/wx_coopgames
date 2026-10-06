@@ -10,7 +10,7 @@ Component({
   pageLifetimes:{ show(){this.refresh()}, resize(){this.measureLayout()} },
   methods:{
     refresh(){
-      const v=catalog.byId[this.properties.vehicleId]||{}, code=v.vehicle_class||'', type=classes[code]||'车型未记录'
+      const v=catalog.byId[this.properties.vehicleId]||{}, code=v.vehicle_class||'', type=classes[code]||code||'车型未记录'
       const dealer=(catalog.byId[v.dealer_id]||{}).name||''
       const tags=this.properties.tags||[],plans=this.properties.plans||[],markers=this.properties.markers||[]
       const preview=presentation.markerPreview(markers,2)

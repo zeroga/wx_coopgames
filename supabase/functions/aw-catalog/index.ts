@@ -22,9 +22,15 @@ export function handler(req: Request) {
   if (!authorized(req)) return Response.json({error:'Invalid API key'}, {headers,status:401})
   if (req.method !== 'GET') return Response.json({error:'Read only'}, {headers,status:405})
   const url = new URL(req.url)
+  if (url.searchParams.get('patch') === '1') {
+    if (url.searchParams.get('version') !== release.manifest.version) return Response.json({error:'Catalog release changed; retry'}, {headers,status:409})
+    const patch = release.patches.find(p => p.descriptor.baseVersion === url.searchParams.get('baseVersion'))
+    if (!patch) return Response.json({error:'No direct patch; use latest full catalog'}, {headers,status:404})
+    return Response.json(patch, {headers})
+  }
   if (url.searchParams.get('bundle') === '1') {
     if (url.searchParams.get('version') !== release.manifest.version) return Response.json({error:'Catalog release changed; retry'}, {headers,status:409})
-    return Response.json(release, {headers})
+    return Response.json({manifest:release.manifest,payload:release.payload}, {headers})
   }
   return Response.json(release.manifest, {headers})
 }

@@ -18,7 +18,10 @@
 7. **公共资料与私有存档严格分离。** 数据包不得包含玩家码、团队码、玩家/团队计划、真实用户数据、服务端密钥或其他私有信息。
 8. **每次修改必须可追溯到来源、核验时间和变更原因。**
 9. **保持最小变更。** 数据任务不要顺带“清理”无关字段、重排 ID、格式化整库或重写未涉及实体，否则会破坏审查价值。
-10. **发布前必须重新生成并验证，不接受“只改最终 JS/JSON 看起来能用”的交付。**
+10. **完整 catalog 是客户端最终存储格式，incremental patch 是正常网络更新格式。**完整线上包保留用于首次安装、缺少可用增量路径、跨版本及恢复；不能在运行时叠加无限 patch 链。
+11. **允许单实体、单关系维护；新车辆是普通数据更新。**在当前 schema 能表达的情况下，新车辆/新舰船不得要求客户端发版、重新审核，也不得依赖源码固定 ID、节点或筛选枚举。仅新结构或通用界面无法表达的新机制要求客户端能力升级。
+12. **数据源维护、增量包生成、资料发布可以由不同主体完成。**标准 patch 内容由 old/new 完整 catalog 的稳定键比较工具产生；人工、Codex、其他 AI 或 CI 均可运行工具，不能依赖聊天上下文。发布必须机器验证 patch hash、结果 hash、引用和结果与目标完整包一致。
+13. **发布前必须重新生成并验证，不接受“只改最终 JS/JSON 看起来能用”的交付。**
 
 ## 2. 数据分层
 
@@ -146,7 +149,7 @@ AI 必须先读取：
 - 同一实体有多个冲突来源；
 - natural key 与既有 ID 不一致；
 - 来源只能证明一部分字段；
-- 新数据需要新增 schema 字段或枚举；
+- 新数据需要当前 schema 无法表达的新结构、字段或业务枚举机制（已支持的合法分类值与新增车辆本身不构成 schema 变化）；
 - 删除旧数据但没有明确证据证明它已失效；
 - 无法判断单位或版本。
 
@@ -215,7 +218,7 @@ AI 必须先读取：
 
 ### B. 新增实体
 
-例如新车辆、新舰船、新武器。
+例如新车辆、新舰船、新武器。属于正常资料更新，只要当前 schema 可表达，必须通过资料版本直接上线，不要求客户端发版。
 
 除普通校验外，必须确认：
 
@@ -287,6 +290,8 @@ AW 当前基础快照仍存在待游戏内核实和缺失字段，因此更新�
 - `miniprogram/data/aw/catalog.js`
 - `miniprogram/data/aw/release.js`
 - `supabase/functions/aw-catalog/release.json`
+- `miniprogram/data/aw/schema.js`（从公共结构契约生成）
+- `data/aw/releases/<version>/full.json` / `patch.json`（不可变发行基准与增量）
 - `data/aw/AW_catalog_manual_data.manifest.json`
 - 重新构建后的 `data/aw/AW_catalog_manual_data.zip`
 
@@ -312,12 +317,16 @@ python tools/build_aw_miniprogram_catalog.py
 发布线上资料包时：
 
 ```bash
-node tools/build_aw_catalog_release.js YYYY.MM.DD.N ISO_TIMESTAMP
+node tools/build_aw_catalog_schema.js
+node tools/build_aw_catalog_release.js YYYY.MM.DD.N ISO_TIMESTAMP \
+  --from data/aw/releases/<上一正式 version>/full.json
 ```
 
 其中 `YYYY.MM.DD.N` 同日序号递增。内容变化必须产生新资料版本，不能用同序号覆盖不同内容。
 
-详细线上发布行为见：
+先确认上一正式发行版本及 hash，从 Git 的不可变 `data/aw/releases/<version>/full.json` 获取准确基准；不从实时数据库反推，不依赖聊天附件。可以先用 `build_aw_catalog_package.js full / patch / validate` 分步交接，再用 release 命令组装，机器验证逐字节结果一致。A 提供新完整数据与证据；B 提供确定性 patch 与校验；C 提供线上部署与 version/hash 确认记录。三个执行者可以完全不同。
+
+详细人工/其他 AI 操作、交接和线上发布行为见：
 
 `docs/aw/catalog-updates.md`
 
@@ -359,7 +368,11 @@ AW 数据更新任务默认禁止：
 - 未知值表示方式；
 - 稳定 ID / natural key 规则；
 - 哪些内容明确不进入公共包；
-- 哪些文件禁止手工修改。
+- 哪些文件禁止手工修改；
+- 完整本地存储、增量更新与全量恢复策略；
+- 不可变正式历史 full 的路径与 version/hash 校验方式；
+- 独立 old/new patch 生成、机器验证及 A/B/C 交接；
+- 新实体自动进入列表、筛选、详情和科技线，只有新机制才升级客户端。
 
 推荐目录形式：
 
