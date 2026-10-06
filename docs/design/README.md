@@ -1,8 +1,10 @@
 # 设计原型与源码路径索引
 
-## 当前 UI 视觉标准（2026-10-05）
+## 当前 UI 视觉标准（v2.2 · 2026-10-06）
 
 当前跨游戏小程序的 UI 实现基线见 [ui-design-system.md](./ui-design-system.md)。
+
+v2.2 已经用户确认。文档与样板以 PR #8 的 `abb7d91` / 测试版 `2026.10.05.5` 为实现参照，补齐固定 AW 车名区、两排能力标签、互斥规划展示，以及共用组件和验收边界。本次只提交设计资料，未修改小程序代码或测试版号。版本变化见 [规范变更记录](./ui-design-system-changelog.md)。样板内嵌的中文回退字体许可证见 [FONT-LICENSE.txt](./FONT-LICENSE.txt)。
 
 - 该文件是当前 **全局视觉与组件标准**，用于 SnowRunner、AW 以及后续游戏模块的实现与复核。
 - 配套可视化样板见 [ui-design-system-sample.html](./ui-design-system-sample.html)。涉及具体布局、尺寸、密度、相对位置时必须同时查看样板，不能只读文字后重新自由设计。
