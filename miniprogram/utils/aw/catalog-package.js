@@ -18,6 +18,7 @@ function key(name, row) {
   return JSON.stringify(values)
 }
 function validateManifest(m) {
+  if (m && m.schemaVersion !== 1) invalid('schemaVersion 不兼容：数据结构需要升级小程序')
   if (!m || m.schemaVersion !== 1 || (m.module !== undefined && m.module !== 'aw') || !Number.isSafeInteger(m.sequence) || m.sequence < 0 || !Number.isFinite(Date.parse(m.publishedAt)) || !Number.isFinite(Date.parse(m.sourceCheckedAt))) invalid('版本格式不兼容')
   if (!/^[a-f0-9]{64}$/.test(m.sha256 || '') || typeof m.version !== 'string' || !m.version.endsWith('-'+m.sha256.slice(0,12))) invalid('版本校验值无效')
   if (!object(m.counts) || Object.keys(m.counts).length !== names.length || names.some(k => !Number.isSafeInteger(m.counts[k]) || m.counts[k] < 0 || m.counts[k] > 30000) || !m.counts.vehicles) invalid('表清单不完整')

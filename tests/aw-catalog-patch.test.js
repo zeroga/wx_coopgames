@@ -79,7 +79,7 @@ test('corrupt local cache forces full recovery even when the server version equa
 })
 test('unsupported schema refuses the release before patch/full requests',async()=>{
   full.manifest.schemaVersion=99
-  await assert.rejects(updates.check(true),/不兼容/);assert.equal(calls.length,1);assert(!catalog.byId.TEST_VEHICLE)
+  await assert.rejects(updates.check(true),/schemaVersion 不兼容：数据结构需要升级小程序/);assert.equal(calls.length,1);assert(!catalog.byId.TEST_VEHICLE)
 })
 test('open editor stages a full candidate and commits pointer only after editor closes',async()=>{
   const editor={};updates.hold(editor)
