@@ -1,6 +1,6 @@
 # AW 完整本地资料与增量网络更新
 
-代码测试版：`2026.10.06.1`。本次准备的资料版：`aw-2026.10.06.1-e8874cd8a93d`；提交生成物不代表已经部署线上函数或上传微信体验版。原始事实仍为同一批 298 辆车，本次不采集或改变真实车辆资料。
+代码测试版：`2026.10.06.2`。本次准备的资料版：`aw-2026.10.06.1-e8874cd8a93d`；提交生成物不代表已经部署线上函数或上传微信体验版。原始事实仍为同一批 298 辆车，本次不采集或改变真实车辆资料。
 
 **AW 后续新增车辆、武器、弹药、科技树和获取关系，在现有 schema 可表达的情况下，都应通过资料版本发布，无需重新审核小程序。**只有当前 schema / 通用界面不能表达的新结构、复杂关系或业务机制才要求客户端升级；车辆 ID 是否出现在旧源码中不构成升级理由。
 
@@ -66,61 +66,48 @@ upsert 为解码后的完整记录，允许新增实体、修改实体、增加/
 - 目标 `schemaVersion` 不支持时不应用 patch 或 full，保留可用旧目录并提示升级。支持的目标 schema 与本地缓存不兼容时使用随包基线并走 full；全量不能让旧客户端理解新结构。
 - full 下载或完整校验失败、槽位写入/回读失败、最后指针提交失败，保留当前旧完整目录。在线换版导致 version 不一致时保留旧版，下次刷新重新获取 manifest。
 - 发布序号必须递增；旧序号不会覆盖新缓存；同序号不同 version 拒绝。发布时间与来源核对时间独立，不能把新发行解释成重新实测所有字段。
+- 同一发行的 `publishedAt`、`sourceCheckedAt` 及 descriptor 冻结；原样重新部署可以复用版本，修改发行元数据须新版本。部署确认时间单独记录。`publishedAt` 不参与 payload SHA，但参与 descriptor 绑定。
+- `schemaVersion` 控制完整结构解析，`patchFormat` 控制补丁协议，`encoding` 控制规范重建。客户端只用支持的编码/patchFormat 做增量；不支持时记录原因并尝试可解析的 full。改变规范编码/增量语义必须更新相应编码及 patchFormat，结构变化另升 schemaVersion，不能单靠结果 hash 发现不兼容。旧 manifest 无 encoding 的基线可按原始 full 解码；当前增量目标必须为 `stable-key-v1`。
 - 合法展示值缺少专门颜色/译名时显示原值或默认样式，不隐藏整辆车。Token 目前只解释已支持的 `dealer_token` + `>=` 机制，未知记账机制明确拒绝并要求客户端能力升级，不能猜测。
 
-## 正式完整基准与可独立重建
+## 历史本地发行的完整基准与可独立重建
 
 Git 保存不可变 `data/aw/releases/<精确资料 version>/full.json`，文件内包含 manifest、完整原始 payload 和 hash。每次 build release 保存 from 和 to，目标目录同时保存 `patch.json`。已经存在的 full 内容若有差异立即拒绝，不覆盖。旧基准不从正式数据库当前状态反推，不依赖聊天附件或 AI 上下文。
 
 本次补存上一份已审查基准 `aw-2026.10.04.5-0541184c1191` 并准备新基准 `aw-2026.10.06.1-e8874cd8a93d`。新旧语义事实完全一致，106 字节 patch 仅将旧编码重建成规范编码；实际新车测试使用测试目录中的合成数据，不进入正式包。
 
-归档记录生成且待发布的版本，不自动宣称已上线。C 发布者必须在 PR Conversation 追加部署结果、实际 version/hash、部署时间与基准 Git commit。下一次 `--from` 必须取该线上已确认正式版本的 full，不能把未部署草稿当成正式上一版。此任务未部署，两份基准的上线状态仍由已有/后续部署记录确认。
+归档记录生成且待发布的版本，不自动宣称已上线。`data/aw/deployed.json` 按环境保存已确认部署记录：module、version/hash/sequence、full 路径、Git commit、确认时间和接口地址。初始 production/staging 均为 null，不猜测历史部署。正式 `--from` 必须与该记录及归档完整内容一致；不静默选“最新归档”。无记录时先验证实际线上基线。本地候选可显式 `--draft <原因>`，该标记不产生上线记录，也不能代替部署验收。
 
-## A / B / C 交接与操作
-
-**数据源维护、增量包生成和资料发布是三个可以由不同主体完成的步骤。**A 可为人工、ChatGPT、Codex 或采集工具；B 可为另一个 AI、人工或 CI；C 可为发布人员或工具。“自动生成”指差异由工具计算，不要求执行动作自动化。
-
-A 维护源数据与证据，允许只改一辆车或一个关系，保持现有 ID。需改变基础源时解出 `AW_catalog_manual_data.zip` 中 `source/catalog_snapshot.json`，编辑工作副本并用原有工具重建 ZIP。截图覆盖层与弹头证据仍分开维护。然后：
+C 发布者用以下只读验证命令核对线上 manifest/full/每个 patch，再重复读取 manifest 确认期间未换版；全通过后才原子写本地部署记录并提交，且在 PR Conversation 追加实际结果：
 
 ```bash
-python tools/build_aw_miniprogram_catalog.py
-node tools/build_aw_catalog_schema.js
-node tools/build_aw_catalog_package.js full \
-  --version 2026.10.08.1 --published-at 2026-10-08T00:00:00Z \
-  --output work/new-full.json
+node tools/verify_aw_catalog_deployment.js --environment production \
+  --release supabase/functions/aw-catalog/release.json \
+  --full data/aw/releases/<实际 version>/full.json --git-commit <完整 commit>
 ```
 
-A 给 B：上游 Git commit、变更实体/关系及稳定 ID、来源及核对时间、未核实项、目标完整文件/version/hash、现有 schemaVersion，以及 C 确认的上一正式完整文件/version/hash。
+首次核验旧版应提供与其线上内容对应的历史发行文件，不能拿待部署新包充当线上证据。另一个环境显式提供 `--url` 和 `--apikey-env`；脚本不会部署、写数据库或自动选择环境。本次未运行线上确认、未部署，记录保持 null。
 
-B 人工执行：
+## 新维护接口与发布流程
 
-```bash
-node tools/build_aw_catalog_package.js patch \
-  --from data/aw/releases/<上一正式 version>/full.json \
-  --to work/new-full.json --output work/new-patch.json
-node tools/build_aw_catalog_package.js validate \
-  --from data/aw/releases/<上一正式 version>/full.json \
-  --to work/new-full.json --patch work/new-patch.json
-node tools/build_aw_catalog_release.js 2026.10.08.1 2026-10-08T00:00:00Z \
-  --from data/aw/releases/<上一正式 version>/full.json --to work/new-full.json
-node --test tests/aw-*.test.js
-python tools/check_aw_miniprogram.py
-```
+本版改为 Supabase 正式事实 → 上传变更 → 拉取固定审核清单 → AI 确认 → 服务器从数据库生成 full/patch → 事务保存发行并切换指针 → 小程序检查/更新。其他 AI 使用 [接口说明](catalog-maintenance-api.md)，管理员执行 [KEY 与部署说明](catalog-maintenance-admin.md)。上传和拉取不修改正式资料；确认仅处理已拉取的 ID 与内容摘要，迟到上传留到下一轮。
 
-另一个 AI 独立执行相同步骤：先阅读本文件及项目维护规范，从 Git 取得精确 old/new 完整包，核对 version/hash，再运行 patch / validate / release；不需要上一个 AI 的聊天记录，也不手工推断差异。全量初次发布或有理由的能力/schema 切换可显式用 `--full-only <原因>`，日常发行必须有 `--from`。
+事实、证据/分类、互斥武器关系及完整发行存数据库。`catalog_snapshot.json` 的长期维护暂缓，旧 ZIP 与历史生成器用于一次性初始化和复现，今后线上维护不要求解压/修改/重打 ZIP。Git 的 `catalog.js` / release 文件是历史/随包生成物，不是 AI 判断线上事实的依据，也不是小程序的联网来源。
 
-release 命令机器验证 patch 应用结果与 new full **逐字节一致**，同时生成线上 `release.json`、客户端基线元数据、历史 full 和 patch。默认不会访问网络或数据库；可用 `--output <临时 release.json> --archive <临时目录>`做隔离预检，不更新随包 release.js。
+确认服务沿用客户端同源协议，先试写并回滚取得真实默认值/时间戳/计算字段，再生成、校验并持久化实际 full/patch；正式写入与发布指针在一个事务内完成，失败全部回滚。历史发行不可改。公共服务直接从数据库 current_version 读取，数据发布无需重新部署 Edge Function。旧本地 CLI 和 deployed.json 只用于历史独立重建/只读上线核验，不作为新维护接口的发布授权或数据库当前版本来源。
 
-B 给 C：old/new 精确 version/hash、schemaVersion、基准 Git commit、full/patch/manifest 路径、命令、校验/测试结果、实体与关系增删改摘要、人工 patch 原因（若有）。C 审查后把同一个 release 的 manifest + patch + full 一起部署，线上验证后追加发布记录；不能只替换 manifest。
+## 本地更新诊断
+
+`catalog-update.info().lastUpdate` 提供最近一次检查的 base/targetVersion、mode、attemptedPatch、reasonCode、fallbackReason、state、起止时间和错误。诊断只在公共资料专用键保存一个有界记录，写入失败不影响更新，不访问私有存档、不增加服务端上报或普通用户界面的技术信息。
+
+`state` 区分 unchanged、staged、activated、failed。编辑器打开时仅 staged；关闭后成功提交才 activated，提交失败记录 failed，不能把“下载完成”当作生效。原因包括 no_direct_patch、patch_base_mismatch、patch_format_unsupported、patch_encoding_unsupported、patch_descriptor_invalid、cache_invalid、patch_failed；全量/缓存失败另记录最终 error。重启可查最近结果，不保存可重放 patch 链。
+
+没有直接 patch 或老客户端走 full 是正常兼容路径，不可仅凭“所有刷新中的 patch 比例为零”判定故障。若以后增加总体指标，应以适用/实际尝试的 patch 为分母，并单独统计失败原因；本次仅做本地诊断。
 
 ## 公共服务与部署
 
-`supabase/functions/aw-catalog/` 仍为只读 Edge Function：
+`supabase/functions/aw-catalog/index.ts` 保留原 GET 路径和响应契约，改用 anon 调用只读数据库 RPC：无参数读 manifest；`?bundle=1&version=<version>` 读当前 full；`?patch=1&baseVersion=<base>&version=<target>` 读当前发行的一跳 patch。version 绑定失败返回 409，缺少一跳 patch 返回 404，数据库不可用返回 503，客户端继续用原完整资料。该 handler 不携带维护 KEY、不使用 service role。
 
-- `GET /functions/v1/aw-catalog`：latest manifest。
-- `GET ?bundle=1&version=<目标 version>`：最新 `{manifest,payload}` full，不夹带 patch。
-- `GET ?patch=1&baseVersion=<当前 version>&version=<目标 version>`：直接 patch envelope；没有该基准返回 404，目标不再是当前发行版返回 409。
+保留 publishable `apikey` 验证和 `verify_jwt=false`，不发送 publishable Bearer token；域名仍使用原 Supabase 地址。维护接口是独立函数，需要任务 KEY。部署按新迁移 → 审查并执行初始化 → 公共函数 → 维护函数 → 验证的顺序操作，详见 [管理员说明](catalog-maintenance-admin.md)。
 
-保留 publishable `apikey` 验证、GET/OPTIONS、`verify_jwt=false`，不发送 publishable Bearer token，不使用 service role、不连接数据库。合法 request 域名沿用现有 Supabase 域名。部署后须检查 manifest/full/patch hash 与错误路径。
-
-本次修改了客户端更新代码和通用数据展示，需要重新编译、上传一次微信体验版才能验证新机制；建议代码版本 `0.1.0-test.20261006.1`。采用新机制以后，现有 schema 的新车/新关系只需发布资料和刷新，无需再次上传或审核小程序。本次未上传、未部署，不修改数据库结构或正式数据。
+本次交付代码测试版 `2026.10.06.2`，上传可用 `0.1.0-test.20261006.2`。客户端带有完整离线基线与更新诊断，首次上传后，现有 schema 的新车/新关系只需数据库资料发布。PR 提交不等于微信已上传、Supabase 已部署或正式数据已改。

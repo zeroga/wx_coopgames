@@ -9,4 +9,6 @@
 
 生成基准并不表示发布成功。发布者在 PR Conversation 追加线上 version/hash、部署时间与基准 Git commit；下一次生成必须以该记录确认的正式版本作为 `--from`。发布后不修改本版本内容；任何事实变更都生成更高资料版本。
 
+机器可读部署证据保存于 `../deployed.json`，按环境确认，不自动以最新归档填充。正式生成器校验 `--from` 与该记录及完整归档一致；本地草稿显式用 `--draft <原因>`。旧版本只能取此处原始 full，不能由当前数据库反推。本版新增数据库维护接口后，新发行真源与完整基准在 Supabase release 表；此 ledger 及本目录保留历史 CLI 复现用途，不代表新接口的当前指针。
+
 完整协议、生成命令、人工/其他 AI 交接与发布步骤见 [catalog-updates.md](../../../docs/aw/catalog-updates.md)。

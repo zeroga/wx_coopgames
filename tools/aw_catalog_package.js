@@ -1,4 +1,5 @@
 // Offline deterministic publisher library. No database, RPC, or private archive access.
+// Imported client modules are shared protocol code; review both sides for changes.
 const fs = require('node:fs'), path = require('node:path')
 const p = require('../miniprogram/utils/aw/catalog-package')
 const sha256 = require('../miniprogram/utils/aw/checksum')

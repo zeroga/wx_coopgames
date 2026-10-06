@@ -1,4 +1,5 @@
-// Shared pure protocol for the mini-program and offline publisher.
+// Shared pure protocol, not UI code. Review client/publisher compatibility and
+// independent hash vectors before changes; do not fork implementations.
 const schema = require('../../data/aw/schema')
 const sha256 = require('./checksum')
 const names = Object.keys(schema).sort(), maxBytes = 8 * 1024 * 1024
@@ -125,7 +126,15 @@ function canonicalPayload(content) {
   return stringify({catalog:encode(decode(content.catalog),content.catalog.checkedAt),ammoEvidence:content.ammoEvidence,presentation:content.presentation})
 }
 function applicable(d, base, target) {
-  return d && d.schemaVersion === 1 && d.module === 'aw' && d.patchFormat === 1 && d.baseVersion === base.version && d.baseSha256 === base.sha256 && d.targetVersion === target.version && d.resultSha256 === target.sha256 && d.publishedAt === target.publishedAt && d.sourceCheckedAt === target.sourceCheckedAt && /^[a-f0-9]{64}$/.test(d.patchSha256 || '')
+  return !patchReason(d,base,target)
+}
+function patchReason(d, base, target) {
+  if(!d)return 'no_direct_patch'
+  if(d.schemaVersion!==1||d.module!=='aw'||d.patchFormat!==1)return 'patch_format_unsupported'
+  if(target.encoding!=='stable-key-v1'||(base.encoding&&base.encoding!=='stable-key-v1'))return 'patch_encoding_unsupported'
+  if(d.baseVersion!==base.version||d.baseSha256!==base.sha256)return 'patch_base_mismatch'
+  if(d.targetVersion!==target.version||d.resultSha256!==target.sha256||d.publishedAt!==target.publishedAt||d.sourceCheckedAt!==target.sourceCheckedAt||!/^[a-f0-9]{64}$/.test(d.patchSha256||''))return 'patch_descriptor_invalid'
+  return ''
 }
 function applyPatch(base, patch, target) {
   const source = validate(base)
@@ -163,4 +172,4 @@ function applyPatch(base, patch, target) {
   validate(bundle)
   return bundle
 }
-module.exports = {schema,names,key,stringify,decode,encode,canonicalPayload,validate,validateManifest,applicable,applyPatch}
+module.exports = {schema,names,key,stringify,decode,encode,canonicalPayload,validate,validateManifest,applicable,patchReason,applyPatch}

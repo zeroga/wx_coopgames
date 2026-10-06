@@ -9,12 +9,12 @@
 
 必须遵守以下规则：
 
-1. **Git 中可审查的数据与证据是维护基准。** Supabase 是运行环境，不是唯一事实来源。
+1. **事实真源由模块明确指定，不能维护多个独立真源。** AW 的正式事实与证据在 Supabase；Git 保存结构、接口、生成器和历史发行。AW 当前维护优先遵守 [接口说明](aw/catalog-maintenance-api.md)，旧 ZIP 仅用于过渡初始化与历史复现。其他模块未迁移前沿用各自现有维护流程。
 2. **未知就是未知。** 未找到、未看到、第三方未记录，都不能解释成“游戏中不存在”；应保留 `null`、`unknown`、待核实状态或已有值。
 3. **不根据现实武器、同系列车辆、命名习惯、相邻科技线或其他游戏版本推断当前游戏数据。**
 4. **生成文件不能手工改。** 必须修改其上游可维护输入，再运行仓库内生成器。
 5. **稳定 ID 不随意重建。** 已存在实体的 UUID / slug / natural key 应保持稳定；遇到冲突先报告，不通过生成新 ID 绕过唯一约束。
-6. **数据更新默认不直接写正式数据库。** 不把数据包挂到 migration、部署任务或自动导入脚本；需要数据库写入时应另立明确任务，并先核对目标库真实状态。
+6. **数据维护 AI 不直接执行正式库 DML。** AW 先只读正式事实，通过受限 KEY 上传变更、拉取固定审核清单、确认后由服务发布；数据库结构迁移与一次性初始化由维护者执行。不得拿管理员凭证绕过维护接口。
 7. **公共资料与私有存档严格分离。** 数据包不得包含玩家码、团队码、玩家/团队计划、真实用户数据、服务端密钥或其他私有信息。
 8. **每次修改必须可追溯到来源、核验时间和变更原因。**
 9. **保持最小变更。** 数据任务不要顺带“清理”无关字段、重排 ID、格式化整库或重写未涉及实体，否则会破坏审查价值。
@@ -268,20 +268,11 @@ AW 是本规范的第一套实际实现。当前 PR #8 分支为：
 
 ### 7.1 AW 可维护输入
 
-当前主要输入包括：
+正式事实在 Supabase 的 26 张公共表，弹药分类/证据和互斥武器关系也存数据库。其他 AI 先用 `aw_catalog_facts` 读取一致快照，再按 [维护接口说明](aw/catalog-maintenance-api.md) 提交带预期原值和证据的变更。不得以 Git 随包 JS 或旧 ZIP 判断当前线上事实。
 
-- `data/aw/AW_catalog_manual_data.zip`  
-  包内 `source/catalog_snapshot.json` 保存公开目录快照。不要直接修改 ZIP 二进制；需要修基础快照时，应解出 source JSON，在工作副本中修改，再重新生成 ZIP。
-- `data/aw/schema_data_contract.json`  
-  数据包列、生成列、唯一键、主外键等结构契约。
-- `data/aw/tech_tree_ingame_overrides.json`  
-  游戏内科技树截图确认后的覆盖层，只修正证据明确支持的关系。
-- `miniprogram/data/aw/ammo-classification.js`  
-  弹头分类与证据补充。未知 ATGM 继续保持 unknown / needs_ingame_check。
-- `miniprogram/data/aw/presentation.js`  
-  只保存已明确核实的展示关系，例如互斥武器组；不能仅凭武器名或升级关系推断。
+`data/aw/schema_data_contract.json` 与生成的 `schema.js` 定义现有客户端字段/主键/引用契约。旧 `AW_catalog_manual_data.zip`、科技树覆盖、`ammo-classification.js`、`presentation.js` 保存已核验历史来源，用于一次性初始化和旧发行复现；初始化以后通过维护接口修改数据库中的事实与证据。`catalog_snapshot.json` 的长期维护暂缓，本版不要求每次资料更新解压和重打 ZIP。
 
-AW 当前基础快照仍存在待游戏内核实和缺失字段，因此更新任务不得把“没有记录”解释成“没有能力”。
+AW 当前仍有待核实和缺失字段，不得把“没有记录”解释成“没有能力”。
 
 ### 7.2 AW 生成产物
 
@@ -295,55 +286,24 @@ AW 当前基础快照仍存在待游戏内核实和缺失字段，因此更新�
 - `data/aw/AW_catalog_manual_data.manifest.json`
 - 重新构建后的 `data/aw/AW_catalog_manual_data.zip`
 
-### 7.3 AW 基础生成流程
+### 7.3 AW 维护与生成流程
 
-基础快照发生变化时，先准备修改后的 `catalog_snapshot.json`，再重建手动数据包：
+正式流程：数据库只读查询 → 上传不可变变更 → 拉取全部未处理数据形成固定清单 → AI 审核确认 → 服务器基于数据库实际试写结果生成并校验 full/patch → 在同一事务内写正式事实、保存发行、移动发布指针并处理清单 → 小程序增量或全量更新。
 
-```bash
-python tools/build_aw_manual_data_package.py \
-  --source /path/to/catalog_snapshot.json \
-  --contract data/aw/schema_data_contract.json \
-  --output data/aw/AW_catalog_manual_data.zip
-```
+三个 scope 可以交给不同 AI。KEY 由维护者通过 SQL Editor 手工签发、轮换、撤销，业务 AI 不拿管理员凭证。迁移/初始化与 KEY SQL 见 [管理员说明](aw/catalog-maintenance-admin.md)。每次数据发布不重新部署函数，不重新编译小程序；新结构或机制需要客户端升级。
 
-然后重建小程序目录：
-
-```bash
-python tools/build_aw_miniprogram_catalog.py
-```
-
-只修改科技树覆盖层时，也应重新运行上述小程序目录生成命令。
-
-发布线上资料包时：
-
-```bash
-node tools/build_aw_catalog_schema.js
-node tools/build_aw_catalog_release.js YYYY.MM.DD.N ISO_TIMESTAMP \
-  --from data/aw/releases/<上一正式 version>/full.json
-```
-
-其中 `YYYY.MM.DD.N` 同日序号递增。内容变化必须产生新资料版本，不能用同序号覆盖不同内容。
-
-先确认上一正式发行版本及 hash，从 Git 的不可变 `data/aw/releases/<version>/full.json` 获取准确基准；不从实时数据库反推，不依赖聊天附件。可以先用 `build_aw_catalog_package.js full / patch / validate` 分步交接，再用 release 命令组装，机器验证逐字节结果一致。A 提供新完整数据与证据；B 提供确定性 patch 与校验；C 提供线上部署与 version/hash 确认记录。三个执行者可以完全不同。
-
-详细人工/其他 AI 操作、交接和线上发布行为见：
-
-`docs/aw/catalog-updates.md`
-
-AW 数据库空表与手工导入约束见：
-
-`docs/aw/README.md`
+旧生成器、ZIP 与 Git 不可变发行保留历史重建能力；不能重写旧 full/hash，也不能把本地候选当已上线。数据库 release 表记录新维护接口的完整发行基准，旧 Git archive 不自动作为线上最新基准。更新协议与诊断见 [线上资料更新](aw/catalog-updates.md)。
 
 ### 7.4 AW 禁止事项
 
 AW 数据更新任务默认禁止：
 
-- 直接从正式 Supabase 表反向生成并覆盖 Git 基准；
+- 用当前正式库覆盖旧不可变发行、伪造其原始 bytes/hash；
 - 直接修改 `catalog.js` 代替修改上游数据；
 - 因 Wiki/官网未写而删除能力；
 - 根据现实武器知识补弹头；
 - 根据科技树视觉位置补完整 XP / 模块 / Token 条件；
-- 自动执行全包数据库导入；
+- 用管理员 DML 或自动全包导入绕过上传/审核接口；
 - 重建已有 UUID；
 - 把玩家/车队规划写进公共资料；
 - 为了数据更新顺带修改车辆卡片 UI 或车队业务逻辑。

@@ -42,6 +42,28 @@ test('baseVersion or base hash mismatch rejects direct application and selects l
 test('missing direct path downloads one full, without traversing historical patches',async()=>{
   full.manifest.patches=[];const r=await updates.check(true)
   assert.equal(r.mode,'full');assert.equal(calls.length,2)
+  assert.equal(r.reasonCode,'no_direct_patch');assert.equal(updates.info().lastUpdate.state,'activated')
+  assert.equal(updates.info().lastUpdate.attemptedPatch,false)
+})
+test('unsupported patch format or encoding skips patch and accepts a schema-compatible full with diagnostics',async()=>{
+  for(const change of [()=>{full.manifest.patches[0].patchFormat=99},()=>{full.manifest.encoding='future-readable-full'}]) {
+    full=clone(f.target);delta=clone(f.patch);calls=[];memory.clear();reload();change()
+    const result=await updates.check(true)
+    assert.equal(result.mode,'full');assert.equal(calls.length,2);assert(!calls.some(c=>c.url.includes('?patch')))
+    assert.match(result.reasonCode,/patch_(format|encoding)_unsupported/)
+    assert.equal(updates.info().lastUpdate.state,'activated')
+  }
+})
+test('diagnostics survive restart, record failed attempts and track deferred activation',async()=>{
+  const editor={};updates.hold(editor);await updates.check(true)
+  assert.equal(updates.info().lastUpdate.state,'staged');assert.equal(updates.info().lastUpdate.mode,'patch')
+  updates.release(editor);assert.equal(updates.info().lastUpdate.state,'activated')
+  reload().init();assert.equal(updates.info().lastUpdate.state,'activated')
+  const previous=updates.info().version
+  wx.request=o=>o.fail({errMsg:'synthetic offline'})
+  await assert.rejects(updates.check(true),/synthetic offline/)
+  assert.equal(updates.info().lastUpdate.state,'failed');assert.match(updates.info().lastUpdate.error,/offline/)
+  assert.equal(updates.info().version,previous)
 })
 test('bad patch checksum falls back to a verified full without installing partial data',async()=>{
   delta.payload+=' '

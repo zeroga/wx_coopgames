@@ -1,4 +1,5 @@
 // SHA-256 over UTF-8; no Node / WebCrypto dependency in the mini-program.
+// Shared release protocol code: assess both client and publisher before changing.
 const constants = [], initial = []
 for (let n = 2; constants.length < 64; n++) {
   let prime = true
