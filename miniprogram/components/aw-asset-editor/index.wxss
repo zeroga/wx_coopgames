@@ -1,8 +1,9 @@
 /* Component styles use class selectors only; page theme has tag selectors. */
-.backdrop { position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(28,26,30,.45); z-index:20; }
-.sheet { box-sizing:border-box; position:fixed; bottom:0; left:0; right:0; max-height:90vh; background:#fbfafc; border-radius:24rpx 24rpx 0 0; padding:26rpx 24rpx calc(26rpx + env(safe-area-inset-bottom)); z-index:21; color:#1c1a1e; font-size:28rpx; }
+.editor-overlay { position:fixed; top:0; right:0; bottom:0; left:0; z-index:20; }
+.backdrop { position:absolute; top:0; right:0; bottom:0; left:0; background:rgba(28,26,30,.45); z-index:0; }
+.sheet { box-sizing:border-box; position:absolute; bottom:0; left:0; right:0; overflow:hidden; background:#fbfafc; border-radius:24rpx 24rpx 0 0; padding:26rpx 24rpx calc(26rpx + env(safe-area-inset-bottom)); z-index:1; color:#1c1a1e; font-size:28rpx; }
 .sheet-head { display:block; margin-bottom:16rpx; }
-.sheet-content { height:55vh; }
+.sheet-content { position:absolute; left:24rpx; right:24rpx; overflow:hidden; }
 .card-title { font-weight:800; font-size:28rpx; line-height:1.4; }
 .muted { color:#6b6370; font-size:23rpx; line-height:1.6; }
 .label { font-size:23rpx; color:#6b6370; margin:20rpx 0 10rpx; }
@@ -18,7 +19,7 @@
 .is-disabled { opacity:.45; }
 .field,.picker { background:#f6f4f7; border:1rpx solid transparent; border-radius:12rpx; padding:0 20rpx; box-sizing:border-box; min-height:0; height:88rpx; font-size:26rpx; width:100%; margin:10rpx 0; }
 .field:focus { border-color:#ea7428; }
-.notes { height:auto; min-height:104rpx; padding:16rpx; background:#f2eff3; }
+.notes { height:160rpx; min-height:104rpx; padding:16rpx; background:#f2eff3; }
 .tag { display:inline-block; font-size:22rpx; padding:10rpx 16rpx; border-radius:10rpx; background:#ece9ed; color:#6b6370; margin:6rpx 8rpx 6rpx 0; line-height:1; }
 
 .line { padding:16rpx 0; border-bottom:1rpx dashed rgba(28,26,30,.12); line-height:1.6; }
@@ -36,10 +37,8 @@
 .route-card { border:2rpx solid #dedbe0; border-radius:12rpx; padding:20rpx; margin:12rpx 0; }
 .route-card.selected { border-color:#ea7428; background:#fbfafc; }
 .warning { background:#fff2df; color:#946126; padding:18rpx; border-radius:12rpx; margin:12rpx 0; }
-.sheet { max-height:none; display:flex; flex-direction:column; }
-.sheet-head,.actions { flex-shrink:0; }
-.sheet-content { height:auto; flex:1; min-height:0; }
-.actions .btn { margin-top:0; }
+.sheet-footer { position:absolute; left:24rpx; right:24rpx; bottom:calc(26rpx + env(safe-area-inset-bottom)); z-index:2; margin:0; flex-wrap:nowrap; }
+.sheet-footer .btn { margin:0; }
 .editor-vehicle { margin-top:12rpx; }
 .target-vehicle { flex:1; min-width:0; }
 .field-required,.field-error { color:#cf3a36; }

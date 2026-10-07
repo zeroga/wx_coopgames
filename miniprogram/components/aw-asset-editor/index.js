@@ -5,13 +5,16 @@ const navigation = require('../../utils/aw/navigation')
 const identity = require('../../utils/aw/identity')
 const tokenPlan = require('../../utils/aw/token-plan')
 const updates = require('../../utils/aw/catalog-update')
+const sheetLayout = require('../../utils/aw/sheet-layout')
 Component({
+  options:{virtualHost:true},
   properties: { vehicleId: String },
-  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentHeight:410,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
-  lifetimes: { attached() { this.prepare() }, detached() { updates.release(this) } },
+  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentTop:0,contentHeight:0,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
+  lifetimes: { attached() { this._detached=false;this.prepare() }, ready() { this.measureLayout() }, detached() { this._detached=true;updates.release(this) } },
   observers: { 'vehicleId'() { if (this.properties.vehicleId) this.prepare() } },
   methods: {
     prepare() {
+      this._windowInfo=wx.getWindowInfo?wx.getWindowInfo():wx.getSystemInfoSync?wx.getSystemInfoSync():{windowHeight:680,windowWidth:375}
       this.setData({registered:false,removeLabel:'',pendingRemoval:false})
       updates.hold(this)
       this.keyboard({detail:{height:0}})
@@ -56,11 +59,11 @@ Component({
       const rows=fleet.clone(this.data.rows),row=rows[e.currentTarget.dataset.index]
       row.index=row.index?0:1;this.setData({rows})
     },
-    roleManager() { if(this.data.saving)return; this.setData({showRoleManager:!this.data.showRoleManager,roleForm:null,fieldError:''}) },
-    newRole() { if(this.data.saving)return; this.setData({roleForm:{id:'',name:'',description:''}}) },
-    editRole(e) { if(this.data.saving)return; const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);if(r)this.setData({roleForm:fleet.clone(r)}) },
+    roleManager() { if(this.data.saving)return; this.setData({showRoleManager:!this.data.showRoleManager,roleForm:null,fieldError:''},()=>this.measureLayout()) },
+    newRole() { if(this.data.saving)return; this.setData({roleForm:{id:'',name:'',description:''}},()=>this.measureLayout()) },
+    editRole(e) { if(this.data.saving)return; const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);if(r)this.setData({roleForm:fleet.clone(r)},()=>this.measureLayout()) },
     roleField(e) { this.setData({['roleForm.'+e.currentTarget.dataset.key]:e.detail.value,fieldError:''}) },
-    cancelRole() { this.setData({roleForm:null,fieldError:''}) },
+    cancelRole() { this.setData({roleForm:null,fieldError:''},()=>this.measureLayout()) },
     async retrySync(){if(this.data.saving)return;this.setData({saving:true});try{await store.push();this.setData({syncError:''});if(this.data.pendingRemoval)this.removed();else this.refreshRoles()}catch(e){this.setData({syncError:e.message})}finally{this.setData({saving:false})}},
     refreshRoles() {
       const draft=fleet.clone(this.data.rows),statusIndex=this.data.statusIndex,note=this.data.note,tokenRewards=this.data.tokenRewards,tokenAcquisition=this.data.tokenAcquisition,unlockPathId=this.data.unlockPathId
@@ -99,7 +102,30 @@ Component({
     note(e) { if(this.data.saving)return; this.setData({ note: e.detail.value }) },
     pickLevel(e) { if(this.data.saving)return; const rows = fleet.clone(this.data.rows); rows[e.currentTarget.dataset.index].index = Number(e.currentTarget.dataset.value); this.setData({ rows }) },
     pickTargets(e) { if(this.data.saving)return; const rows = fleet.clone(this.data.rows), row = rows[e.currentTarget.dataset.index]; row.targets.forEach(t => { t.checked = e.detail.value.includes(t.id) }); this.setData({ rows }) },
-    keyboard(e) { const h=Number(e.detail.height)||0,win=wx.getWindowInfo?wx.getWindowInfo().windowHeight:680,available=Math.max(230,Math.min(win*.88,win-h-12));this.setData({keyboardHeight:h,sheetHeight:available,contentHeight:Math.max(100,available-140)}) },
+    blockTouch() {},
+    keyboard(e) {
+      // Use the viewport captured before focus; native keyboard events can arrive after resize.
+      const info=this._windowInfo||{windowHeight:680,windowWidth:375},bounds=sheetLayout.frame(info,e.detail.height)
+      this.setData(Object.assign(bounds,{contentHeight:0}),()=>this.measureLayout())
+    },
+    measureLayout() {
+      if(!this.createSelectorQuery || this._detached)return
+      const revision=this._layoutRevision=(this._layoutRevision||0)+1
+      const measure=()=>{
+        if(this._detached || revision!==this._layoutRevision)return
+        const query=this.createSelectorQuery()
+        query.select('.sheet').boundingClientRect()
+        query.select('.sheet-head').boundingClientRect()
+        query.select('.sheet-footer').boundingClientRect()
+        query.exec(rects=>{
+          if(this._detached || revision!==this._layoutRevision)return
+          const gap=8*((this._windowInfo||{}).windowWidth||375)/375
+          const bounds=sheetLayout.contentBounds(rects[0],rects[1],rects[2],gap)
+          if(bounds)this.setData(bounds)
+        })
+      }
+      if(wx.nextTick)wx.nextTick(measure);else measure()
+    },
     reward(e) { if(this.data.saving)return;const {id,state}=e.currentTarget.dataset;if(this.data.statusIndex&&state!=='unearned'){this.setData({fieldError:'先登记为已拥有，再记录满经验或已领取'});return}this.setData({tokenRewards:this.data.tokenRewards.map(r=>Object.assign({},r,r.id===id?{state}:{})),fieldError:''}) },
     acquisition(e) { if(this.data.saving)return;this.setData({tokenAcquisition:e.currentTarget.dataset.value,unlockPathId:e.currentTarget.dataset.value==='token'?this.data.unlockPathId:'',fieldError:''}) },
     unlockPath(e) { if(!this.data.saving)this.setData({unlockPathId:e.currentTarget.dataset.id}) },

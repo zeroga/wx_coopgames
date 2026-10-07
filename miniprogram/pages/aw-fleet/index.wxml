@@ -1,3 +1,4 @@
+<page-meta page-style="{{editor || prerequisiteForm || memberForm || roleForm ? 'overflow:hidden;' : ''}}"/>
 <view class="aw-page">
   <view wx:if="{{fieldError && !memberForm && !roleForm}}" class="ui-error">{{fieldError}}</view>
   <view wx:if="{{syncError}}" class="ui-error">{{syncError}}</view>

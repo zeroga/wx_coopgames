@@ -1,3 +1,4 @@
+<page-meta page-style="{{editor || prerequisiteForm ? 'overflow:hidden;' : ''}}"/>
 <view class="aw-page" wx:if="{{vehicle}}">
   <view wx:if="{{syncError}}" class="ui-error">{{syncError}}</view>
   <view class="hero"><view class="eyebrow">ARMORED WARFARE · VEHICLE</view><view class="title"><aw-vehicle-label vehicle-id="{{vehicle.id}}" catalog-revision="{{catalogRevision}}" variant="hero"/></view><view class="subtitle"><text wx:if="{{vehicle.is_premium}}" class="tag">Premium</text><text class="tag">{{vehicle.acquisitionText}}</text><view><text wx:for="{{vehicle.capabilities}}" wx:key="id" wx:if="{{item.availability !== 'absent'}}" class="tag">{{item.name}}{{item.availability !== 'default' && item.statusText ? ' · ' + item.statusText : ''}}</text></view></view></view>
