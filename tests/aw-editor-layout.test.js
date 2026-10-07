@@ -16,7 +16,7 @@ test('sheet stays within pre-keyboard viewport on small, iPhone and tablet windo
 })
 test('scroll region never overlaps measured actions for varying headers, safe areas and keyboards',()=>{
   for(const height of [168,356,637])for(const headHeight of [75,165,240])for(const footerHeight of [38,62,100]){
-    const sheet={top:42,height},head={bottom:42+headHeight},footer={top:42+height-footerHeight}
+    const sheet={top:42,left:0,width:390,height},head={left:12.48,width:365.04,bottom:42+headHeight},footer={left:12.48,width:365.04,top:42+height-footerHeight}
     const bounds=layout.contentBounds(sheet,head,footer,8)
     assert(bounds.contentTop>=0);assert(bounds.contentHeight>=0)
     if(bounds.contentHeight){assert(42+bounds.contentTop+bounds.contentHeight<=footer.top-8)}
@@ -24,21 +24,32 @@ test('scroll region never overlaps measured actions for varying headers, safe ar
   }
   assert.equal(layout.contentBounds(null,{}, {},8),null)
 })
+test('native scroll-view gets measured width for phone, tablet and narrow embedded sheet containers',()=>{
+  for(const viewportWidth of [320,375,390,768])for(const sheetWidth of [viewportWidth,Math.min(320,viewportWidth)]){
+    const inset=24*viewportWidth/750,left=53,width=sheetWidth-2*inset
+    const sheet={top:42,left,width:sheetWidth,height:400},head={left:left+inset,width,bottom:180},footer={left:left+inset,width,top:400}
+    const bounds=layout.contentBounds(sheet,head,footer,8)
+    assert.equal(bounds.contentWidth,width)
+    assert(Math.abs(bounds.contentLeft-inset)<.00001)
+    assert(Math.abs(sheet.left+bounds.contentLeft+bounds.contentWidth-(head.left+head.width))<.00001)
+    assert(bounds.contentLeft+bounds.contentWidth<=sheet.width)
+  }
+})
 test('editor uses native header and footer positions and ignores stale or detached measurements',()=>{
   const p=editor(),callbacks=[]
   p.createSelectorQuery=()=>({select(){return this},boundingClientRect(){return this},exec(cb){callbacks.push(cb)}})
   p.measureLayout();p.measureLayout()
-  callbacks[1]([{top:100,height:500},{bottom:270},{top:530}])
-  const actual={contentTop:p.data.contentTop,contentHeight:p.data.contentHeight}
+  callbacks[1]([{top:100,left:0,width:390,height:500},{left:12.48,width:365.04,bottom:270},{left:12.48,width:365.04,top:530}])
+  const actual={contentLeft:p.data.contentLeft,contentWidth:p.data.contentWidth,contentTop:p.data.contentTop,contentHeight:p.data.contentHeight}
   assert(actual.contentTop+actual.contentHeight<430)
-  callbacks[0]([{top:0,height:900},{bottom:0},{top:800}])
-  assert.deepEqual({contentTop:p.data.contentTop,contentHeight:p.data.contentHeight},actual)
-  p.measureLayout();p._detached=true;callbacks[2]([{top:0,height:900},{bottom:0},{top:800}])
-  assert.deepEqual({contentTop:p.data.contentTop,contentHeight:p.data.contentHeight},actual)
+  callbacks[0]([{top:0,left:0,width:768,height:900},{left:24.576,width:718.848,bottom:0},{left:24.576,width:718.848,top:800}])
+  assert.deepEqual({contentLeft:p.data.contentLeft,contentWidth:p.data.contentWidth,contentTop:p.data.contentTop,contentHeight:p.data.contentHeight},actual)
+  p.measureLayout();p._detached=true;callbacks[2]([{top:0,left:0,width:768,height:900},{left:24.576,width:718.848,bottom:0},{left:24.576,width:718.848,top:800}])
+  assert.deepEqual({contentLeft:p.data.contentLeft,contentWidth:p.data.contentWidth,contentTop:p.data.contentTop,contentHeight:p.data.contentHeight},actual)
 })
 test('keyboard shrink and dismiss remeasure against original viewport instead of subtracting twice',()=>{
   const p=editor(),old=wx.getWindowInfo
-  p.createSelectorQuery=()=>({select(){return this},boundingClientRect(){return this},exec(cb){cb([{top:0,height:p.data.sheetHeight},{bottom:145},{top:p.data.sheetHeight-65}])}})
+  p.createSelectorQuery=()=>({select(){return this},boundingClientRect(){return this},exec(cb){cb([{top:0,left:0,width:390,height:p.data.sheetHeight},{left:12.48,width:365.04,bottom:145},{left:12.48,width:365.04,top:p.data.sheetHeight-65}])}})
   try{
     p.keyboard({detail:{height:0}});const full=p.data.sheetHeight
     wx.getWindowInfo=()=>({windowHeight:424,windowWidth:390})
@@ -66,6 +77,8 @@ test('native fixed textareas and footer touches stay separated from the form scr
   assert.match(markup,/class="actions sheet-footer" catchtouchmove="blockTouch"/)
   const scroll=markup.match(/<scroll-view\b[^>]+>/)[0]
   assert.doesNotMatch(scroll,/catchtouchmove/);assert.match(scroll,/height:{{contentHeight}}px/)
+  // Native scroll-view defaults to width:100%; left/right alone do not constrain it.
+  assert.match(scroll,/left:{{contentLeft}}px;width:{{contentWidth}}px/)
   assert(markup.lastIndexOf('bindtap="save"')>markup.lastIndexOf('</scroll-view>'))
   const styles=fs.readFileSync('miniprogram/components/aw-asset-editor/index.wxss','utf8')
   assert.match(styles,/\.sheet-footer\s*\{[^}]*position:absolute/)

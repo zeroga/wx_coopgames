@@ -2,7 +2,7 @@
 <view class="backdrop" catchtap="cancel" catchtouchmove="blockTouch"></view>
 <view class="sheet" style="bottom:{{keyboardHeight}}px;height:{{sheetHeight}}px">
   <view class="sheet-head" catchtouchmove="blockTouch"><view class="card-title">{{showRoleManager ? '车队共同维护的职责' : '登记我的车辆与职责'}}</view><view class="ui-card vehicle-card editor-vehicle"><aw-vehicle-label vehicle-id="{{vehicleId}}" name="{{vehicleName}}" catalog-revision="{{catalogRevision}}" bind:planlayout="measureLayout"/></view></view>
-  <scroll-view scroll-y="{{true}}" class="sheet-content" enhanced="{{true}}" bounces="{{false}}" style="top:{{contentTop}}px;height:{{contentHeight}}px">
+  <scroll-view scroll-y="{{true}}" class="sheet-content" enhanced="{{true}}" bounces="{{false}}" style="left:{{contentLeft}}px;width:{{contentWidth}}px;top:{{contentTop}}px;height:{{contentHeight}}px">
     <view wx:if="{{fieldError && fieldError !== '请填写职责名称'}}" class="ui-error">{{fieldError}}</view>
     <view wx:if="{{syncError}}" class="ui-error">{{syncError}}<view class="link" bindtap="retrySync">刷新并重试同步</view></view>
     <block wx:if="{{showRoleManager}}">

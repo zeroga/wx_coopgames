@@ -3,7 +3,7 @@
 .backdrop { position:absolute; top:0; right:0; bottom:0; left:0; background:rgba(28,26,30,.45); z-index:0; }
 .sheet { box-sizing:border-box; position:absolute; bottom:0; left:0; right:0; overflow:hidden; background:#fbfafc; border-radius:24rpx 24rpx 0 0; padding:26rpx 24rpx calc(26rpx + env(safe-area-inset-bottom)); z-index:1; color:#1c1a1e; font-size:28rpx; }
 .sheet-head { display:block; margin-bottom:16rpx; }
-.sheet-content { position:absolute; left:24rpx; right:24rpx; overflow:hidden; }
+.sheet-content { position:absolute; box-sizing:border-box; min-width:0; overflow:hidden; }
 .card-title { font-weight:800; font-size:28rpx; line-height:1.4; }
 .muted { color:#6b6370; font-size:23rpx; line-height:1.6; }
 .label { font-size:23rpx; color:#6b6370; margin:20rpx 0 10rpx; }

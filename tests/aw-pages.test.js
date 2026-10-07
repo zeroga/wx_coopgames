@@ -240,7 +240,7 @@ test('open vehicle or form draft prevents automatic cloud read; keyboard adjusts
  try{const fp=page('aw-fleet');fp.onLoad({});fp.setData({memberForm:{name:'草稿'}});await fp.onShow();assert.equal(calls,0)
  const vp=page('aw-vehicle');vp.onLoad({id:c.tables.vehicles[0].id});vp.edit();await vp.onShow();assert.equal(calls,0)
  let def;global.Component=d=>def=d;const script='../miniprogram/components/aw-asset-editor/index';delete require.cache[require.resolve(script)];require(script);const editor=hydrate(def,true);editor.properties={vehicleId:c.tables.vehicles[0].id}
- editor.createSelectorQuery=()=>({select(){return this},boundingClientRect(){return this},exec(cb){cb([{top:0,height:editor.data.sheetHeight},{bottom:100},{top:editor.data.sheetHeight-50}])}})
+ editor.createSelectorQuery=()=>({select(){return this},boundingClientRect(){return this},exec(cb){cb([{top:0,left:0,width:375,height:editor.data.sheetHeight},{left:12,width:351,bottom:100},{left:12,width:351,top:editor.data.sheetHeight-50}])}})
  editor.prepare();const h=editor.data.sheetHeight;editor.keyboard({detail:{height:300}});assert(editor.data.sheetHeight<h);assert(editor.data.contentHeight>0)
  }finally{s.refreshIfClean=old}
 })

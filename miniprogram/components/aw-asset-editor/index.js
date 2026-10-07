@@ -9,7 +9,7 @@ const sheetLayout = require('../../utils/aw/sheet-layout')
 Component({
   options:{virtualHost:true},
   properties: { vehicleId: String },
-  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentTop:0,contentHeight:0,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
+  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentLeft:0,contentWidth:0,contentTop:0,contentHeight:0,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
   lifetimes: { attached() { this._detached=false;this.prepare() }, ready() { this.measureLayout() }, detached() { this._detached=true;updates.release(this) } },
   observers: { 'vehicleId'() { if (this.properties.vehicleId) this.prepare() } },
   methods: {
