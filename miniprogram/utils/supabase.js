@@ -19,7 +19,8 @@ function request(path, method, data) {
       data: data === undefined ? undefined : data,
       header: {
         apikey: config.supabasePublishableKey,
-        Authorization: 'Bearer ' + config.supabasePublishableKey,
+        // Publishable keys are opaque API keys, not session JWTs.
+        ...(String(config.supabasePublishableKey).startsWith('sb_publishable_') ? {} : { Authorization: 'Bearer ' + config.supabasePublishableKey }),
         'Content-Type': 'application/json'
       },
       success(res) {
@@ -47,6 +48,12 @@ function normalizeCode(value) {
 }
 
 module.exports = {
+  awArchive(action, code, payload, version) {
+    return rpc('aw_archive', { p_action: action, p_code: code || null, p_payload: payload || {}, p_expected_version: version === undefined ? null : version })
+  },
+  getLegacyAwPlan(profileId, inviteCode) {
+    return rpc("get_aw_fleet_plan", { p_workspace_id: profileId, p_invite_code: normalizeCode(inviteCode) })
+  },
   normalizeCode,
 
   createProfile(profileData) {

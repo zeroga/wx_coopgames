@@ -1,0 +1,18 @@
+<view class="vehicle-label {{variant === 'hero' ? 'vehicle-label-hero' : ''}}">
+  <view class="vehicle-class" aria-label="{{className}}"><text>{{classCode}}</text></view>
+  <view class="vehicle-main" style="{{mainWidthRpx ? 'width:' + mainWidthRpx + 'rpx' : ''}}">
+    <text class="vehicle-name" aria-label="{{displayName}}">{{displayName}}</text>
+    <text wx:if="{{metaText}}" class="vehicle-meta">{{metaText}}</text>
+    <view wx:if="{{tags.length}}" class="vehicle-tags" catchtap="showTags" role="button" aria-label="查看全部 {{tags.length}} 项能力">
+      <view wx:for="{{tagRows}}" wx:for-item="row" wx:key="id" wx:if="{{row.tags.length || (row.id === 'second' && hiddenTags)}}" class="vehicle-tag-row"><text wx:for="{{row.tags}}" wx:key="*this" class="vehicle-tag">{{item}}</text><view wx:if="{{row.id === 'second' && hiddenTags}}" class="vehicle-overflow" catchtap="showTags" hover-class="vehicle-pressed" role="button" aria-label="查看全部 {{tags.length}} 项能力">+{{hiddenTags}}</view></view>
+      <view class="vehicle-probes"><text wx:for="{{tags}}" wx:key="*this" class="vehicle-tag-probe">{{item}}</text><text class="vehicle-overflow-probe">+{{tags.length}}</text></view>
+    </view>
+  </view>
+  <view class="vehicle-trail"><view class="vehicle-tier" catchtap="showIdentity" role="button" aria-label="查看完整车辆名称与等级" hover-class="vehicle-pressed">{{tierText}}</view><view wx:if="{{resolvedPlanMode === 'summary' && (markers.length || planMemberCount)}}" class="vehicle-markers" catchtap="showPlans" hover-class="vehicle-pressed" role="button" aria-label="查看完整玩家规划"><text wx:for="{{visibleMarkers}}" wx:key="id" class="vehicle-marker" style="background:{{item.color}};color:{{item.foreground}}" aria-label="{{item.memberName}} · {{item.label}} · {{item.roleName}}">{{item.label}}</text><text wx:if="{{hiddenMembers}}" class="vehicle-marker-more">+{{hiddenMembers}}人</text><text wx:elif="{{!markers.length}}" class="vehicle-marker-more">{{planMemberCount}}人规划</text></view><view wx:if="{{resolvedPlanMode === 'summary' && needsPrerequisite}}" class="vehicle-plan-alert" catchtap="showPrerequisites" hover-class="vehicle-pressed" role="button" aria-label="配置前置与 Token"><image class="vehicle-plan-icon" src="/assets/icons/warning.svg"/></view></view>
+</view>
+<block wx:if="{{planSheet}}">
+  <view class="vehicle-plan-backdrop" catchtap="closePlans" catchtouchmove="keepSheetOpen"></view>
+  <view class="vehicle-plan-sheet" catchtap="keepSheetOpen"><view class="vehicle-plan-head"><view class="vehicle-plan-heading">{{displayName}} · 玩家规划</view><button class="vehicle-plan-close" catchtap="closePlans">关闭</button></view>
+    <scroll-view scroll-y="{{true}}" class="vehicle-plan-content"><view wx:for="{{plans}}" wx:key="id" class="vehicle-plan-row"><view class="vehicle-plan-member">{{item.memberName}} · {{item.statusText}}</view><view class="vehicle-plan-description">{{item.roleText}}</view><view wx:if="{{item.planText}}" class="vehicle-plan-description">{{item.planText}}</view><view wx:for="{{item.roles}}" wx:for-item="assignment" wx:key="id" wx:if="{{assignment.targetNames}}" class="vehicle-plan-description">{{assignment.sourceText}} → {{assignment.targetNames}}</view><view wx:if="{{item.customPrerequisite}}" class="vehicle-plan-description">自定义前置</view><button wx:if="{{item.status === 'planned'}}" class="vehicle-plan-config" data-member="{{item.memberId}}" catchtap="configurePlan"><image wx:if="{{item.needsPrerequisite}}" class="vehicle-plan-icon" src="/assets/icons/warning.svg"/>前置与 Token 配置</button></view></scroll-view>
+  </view>
+</block>

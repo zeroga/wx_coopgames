@@ -20,7 +20,7 @@ function sortedCatalog(catalog) {
 Page({
   data: {
     state: null, cloudStatus: '本地', profileId: '', shareCode: '', catalogList: [],
-    seasonKeyInput: '', seasonCnInput: '', seasonEnInput: '', seasonVehiclesInput: ''
+    seasonKeyInput: '', seasonCnInput: '', seasonEnInput: '', seasonVehiclesInput: '', seasonErrors: {}
   },
 
   onLoad() {
@@ -41,7 +41,11 @@ Page({
     cache.set('snowrunner', state)
   },
 
-  inputField(e) { this.setData({ [e.currentTarget.dataset.field]: e.detail.value }) },
+  inputField(e) {
+    const field = e.currentTarget.dataset.field
+    const key = field === 'seasonKeyInput' ? 'key' : field === 'seasonCnInput' ? 'cn' : ''
+    this.setData(Object.assign({ [field]: e.detail.value }, key ? { ['seasonErrors.' + key]: '' } : {}))
+  },
 
   editExisting(e) {
     const key = e.currentTarget.dataset.key
@@ -49,13 +53,13 @@ Page({
     if (!item) return
     this.setData({
       seasonKeyInput: key, seasonCnInput: item.cn || '', seasonEnInput: item.en || '',
-      seasonVehiclesInput: (item.vehicles || []).join('\n')
+      seasonVehiclesInput: (item.vehicles || []).join('\n'), seasonErrors: {}
     })
     wx.pageScrollTo({ scrollTop: 0, duration: 250 })
   },
 
   clearForm() {
-    this.setData({ seasonKeyInput: '', seasonCnInput: '', seasonEnInput: '', seasonVehiclesInput: '' })
+    this.setData({ seasonKeyInput: '', seasonCnInput: '', seasonEnInput: '', seasonVehiclesInput: '', seasonErrors: {} })
   },
 
   saveSeasonDefinition() {
@@ -63,8 +67,12 @@ Page({
     const cn = String(this.data.seasonCnInput || '').trim()
     const en = String(this.data.seasonEnInput || '').trim()
     const vehicles = parseVehicles(this.data.seasonVehiclesInput)
-    if (!/^S\d+$/.test(key)) return wx.showToast({ title: '赛季编号请输入 S20 这种格式', icon: 'none' })
-    if (!cn) return wx.showToast({ title: '请填写地区 / 中文名', icon: 'none' })
+    const seasonErrors = {
+      key: /^S\d+$/.test(key) ? '' : '赛季编号请输入 S20 这种格式',
+      cn: cn ? '' : '请填写地区 / 中文名'
+    }
+    this.setData({ seasonErrors })
+    if (seasonErrors.key || seasonErrors.cn) return
     const exists = !!this.data.state.seasonCatalog[key]
     const commit = () => {
       const state = clone(this.data.state)

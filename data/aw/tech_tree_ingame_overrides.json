@@ -1,0 +1,815 @@
+{
+  "version": 1,
+  "checked_at": "2026-10-04",
+  "evidence": "Current in-game dealer technology-tree overview screenshots supplied by the project owner. This overlay verifies visible vehicle-to-vehicle display/progression relationships only; it does not by itself prove upgrade-node gates, token quantities, damage thresholds, or other hidden unlock requirements.",
+  "covered_dealers": [
+    "sophie_wolfli",
+    "marat_shishkin",
+    "zhang_feng",
+    "oscar_faraday",
+    "sol_schreiber",
+    "francine_de_laroche"
+  ],
+  "edge_replacements": [
+    {
+      "from": "lav_150",
+      "to": "xm800t_law",
+      "edge_type": "branch",
+      "new_from": "m113_acav",
+      "new_to": "xm800t_law",
+      "reason": "2026-10-04 in-game Sophie Wölfli tree shows XM800T LAW branching from M113 ACAV, not LAV-150."
+    }
+  ],
+  "verified_edges": [
+    {
+      "from": "dragoon_300_lfv_90",
+      "to": "lav_300",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m113_acav",
+      "to": "lav_300",
+      "edge_type": "branch"
+    },
+    {
+      "from": "lav_150",
+      "to": "m113_acav",
+      "edge_type": "branch"
+    },
+    {
+      "from": "b1_centauro_105",
+      "to": "m1128_stryker_mgs",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_90_ii",
+      "to": "9910",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m113_acav",
+      "to": "wiesel_1_tow",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv510_warrior_milan",
+      "to": "wiesel_1_hot",
+      "edge_type": "branch"
+    },
+    {
+      "from": "b1_centauro_105",
+      "to": "wiesel_1_hot",
+      "edge_type": "branch"
+    },
+    {
+      "from": "leopard_1a5",
+      "to": "lav_600",
+      "edge_type": "branch"
+    },
+    {
+      "from": "erc_90_f4",
+      "to": "lav_600",
+      "edge_type": "normal"
+    },
+    {
+      "from": "lav_300",
+      "to": "lav_600",
+      "edge_type": "normal"
+    },
+    {
+      "from": "palmaria",
+      "to": "b1_centauro_105",
+      "edge_type": "branch"
+    },
+    {
+      "from": "lav_600",
+      "to": "b1_centauro_105",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmp_3m",
+      "to": "bmp_3m_dragun_125",
+      "edge_type": "normal"
+    },
+    {
+      "from": "wiesel_1_tow",
+      "to": "fv438_swingfire",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmd_1p",
+      "to": "bmp_2",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmp_1",
+      "to": "bmp_2",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bmp_3",
+      "to": "bmp_3m",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bmp_2",
+      "to": "bmp_3",
+      "edge_type": "normal"
+    },
+    {
+      "from": "fv721_fox",
+      "to": "vbl_ingwe",
+      "edge_type": "normal"
+    },
+    {
+      "from": "vbl",
+      "to": "fv721_fox",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmp_3",
+      "to": "fv721_fox",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv107_scimitar",
+      "to": "bmp_1",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv438_swingfire",
+      "to": "fv510_warrior_milan",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m113_acav",
+      "to": "xm800t_law",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv107_scimitar",
+      "to": "lav_150",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bmp_1",
+      "to": "bmp_1p",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv510_warrior_milan",
+      "to": "bradley_fighting_vehicle",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m41_walker_bulldog",
+      "to": "dragoon_300_lfv_90",
+      "edge_type": "normal"
+    },
+    {
+      "from": "dragoon_300_lfv_90",
+      "to": "erc_90_f4",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_72a",
+      "to": "leopard_2av",
+      "edge_type": "normal"
+    },
+    {
+      "from": "leopard_1a5",
+      "to": "leopard_2av",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m60_patton",
+      "to": "m60a1_patton",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m60_patton",
+      "to": "m60a3_patton",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m48_patton",
+      "to": "m60_patton",
+      "edge_type": "normal"
+    },
+    {
+      "from": "merkava_mk_1",
+      "to": "m1_abrams",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m60a2_starship",
+      "to": "m1_abrams",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m60a3_patton",
+      "to": "m1_abrams",
+      "edge_type": "normal"
+    },
+    {
+      "from": "magach_5",
+      "to": "m60a2_starship",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m60a1_patton",
+      "to": "m60a2_starship",
+      "edge_type": "normal"
+    },
+    {
+      "from": "leopard_2av",
+      "to": "leopard_2",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m1a1_abrams",
+      "to": "leopard_evolution",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m1_abrams",
+      "to": "m1a1_abrams",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m1a1_abrams",
+      "to": "m1a2_abrams",
+      "edge_type": "branch"
+    },
+    {
+      "from": "oa_82_jarmila_2",
+      "to": "vbl",
+      "edge_type": "normal"
+    },
+    {
+      "from": "xm800t_law",
+      "to": "vbl",
+      "edge_type": "normal"
+    },
+    {
+      "from": "vbl_ingwe",
+      "to": "vbr",
+      "edge_type": "normal"
+    },
+    {
+      "from": "tiran_6",
+      "to": "t_64a_mod_1969",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_55",
+      "to": "t_64a_mod_1969",
+      "edge_type": "normal"
+    },
+    {
+      "from": "fv101_scorpion",
+      "to": "fv101_scorpion_90",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m551_sheridan",
+      "to": "begleitpanzer_57",
+      "edge_type": "branch"
+    },
+    {
+      "from": "sho_t_kal_dalet",
+      "to": "m551_sheridan",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv101_scorpion",
+      "to": "m551_sheridan",
+      "edge_type": "branch"
+    },
+    {
+      "from": "pt_85",
+      "to": "t92_lt",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bmd_2",
+      "to": "bmd_4",
+      "edge_type": "normal"
+    },
+    {
+      "from": "begleitpanzer_57",
+      "to": "bmd_4",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmd_1",
+      "to": "bmd_2",
+      "edge_type": "branch"
+    },
+    {
+      "from": "pt_85",
+      "to": "t_55",
+      "edge_type": "branch"
+    },
+    {
+      "from": "stingray",
+      "to": "stingray_2",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmd_4",
+      "to": "bmd_2m",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t92_lt",
+      "to": "fv101_scorpion",
+      "edge_type": "branch"
+    },
+    {
+      "from": "stingray_2",
+      "to": "m8_105_buford",
+      "edge_type": "normal"
+    },
+    {
+      "from": "type_80_ii",
+      "to": "t_72_ural",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_62",
+      "to": "t_72_ural",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m551_sheridan",
+      "to": "stingray",
+      "edge_type": "branch"
+    },
+    {
+      "from": "chieftain_mk_10",
+      "to": "chieftain_900",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t92_lt",
+      "to": "chieftain_mk_2",
+      "edge_type": "branch"
+    },
+    {
+      "from": "chieftain_mk_2",
+      "to": "centurion_mk_11",
+      "edge_type": "normal"
+    },
+    {
+      "from": "centurion_mk_11",
+      "to": "chieftain_mk_10",
+      "edge_type": "normal"
+    },
+    {
+      "from": "pt_85",
+      "to": "t_62",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_64a_mod_1969",
+      "to": "t_64a_mod_1976",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_64a_mod_1976",
+      "to": "t_72a",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_72_ural",
+      "to": "t_72a",
+      "edge_type": "branch"
+    },
+    {
+      "from": "2s3_akatsiya",
+      "to": "challenger_1",
+      "edge_type": "branch"
+    },
+    {
+      "from": "chieftain_900",
+      "to": "challenger_1",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t_80bvm",
+      "to": "object_292",
+      "edge_type": "normal"
+    },
+    {
+      "from": "type_59",
+      "to": "type_69",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_90",
+      "to": "ramka_99",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bmd_2m",
+      "to": "ramka_99",
+      "edge_type": "normal"
+    },
+    {
+      "from": "challenger_1",
+      "to": "al_hussein_hybrid",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t_80u",
+      "to": "t_80um_1_bars",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_90",
+      "to": "t_90a_vladimir",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_80um_1_bars",
+      "to": "t_80bvm",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t_80b",
+      "to": "t_80u",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t_64a_mod_1969",
+      "to": "t_80",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_72b",
+      "to": "t_90",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t_80u",
+      "to": "t_90",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_72_ural",
+      "to": "t_72b",
+      "edge_type": "branch"
+    },
+    {
+      "from": "pt_85",
+      "to": "bmd_1",
+      "edge_type": "branch"
+    },
+    {
+      "from": "t_80",
+      "to": "t_80b",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t_64a_mod_1976",
+      "to": "t_80b",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bmd_1",
+      "to": "bmd_1p",
+      "edge_type": "branch"
+    },
+    {
+      "from": "fv101_scorpion_90",
+      "to": "bmd_1p",
+      "edge_type": "normal"
+    },
+    {
+      "from": "zbl_08",
+      "to": "st1",
+      "edge_type": "normal"
+    },
+    {
+      "from": "griffin_50mm",
+      "to": "m113_hellfire",
+      "edge_type": "normal"
+    },
+    {
+      "from": "type_69",
+      "to": "m108",
+      "edge_type": "branch"
+    },
+    {
+      "from": "kto_rosomak",
+      "to": "kto_rosomak_m1m",
+      "edge_type": "normal"
+    },
+    {
+      "from": "magach_6b_gal_batash",
+      "to": "bvp_m2_skcz_sakal",
+      "edge_type": "branch"
+    },
+    {
+      "from": "ot_64_cobra",
+      "to": "bvp_m2_skcz_sakal",
+      "edge_type": "normal"
+    },
+    {
+      "from": "bmp_1p",
+      "to": "bvp_m2_skcz_sakal",
+      "edge_type": "normal"
+    },
+    {
+      "from": "ot_65a_vydra",
+      "to": "ot_64_cobra",
+      "edge_type": "branch"
+    },
+    {
+      "from": "magach_5",
+      "to": "oa_82_jarmila_2",
+      "edge_type": "branch"
+    },
+    {
+      "from": "ot_65a_vydra",
+      "to": "oa_82_jarmila_2",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_59",
+      "to": "ot_65a_vydra",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_90_ii",
+      "to": "kto_rosomak",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bvp_m2_skcz_sakal",
+      "to": "kto_rosomak",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m109",
+      "to": "palmaria",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m108",
+      "to": "m109",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m108",
+      "to": "2s1_gvozdika",
+      "edge_type": "branch"
+    },
+    {
+      "from": "plz_89",
+      "to": "m109a6_paladin",
+      "edge_type": "normal"
+    },
+    {
+      "from": "palmaria",
+      "to": "m109a6_paladin",
+      "edge_type": "branch"
+    },
+    {
+      "from": "2s3_akatsiya",
+      "to": "plz_89",
+      "edge_type": "branch"
+    },
+    {
+      "from": "2s1_gvozdika",
+      "to": "2s3_akatsiya",
+      "edge_type": "normal"
+    },
+    {
+      "from": "type_80_ii",
+      "to": "type_85_iim",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_79",
+      "to": "type_85_iim",
+      "edge_type": "normal"
+    },
+    {
+      "from": "type_85_iim",
+      "to": "type_90_ii",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_85_iim",
+      "to": "type_96",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_59",
+      "to": "type_79",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_96",
+      "to": "type_96a",
+      "edge_type": "normal"
+    },
+    {
+      "from": "9910",
+      "to": "type_99",
+      "edge_type": "normal"
+    },
+    {
+      "from": "sho_t_kal_dalet",
+      "to": "type_80_ii",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_69",
+      "to": "type_80_ii",
+      "edge_type": "branch"
+    },
+    {
+      "from": "bvp_m2_skcz_sakal",
+      "to": "zbl_08",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_96a",
+      "to": "vt4",
+      "edge_type": "normal"
+    },
+    {
+      "from": "tank_test_bed",
+      "to": "m48_gau_8_avenger",
+      "edge_type": "normal"
+    },
+    {
+      "from": "t249_vigilante",
+      "to": "m8_mgm_166",
+      "edge_type": "normal"
+    },
+    {
+      "from": "2s25_sprut_sd",
+      "to": "9p163_3_kornet_em",
+      "edge_type": "branch"
+    },
+    {
+      "from": "leclerc_prototype",
+      "to": "griffin_50mm",
+      "edge_type": "branch"
+    },
+    {
+      "from": "nm142",
+      "to": "2s25_sprut_sd",
+      "edge_type": "normal"
+    },
+    {
+      "from": "2s25_sprut_sd",
+      "to": "k21_xc_8",
+      "edge_type": "branch"
+    },
+    {
+      "from": "m1a2_abrams",
+      "to": "tank_test_bed",
+      "edge_type": "normal"
+    },
+    {
+      "from": "m50_super_sherman",
+      "to": "tiran_6",
+      "edge_type": "normal"
+    },
+    {
+      "from": "tiran_6",
+      "to": "sho_t_kal_dalet",
+      "edge_type": "branch"
+    },
+    {
+      "from": "merkava_mk_1",
+      "to": "merkava_mk_2b",
+      "edge_type": "branch"
+    },
+    {
+      "from": "sho_t_kal_dalet",
+      "to": "merkava_mk_1",
+      "edge_type": "branch"
+    },
+    {
+      "from": "magach_6b_gal_batash",
+      "to": "magach_7c",
+      "edge_type": "branch"
+    },
+    {
+      "from": "tiran_6",
+      "to": "magach_5",
+      "edge_type": "branch"
+    },
+    {
+      "from": "magach_7c",
+      "to": "merkava_mk_3_barak_zoher",
+      "edge_type": "normal"
+    },
+    {
+      "from": "merkava_mk_2b",
+      "to": "merkava_mk_3_barak_zoher",
+      "edge_type": "normal"
+    },
+    {
+      "from": "merkava_mk_4",
+      "to": "merkava_mk_4m_barak",
+      "edge_type": "normal"
+    },
+    {
+      "from": "merkava_mk_3_barak_zoher",
+      "to": "merkava_mk_4",
+      "edge_type": "normal"
+    },
+    {
+      "from": "amx_40",
+      "to": "c13_tua",
+      "edge_type": "normal"
+    },
+    {
+      "from": "amx_30b2_brenus",
+      "to": "amx_13_dca",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_16_mcv",
+      "to": "harimau",
+      "edge_type": "normal"
+    },
+    {
+      "from": "amx_30b2_brenus",
+      "to": "amx_40",
+      "edge_type": "branch"
+    },
+    {
+      "from": "c13_tua",
+      "to": "leclerc_prototype",
+      "edge_type": "branch"
+    },
+    {
+      "from": "vcac_mephisto",
+      "to": "leclerc",
+      "edge_type": "normal"
+    },
+    {
+      "from": "leclerc_prototype",
+      "to": "c1_ariete",
+      "edge_type": "branch"
+    },
+    {
+      "from": "leclerc",
+      "to": "leclerc_t4",
+      "edge_type": "normal"
+    },
+    {
+      "from": "k_153c_raybolt",
+      "to": "k2_black_panther",
+      "edge_type": "normal"
+    },
+    {
+      "from": "as21_redback",
+      "to": "k2_black_panther",
+      "edge_type": "normal"
+    },
+    {
+      "from": "amx_50",
+      "to": "of_40",
+      "edge_type": "branch"
+    },
+    {
+      "from": "amx_50",
+      "to": "amx_30b2_brenus",
+      "edge_type": "branch"
+    },
+    {
+      "from": "harimau",
+      "to": "as21_redback",
+      "edge_type": "branch"
+    },
+    {
+      "from": "c13_tua",
+      "to": "type_16_mcv",
+      "edge_type": "branch"
+    },
+    {
+      "from": "type_90_ii",
+      "to": "type_16_mcv",
+      "edge_type": "branch"
+    },
+    {
+      "from": "harimau",
+      "to": "k_153c_raybolt",
+      "edge_type": "branch"
+    },
+    {
+      "from": "leclerc_prototype",
+      "to": "vcac_mephisto",
+      "edge_type": "branch"
+    }
+  ]
+}

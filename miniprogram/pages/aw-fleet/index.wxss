@@ -1,0 +1,48 @@
+@import "../../utils/aw/theme.wxss";
+.form-backdrop { position:fixed; top:0; right:0; bottom:0; left:0; background:rgba(28,26,30,.45); z-index:20; }
+.form { box-sizing:border-box; position:fixed; bottom:0; left:0; right:0; padding:28rpx 24rpx calc(28rpx + env(safe-area-inset-bottom)); border-radius:24rpx 24rpx 0 0; background:#fbfafc; z-index:21; }
+.player.selected { border-color:#ea7428; }
+.role-sort.dragging { border-color:#ea7428; }
+.drag-handle { padding:22rpx; color:#6b6370; font-size:34rpx; }
+.member-name { flex:1; min-width:0; }
+.archive-toggle { margin-top:16rpx; }
+.form { overflow-y:auto; }
+.member-buttons { display:flex; flex-wrap:wrap; gap:12rpx; margin:16rpx 0; }
+.member-buttons .choice { flex:none; min-width:120rpx; }
+.player { min-height:88rpx; }
+.fleet-status .muted { margin-top:8rpx; }
+
+/* Vehicle text leads; controls have compact visible boxes. */
+.vehicle-entry .tag { font-size:22rpx; padding:10rpx 16rpx; margin:0 10rpx 0 0; }
+.vehicle-entry .vehicle-toolbar { margin-top:0; }
+.role-sort { padding:8rpx 12rpx; }
+.role-row { display:flex; align-items:center; gap:4rpx; flex-wrap:wrap; }
+.role-title { flex:1; min-width:128rpx; }
+.role-title .card-title { font-size:28rpx; }
+.drag-handle { flex:none; display:flex; align-items:center; justify-content:center; width:44rpx; height:44rpx; box-sizing:border-box; padding:0; font-size:28rpx; }
+.role-actions { display:flex; align-items:center; justify-content:flex-end; margin-left:auto; flex:none; }
+.role-actions .quiet-control { padding:8rpx; }
+.role-description { padding:0 12rpx 10rpx; margin-left:44rpx; }
+.undefined-group { margin:26rpx 0; }
+.undefined-toggle { display:flex; justify-content:space-between; width:100%; }
+
+.role-group,.member-detail { margin:24rpx 0; }
+.role-group .vehicle-card:last-child { margin-bottom:0; }
+.role-group .vehicle-card,.undefined-group .vehicle-card,.member-undefined .vehicle-card { box-shadow:none; }
+.member-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6rpx 12rpx; }
+.member-header .actions { margin:0; }
+.member-header .member-count { flex-basis:100%; }
+.member-undefined .vehicle-card:last-child,.undefined-group .vehicle-card:last-child { margin-bottom:0; }
+.member-search .ui-field,.planning-selector .ui-field { height:72rpx; min-height:72rpx; }
+.member-buttons { margin:10rpx 0 0; }
+.role-tools .muted { margin-top:8rpx; }
+.section-heading { padding-top:12rpx; padding-bottom:12rpx; }
+.section-heading .section-title { margin:0; }
+.section-heading .ui-button { margin-top:10rpx; }
+.member-token .ui-button { margin-top:12rpx; }
+.overview-grid { display:flex; flex-wrap:wrap; gap:18rpx; margin:18rpx 0; }
+.overview-grid > .role-group { flex:1 1 340px; min-width:0; margin:0; }
+.field-required,.field-error { color:#cf3a36; }
+.field-error { font-size:21rpx; margin-top:6rpx; }
+
+@import "../../utils/ui/components.wxss";

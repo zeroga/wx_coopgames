@@ -1,0 +1,54 @@
+const navigation = require('../../utils/aw/navigation')
+const catalog = require('../../utils/aw/catalog')
+const store = require('../../utils/aw/store')
+const updates = require('../../utils/aw/catalog-update')
+const presentation = require('../../utils/aw/vehicle-presentation')
+function fresh() { return { query: '', tiers: [], classes: [], dealers: [], nations: [], capabilities: [], ammoTypes: [], ammoTraits: [], acquisition: [], factory: false, penetration: '', speed: '', view: '', camo: '', premium: '', researchable: '' } }
+Page({
+  data: { prerequisiteForm:null, planModes:{}, syncError:'', filters: fresh(), results: [], selected: [], filterTab: '', filterTabs: [{key:'base',name:'等级 / 车型'},{key:'cap',name:'能力'},{key:'ammo',name:'武器 / 弹药'},{key:'perf',name:'性能'},{key:'get',name:'获取方式'}], limit: 30, count: 0, loading: false, error: '', source: '', booleanOptions: ['不限', '是', '否'], premiumIndex: 0, researchIndex: 0 },
+  configurePrerequisites(e){const d=e.detail&&e.detail.vehicleId?{vehicle:e.detail.vehicleId,member:e.detail.memberId}:e.currentTarget.dataset;this.setData({prerequisiteForm:{vehicleId:d.vehicle||d.id||this.data.id,memberId:d.member||store.currentMember()}})},
+  planLayout(e){const id=e.detail.vehicleId,mode=e.detail.mode;if(this.data.planModes[id]!==mode)this.setData({['planModes.'+id]:mode})},
+  showAllPlans(e){const label=this.selectComponent('#vehicle-label-'+e.currentTarget.dataset.id);if(label)label.showPlans()},
+  closePrerequisites(){this.setData({prerequisiteForm:null});this.refresh()},
+  prerequisitesSaved(){this.closePrerequisites()},
+  onLoad() { updates.init();this.buildFilterOptions(); this.refresh() },
+  async onShow() { if(this.data.prerequisiteForm)return;this.refresh();await Promise.all([updates.check(false).catch(()=>{}),(async()=>{try{await store.refreshIfClean();this.setData({syncError:''})}catch(e){this.setData({syncError:'未能读取车队最新信息：'+e.message})}})()]);this.buildFilterOptions();this.refresh() },
+  buildFilterOptions() {
+    const options=catalog.filterOptions(),caps=options.capabilities
+    this.optionsRevision=catalog.revision
+    this.setData({ groups:options.groups,
+      capabilityGroups:['防护','侦察 / 支援','车辆特性','武器能力'].map(name=>({name,options:caps.filter(c=>c.group===name)})),
+      ammoTypes:options.ammoTypes,ammoTraits:options.ammoTraits,acquisitions:options.acquisitions })
+  },
+  refresh() {
+    if(this.optionsRevision!==catalog.revision)this.buildFilterOptions()
+    const f = this.data.filters, s = store.load(), all = catalog.filter(f)
+    const choices = {}; this.data.groups && this.data.groups.forEach(g=>g.options.forEach(o=>{choices[g.key+':'+o.value]=o.name}))
+    ;(this.data.capabilityGroups||[]).forEach(g=>g.options.forEach(o=>{choices['capabilities:'+o.value]=o.name}))
+    ;['ammoTypes','ammoTraits'].forEach(key=>(this.data[key]||[]).forEach(o=>{choices[key+':'+o.value]=o.name}))
+    ;(this.data.acquisitions||[]).forEach(o=>{choices['acquisition:'+o.value]=o.name})
+    const selected = []; if(f.factory)selected.push({key:'factory',value:true,name:'出厂能力'})
+    ;['tiers','classes','dealers','nations','capabilities','ammoTypes','ammoTraits','acquisition'].forEach(key=>f[key].forEach(value=>selected.push({key,value,name:choices[key+':'+value]||value})))
+    ;[['penetration','穿深'],['speed','速度'],['view','视野'],['camo','隐蔽']].forEach(([key,name])=>{if(f[key] !== '') selected.push({key,value:f[key],name:name+' ≥ '+f[key]})})
+    ;[['premium','高级车'],['researchable','当前可研发']].forEach(([key,name])=>{if(f[key]) selected.push({key,value:f[key],name:name+'：'+(f[key]==='yes'?'是':'否')})})
+    const selection = {}; selected.forEach(x=>{selection[x.key+':'+x.value]=true})
+    this.setData({catalogRevision:catalog.revision,  count: all.length, selected, selection, results: all.slice(0,this.data.limit).map(v=>{
+      const c = catalog.card(v,f), summaries = s.members.length ? fleetSummary(s,v.id) : []
+      return Object.assign(c,{ team: summaries.slice(0,2).map(x=>Object.assign({},x,{color:presentation.memberColor(s,x.memberId)})), extra: Math.max(0,summaries.length-2), markers:presentation.markers(s,summaries), plans:summaries })
+    }), catalogInfo:updates.info(), source: '原始资料核对时间：'+catalog.checkedAt.slice(0,10) })
+  },
+  input(e) { const key=e.currentTarget.dataset.key; this.setData({ ['filters.'+key]:e.detail.value, limit:30 }); this.refresh() },
+  toggle(e) { const {key,value}=e.currentTarget.dataset, values=this.data.filters[key].slice(), i=values.indexOf(value); if(i>=0) values.splice(i,1); else values.push(value); this.setData({['filters.'+key]:values,limit:30});this.refresh() },
+  remove(e) { const {key,value}=e.currentTarget.dataset; if(Array.isArray(this.data.filters[key])) this.toggle(e); else {this.setData({['filters.'+key]:key==='factory'?false:'', premiumIndex:key==='premium'?0:this.data.premiumIndex,researchIndex:key==='researchable'?0:this.data.researchIndex});this.refresh()} },
+  clear() { this.setData({filters:fresh(),premiumIndex:0,researchIndex:0,limit:30}); this.refresh() },
+  factory(e) { this.setData({'filters.factory':e.currentTarget.dataset.value === 'yes',limit:30});this.refresh() },
+  bool(e) { const key=e.currentTarget.dataset.key,i=Number(e.currentTarget.dataset.value);this.setData({['filters.'+key]:['','yes','no'][i],[key==='premium'?'premiumIndex':'researchIndex']:i,limit:30});this.refresh() },
+  showFilters(e) { const tab=e.currentTarget.dataset.tab;this.setData({filterTab:this.data.filterTab===tab?'':tab}) },
+  switchFilters(e) { this.setData({filterTab:e.currentTarget.dataset.tab}) },
+  closeFilters() { this.setData({filterTab:''}) },
+  open(e) { wx.navigateTo({url:'/pages/aw-vehicle/index?id='+e.currentTarget.dataset.id}) },
+  awHome(){navigation.visit('pages/aw-home/index')},
+  onReachBottom() { this.setData({limit:this.data.limit+30});this.refresh() },
+
+})
+function fleetSummary(s,id) { return require('../../utils/aw/fleet').summary(s,id) }

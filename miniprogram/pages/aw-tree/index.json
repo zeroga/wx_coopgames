@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AW · 科技树",
+  "usingComponents": {
+    "aw-prerequisites": "../../components/aw-prerequisites/index",
+    "aw-vehicle-label": "/components/aw-vehicle-label/index"
+  }
+}

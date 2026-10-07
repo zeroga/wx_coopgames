@@ -1,0 +1,7 @@
+@import "../../utils/aw/theme.wxss";
+.module-entry { display:flex; align-items:center; justify-content:space-between; min-height:120rpx; }
+.entry-arrow { width:36rpx; height:36rpx; margin-left:20rpx; flex:none; }
+.module-grid { display:flex; flex-wrap:wrap; gap:18rpx; }
+.module-grid .module-entry { flex:1 1 320px; min-width:0; margin:0; }
+
+@import "../../utils/ui/components.wxss";

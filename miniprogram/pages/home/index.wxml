@@ -5,12 +5,12 @@
     <view class="desc">共用进度、车辆分配与游玩顺序。云端是主存档。</view>
   </view>
   <view class="games">
-    <view wx:for="{{games}}" wx:key="key" class="game card {{item.enabled ? '' : 'disabled'}}" bindtap="openGame" data-key="{{item.key}}">
+    <view wx:for="{{games}}" wx:key="key" class="ui-card game card {{item.enabled ? '' : 'disabled'}}" bindtap="openGame" data-key="{{item.key}}">
       <view>
         <view class="game-name">{{item.name}}</view>
         <view class="game-sub">{{item.subtitle}}</view>
       </view>
-      <view class="arrow">{{item.enabled ? '›' : '预留'}}</view>
+      <image wx:if="{{item.enabled}}" class="arrow" src="/assets/icons/chevron-right.svg"/><text wx:else="" class="disabled-label">预留</text>
     </view>
   </view>
 </view>

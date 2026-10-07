@@ -1,0 +1,7 @@
+[functions.aw-catalog]
+# This function validates the publishable apikey in its handler.
+verify_jwt = false
+
+[functions.aw-catalog-maintenance]
+# Handler validates publishable apikey + SQL-managed, hashed task KEY.
+verify_jwt = false
