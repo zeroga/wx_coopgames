@@ -7,11 +7,12 @@ const tokenPlan = require('../../utils/aw/token-plan')
 const updates = require('../../utils/aw/catalog-update')
 Component({
   properties: { vehicleId: String },
-  data: { members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentHeight:410,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
+  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentHeight:410,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
   lifetimes: { attached() { this.prepare() }, detached() { updates.release(this) } },
   observers: { 'vehicleId'() { if (this.properties.vehicleId) this.prepare() } },
   methods: {
     prepare() {
+      this.setData({registered:false,removeLabel:'',pendingRemoval:false})
       updates.hold(this)
       this.keyboard({detail:{height:0}})
       const s = store.load(), current = store.currentMember()
@@ -22,6 +23,7 @@ Component({
       const s = store.load(), m = this.data.members[this.data.playerIndex]
       if (!m) { this.setData({ rows: [], note: '', editable:false, vehicleName:(catalog.byId[this.properties.vehicleId] || {}).name || '' }); return }
       const asset = fleet.getAsset(s, m.id, this.properties.vehicleId)
+      this.setData({registered:!!(asset && asset.explicit),removeLabel:asset && asset.status === 'owned' ? '取消已获取' : '取消计划'})
       const rows = s.roles.slice().sort((a, b) => a.order - b.order).map(r => {
         const a = asset && s.assignments[fleet.assignmentKey(asset.id, r.id)]
         const manual = a && a.source !== 'tech_tree'
@@ -59,7 +61,7 @@ Component({
     editRole(e) { if(this.data.saving)return; const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);if(r)this.setData({roleForm:fleet.clone(r)}) },
     roleField(e) { this.setData({['roleForm.'+e.currentTarget.dataset.key]:e.detail.value,fieldError:''}) },
     cancelRole() { this.setData({roleForm:null,fieldError:''}) },
-    async retrySync(){this.setData({saving:true});try{await store.push();this.setData({syncError:''});this.refreshRoles()}catch(e){this.setData({syncError:e.message})}finally{this.setData({saving:false})}},
+    async retrySync(){if(this.data.saving)return;this.setData({saving:true});try{await store.push();this.setData({syncError:''});if(this.data.pendingRemoval)this.removed();else this.refreshRoles()}catch(e){this.setData({syncError:e.message})}finally{this.setData({saving:false})}},
     refreshRoles() {
       const draft=fleet.clone(this.data.rows),statusIndex=this.data.statusIndex,note=this.data.note,tokenRewards=this.data.tokenRewards,tokenAcquisition=this.data.tokenAcquisition,unlockPathId=this.data.unlockPathId
       this.loadPlayer()
@@ -103,8 +105,30 @@ Component({
     unlockPath(e) { if(!this.data.saving)this.setData({unlockPathId:e.currentTarget.dataset.id}) },
     cancel() { if(!this.data.saving){updates.release(this);this.triggerEvent('cancel')} },
     manage() { updates.release(this);this.triggerEvent('cancel'); navigation.visit('pages/aw-fleet/index',{tab:'players'}) },
+    removed() { updates.release(this);this.triggerEvent('saved');wx.showToast({title:store.syncInfo().ready?'已取消并同步':'已取消登记',icon:'success'}) },
+    async remove() {
+      if(this.data.saving || this.data.pendingRemoval)return
+      this.setData({saving:true,fieldError:'',syncError:''})
+      try {
+        const memberId=this.data.memberId,vehicleId=this.properties.vehicleId
+        if(!store.canEdit(memberId))throw new Error('只能取消自己的车辆登记')
+        const asset=fleet.getAsset(store.load(),memberId,vehicleId)
+        if(!asset || !asset.explicit)return
+        const confirmed=await new Promise(resolve=>wx.showModal({title:asset.status==='owned'?'取消已获取登记？':'取消车辆计划？',content:'移除这台车的登记、备注、手工职责、前置配置及 Token 奖励和实际消耗记录。其他计划仍需要它时，会保留自动前置。',confirmText:'确认取消',success:r=>resolve(!!r.confirm),fail:()=>resolve(false)}))
+        if(!confirmed)return
+        if(this.data.memberId!==memberId || this.properties.vehicleId!==vehicleId)throw new Error('当前车辆或身份已切换，请重新操作')
+        if(!store.canEdit(memberId))throw new Error('只能取消自己的车辆登记')
+        const next=fleet.clone(store.load())
+        fleet.removeAsset(next,fleet.assetKey(memberId,vehicleId))
+        await store.saveAndSync(next)
+        this.removed()
+      } catch(e) {
+        if(e.localSaved){this.loadPlayer();this.setData({pendingRemoval:true,syncError:'已取消登记，尚未同步：'+e.message})}
+        else this.setData({fieldError:e.message})
+      } finally { this.setData({saving:false}) }
+    },
     async save() {
-      if(this.data.saving)return
+      if(this.data.saving || this.data.pendingRemoval)return
       this.setData({fieldError:'',syncError:''})
       try {
         const m = this.data.members[this.data.playerIndex]; if (!m || m.id !== store.currentMember() || !m.active) throw new Error('请先建立自己的成员档')

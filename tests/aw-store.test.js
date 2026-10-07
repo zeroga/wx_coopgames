@@ -35,6 +35,16 @@ test('publishing remaps every stable relation and separates member vehicles from
  assert.notEqual(id,'local');assert.equal(store.currentMember(),id);assert.match(store.memberInfo(id).code,/^AW-M-/);assert.match(store.remoteInfo().teamCode,/^AW-T-/)
  assert.equal(Object.values(m.data.assets)[0].status,'owned');assert(!('roles' in m.data));assert(!('assets' in t.data));assert.equal(Object.values(t.data.assignments)[0].assetId.split('~')[0],id);assert.equal(store.dirty,false)
 })
+
+test('cancellation sync removes personal asset and team duties across a fresh device',async()=>{
+  localMember();await store.createTeam('取消测试车队')
+  const id=store.currentMember(),mc=store.memberInfo(id).code,tc=store.remoteInfo().teamCode,vid=catalog.tables.vehicles[0].id
+  const next=fleet.clone(store.load());fleet.removeAsset(next,fleet.assetKey(id,vid));await store.saveAndSync(next)
+  assert.equal(members[id].data.assets[vid],undefined);assert.deepEqual(Object.values(teams)[0].data.assignments,{})
+  assert.equal(store.dirty,false)
+  memory.clear();store=freshStore();await store.openTeam(tc);await store.attachMember(mc)
+  assert.equal(fleet.getAsset(store.load(),id,vid),undefined);assert.equal(store.dirty,false)
+})
 test('member attachment is idempotent and one member can belong to independent teams',async()=>{
  localMember();await store.createTeam('Team A');const id=store.load().members[0].id,mc=store.memberInfo(id).code,first=Object.values(teams)[0]
  await store.attachMember(mc);await store.push();assert.equal(store.load().members.length,1)

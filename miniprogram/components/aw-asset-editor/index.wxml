@@ -17,6 +17,7 @@
     <block wx:else="">
       <view class="muted">我的成员档 · {{members[0].name}}</view>
       <view class="label">车辆状态</view><view class="segments"><button wx:for="{{statuses}}" wx:key="*this" class="ui-button choice {{statusIndex === index ? 'active' : ''}}" data-value="{{index}}" disabled="{{saving}}" bindtap="pickStatus">{{item}}</button></view>
+      <button wx:if="{{registered && !pendingRemoval}}" class="ui-button btn danger" disabled="{{saving}}" bindtap="remove">{{removeLabel}}</button>
       <view class="row between"><view class="label">车辆职责 · 可多选</view><text class="link" bindtap="roleManager">管理车队职责 <image class="inline-chevron" src="/assets/icons/chevron-right.svg"/></text></view>
       <view class="tags"><view wx:for="{{rows}}" wx:key="id" class="ui-option {{item.index ? 'selected' : ''}}" data-index="{{index}}" bindtap="toggleRole"><view class="ui-option-face"><image class="ui-choice-icon" src="/assets/icons/{{item.index ? 'check-white' : 'plus'}}.svg"/>{{item.name}}</view></view></view>
       <view wx:if="{{!rows.length}}" class="muted">可添加职责，也可以只保存车辆状态。</view>
@@ -32,5 +33,5 @@
     </block>
   </scroll-view>
   <view wx:if="{{showRoleManager}}" class="actions"><button class="ui-button btn ghost" disabled="{{saving}}" bindtap="roleManager">返回车辆草稿</button><button wx:if="{{roleForm}}" class="ui-button btn primary" loading="{{saving}}" disabled="{{saving}}" bindtap="saveRole">保存职责</button></view>
-  <view wx:else="" class="actions"><button class="ui-button btn ghost" disabled="{{saving}}" bindtap="cancel">取消</button><button class="ui-button btn primary" loading="{{saving}}" disabled="{{saving || !members.length || !editable}}" bindtap="save">保存车辆</button></view>
+  <view wx:else="" class="actions"><button class="ui-button btn ghost" disabled="{{saving}}" bindtap="cancel">关闭</button><button class="ui-button btn primary" loading="{{saving}}" disabled="{{saving || pendingRemoval || !members.length || !editable}}" bindtap="save">保存车辆</button></view>
 </view>

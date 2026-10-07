@@ -134,9 +134,19 @@ function deleteRole(s, roleId) {
   return recompute(s)
 }
 function removeAsset(s, assetId) {
+  const asset = s.assets[assetId]
+  if (!asset) return s
+  const automatic = Object.values(s.assets).filter(a => a.memberId === asset.memberId && !a.explicit).map(a => a.id)
+  delete s.routes[assetId]
+  const pathIds = new Set(catalog.rows('unlock_paths', 'vehicle_id', asset.vehicleId).map(p => p.id))
+  catalog.tables.unlock_requirements.filter(r => pathIds.has(r.unlock_path_id)).forEach(r => { delete s.confirmedRequirements[assetKey(asset.memberId, r.id)] })
+  catalog.rows('vehicle_token_rewards', 'vehicle_id', asset.vehicleId).forEach(r => { delete s.confirmedRewards[assetKey(asset.memberId, r.id)] })
   delete s.assets[assetId]
   Object.keys(s.assignments).forEach(k => { if (s.assignments[k].assetId === assetId) delete s.assignments[k] })
-  return recompute(s)
+  recompute(s)
+  // Keep prerequisites still needed by another target, but drop orphaned derived vehicles.
+  automatic.forEach(id => { if (s.assets[id] && !s.assets[id].explicit && !Object.values(s.assignments).some(a => a.assetId === id)) delete s.assets[id] })
+  return s
 }
 function planningTargets(s, memberId) {
   const formal=targets(s,memberId), seen=new Set(formal.map(t=>t.assetId))

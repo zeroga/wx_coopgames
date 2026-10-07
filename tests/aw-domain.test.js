@@ -207,3 +207,44 @@ test('old explicit route survives migration while older unconfigured plans ignor
   assert.equal(fleet.resolveRoute(s,'m','D').nodes.length,1)
   s.routes[a.id]='pD';assert.equal(fleet.prerequisiteConfig(s,'m','D').mode,'known');assert.equal(fleet.resolveRoute(s,'m','D').nodes.length,4)
 })
+
+test('cancel planned or owned registration clears personal records and manual references, preserving peers',()=>{
+  data.vehicle_token_rewards.push({id:'rewardD',vehicle_id:'D',token_id:'token',quantity:1})
+  for(const status of ['planned','owned']){
+    const s=state();s.members.push({id:'peer',name:'队友',active:true,order:1})
+    fleet.saveAsset(s,'peer','D','owned','队友备注',[{roleId:'r',level:'primary'}])
+    const targetId=target(s,'D');target(s,'X','transition')
+    const a=fleet.getAsset(s,'m','D');a.status=status;a.note='撤销备注';a.tokenRewards={rewardD:'claimed'};a.tokenAcquisition='token';a.tokenUnlockPathId='pD'
+    s.routes[a.id]='pD';s.confirmedRewards['m~rewardD']=true;s.confirmedRequirements['m~rD']=true;s.confirmedRequirements['peer~rD']=true
+    s.dependencies.push({id:'manual',assignmentId:'m~X~r',targetId,source:'manual'})
+    const peer=JSON.stringify(fleet.getAsset(s,'peer','D'))
+    fleet.removeAsset(s,a.id)
+    assert.equal(fleet.getAsset(s,'m','D'),undefined)
+    assert.equal(s.routes[a.id],undefined);assert.equal(s.confirmedRewards['m~rewardD'],undefined);assert.equal(s.confirmedRequirements['m~rD'],undefined)
+    assert.equal(s.confirmedRequirements['peer~rD'],true);assert.equal(JSON.stringify(fleet.getAsset(s,'peer','D')),peer)
+    assert(!Object.values(s.assignments).some(x=>x.assetId===a.id))
+    assert(!s.dependencies.some(d=>d.assignmentId===targetId||d.targetId===targetId))
+    assert.equal(require('../miniprogram/utils/aw/archives').personal(s,'m').assets.D,undefined)
+  }
+})
+
+test('cancel target removes orphaned automatic prerequisites but preserves shared and explicit vehicles',()=>{
+  const s=state();target(s,'D');target(s,'E');fleet.saveAsset(s,'m','A','owned','保留',[])
+  fleet.removeAsset(s,'m~D')
+  assert.equal(fleet.getAsset(s,'m','C'),undefined)
+  assert.equal(fleet.getAsset(s,'m','A').status,'owned')
+  assert(fleet.getAsset(s,'m','B'));assert(s.dependencies.some(d=>d.assignmentId==='m~B~'&&d.targetId==='m~E~r'))
+  fleet.removeAsset(s,'m~E');assert.equal(fleet.getAsset(s,'m','B'),undefined)
+  assert.equal(fleet.getAsset(s,'m','A').note,'保留')
+})
+
+test('cancel owned prerequisite resets it to automatic planned without old rewards or route',()=>{
+  const s=state();target(s,'D');fleet.saveAsset(s,'m','C','owned','旧备注',[])
+  const a=fleet.getAsset(s,'m','C');a.tokenRewards={rewardC:'claimed'};s.routes[a.id]='pC';s.confirmedRequirements['m~rC']=true
+  fleet.removeAsset(s,a.id)
+  const automatic=fleet.getAsset(s,'m','C')
+  assert.equal(automatic.status,'planned');assert.equal(automatic.explicit,false);assert.equal(automatic.note,'');assert.equal(automatic.tokenRewards,undefined)
+  assert.equal(s.routes[a.id],undefined);assert.equal(s.confirmedRequirements['m~rC'],undefined)
+  assert.equal(require('../miniprogram/utils/aw/archives').personal(s,'m').assets.C,undefined)
+  assert.equal(fleet.memberPlan(s,'m').steps.find(n=>n.id==='C').owned,false)
+})
