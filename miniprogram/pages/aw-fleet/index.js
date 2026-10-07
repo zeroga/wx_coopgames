@@ -91,7 +91,7 @@ Page({
   editAsset(e){const member=e.currentTarget.dataset.member||this.data.memberId;if(member!==store.currentMember())return wx.showToast({title:'只能登记自己的车辆',icon:'none'});this.setData({editor:true,editVehicleId:e.currentTarget.dataset.id})},
   cancel(){this.setData({editor:false});this.refresh()},
   saved(){this.setData({editor:false});this.refresh()},
-  removeAsset(e){const id=e.currentTarget.dataset.asset;if((store.load().assets[id]||{}).memberId!==store.currentMember())return error(new Error('只能移除自己的车辆'));wx.showModal({title:'移除我的车辆？',content:'移除车辆登记、备注、手工职责、前置配置及 Token 奖励和实际消耗记录。其他计划仍需要它时，会保留自动前置。',success:r=>{if(r.confirm)this.mutate(s=>fleet.removeAsset(s,id))}})},
+  removeAsset(e){const id=e.currentTarget.dataset.asset;if((store.load().assets[id]||{}).memberId!==store.currentMember())return error(new Error('只能移除自己的车辆'));wx.showModal({title:'移除我的车辆？',content:'移除“'+((catalog.byId[(store.load().assets[id]||{}).vehicleId]||{}).name||'该车辆')+'”的登记、备注、手工职责、前置配置及 Token 奖励和实际消耗记录。其他计划仍需要它时，会保留自动前置。',success:r=>{if(r.confirm)this.mutate(s=>fleet.removeAsset(s,id))}})},
   tree(e){navigation.visit('pages/aw-tree/index',{id:e.currentTarget.dataset.id})},
   detail(e){navigation.visit('pages/aw-vehicle/index',{id:e.currentTarget.dataset.id})},
   addVehicle(){navigation.visit('pages/aw-catalog/index')},

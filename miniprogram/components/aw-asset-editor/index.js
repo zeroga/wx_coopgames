@@ -9,8 +9,9 @@ const sheetLayout = require('../../utils/aw/sheet-layout')
 Component({
   options:{virtualHost:true},
   properties: { vehicleId: String },
-  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',keyboardHeight:0,sheetHeight:560,contentLeft:0,contentWidth:0,contentTop:0,contentHeight:0,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
+  data: { registered:false, removeLabel:'', pendingRemoval:false, members: [], playerIndex: 0, statusIndex: 1, statuses: ['已拥有', '计划'], levels: ['主力', '备选', '过渡'], rows: [], note: '', saving: false, editable: true, vehicleName: '', identityName:'', memberCode:'', identityBusy:false, showRoleManager:false, roleForm:null,fieldError:'',syncError:'',focusedField:'',keyboardHeight:0,sheetHeight:560,contentLeft:0,contentWidth:0,contentTop:0,contentHeight:0,tokenRewards:[],tokenAcquisition:'unknown',unlockPathId:'',unlockPaths:[] },
   lifetimes: { attached() { this._detached=false;this.prepare() }, ready() { this.measureLayout() }, detached() { this._detached=true;updates.release(this) } },
+  pageLifetimes: { resize(e) { this.resize(e) } },
   observers: { 'vehicleId'() { if (this.properties.vehicleId) this.prepare() } },
   methods: {
     prepare() {
@@ -21,6 +22,7 @@ Component({
       const s = store.load(), current = store.currentMember()
       const members = s.members.filter(m => m.id === current && m.active)
       this.setData({ catalogRevision:catalog.revision, members, playerIndex:0, memberId:current }); this.loadPlayer()
+      this._vehicleBaseline=this.vehicleDraft()
     },
     loadPlayer() {
       const s = store.load(), m = this.data.members[this.data.playerIndex]
@@ -59,9 +61,9 @@ Component({
       const rows=fleet.clone(this.data.rows),row=rows[e.currentTarget.dataset.index]
       row.index=row.index?0:1;this.setData({rows})
     },
-    roleManager() { if(this.data.saving)return; this.setData({showRoleManager:!this.data.showRoleManager,roleForm:null,fieldError:''},()=>this.measureLayout()) },
-    newRole() { if(this.data.saving)return; this.setData({roleForm:{id:'',name:'',description:''}},()=>this.measureLayout()) },
-    editRole(e) { if(this.data.saving)return; const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);if(r)this.setData({roleForm:fleet.clone(r)},()=>this.measureLayout()) },
+    roleManager() { this.discardDraft(()=>this.setData({showRoleManager:!this.data.showRoleManager,roleForm:null,fieldError:''},()=>this.measureLayout()),true) },
+    newRole() { this.discardDraft(()=>{const form={id:'',name:'',description:''};this._roleBaseline=JSON.stringify(form);this.setData({roleForm:form},()=>this.measureLayout())},true) },
+    editRole(e) { this.discardDraft(()=>{const r=store.load().roles.find(x=>x.id===e.currentTarget.dataset.id);if(r){this._roleBaseline=JSON.stringify(r);this.setData({roleForm:fleet.clone(r)},()=>this.measureLayout())}},true) },
     roleField(e) { this.setData({['roleForm.'+e.currentTarget.dataset.key]:e.detail.value,fieldError:''}) },
     cancelRole() { this.setData({roleForm:null,fieldError:''},()=>this.measureLayout()) },
     async retrySync(){if(this.data.saving)return;this.setData({saving:true});try{await store.push();this.setData({syncError:''});if(this.data.pendingRemoval)this.removed();else this.refreshRoles()}catch(e){this.setData({syncError:e.message})}finally{this.setData({saving:false})}},
@@ -86,7 +88,8 @@ Component({
     },
     deleteRole(e) {
       const id=e.currentTarget.dataset.id
-      wx.showModal({title:'删除职责？',content:'移除该职责及车队关联，保留成员车辆。',success:async r=>{
+      const role=store.load().roles.find(r=>r.id===id)
+      wx.showModal({title:'删除职责？',content:'移除职责“'+(role&&role.name||'该职责')+'”及全车队关联，保留成员车辆。',success:async r=>{
         if(!r.confirm)return
         try{const next=fleet.clone(store.load());fleet.deleteRole(next,id);await this.syncRoles(next)}
         catch(e){wx.showModal({title:'无法删除职责',content:e.message,showCancel:false})}
@@ -103,10 +106,23 @@ Component({
     pickLevel(e) { if(this.data.saving)return; const rows = fleet.clone(this.data.rows); rows[e.currentTarget.dataset.index].index = Number(e.currentTarget.dataset.value); this.setData({ rows }) },
     pickTargets(e) { if(this.data.saving)return; const rows = fleet.clone(this.data.rows), row = rows[e.currentTarget.dataset.index]; row.targets.forEach(t => { t.checked = e.detail.value.includes(t.id) }); this.setData({ rows }) },
     blockTouch() {},
+    focusField(e) { this._focusedField=e.currentTarget.id;this.revealFocusedField() },
+    blurField() { this._focusedField='';this.setData({focusedField:''}) },
+    revealFocusedField() {
+      if(!this._focusedField || this._detached)return
+      this.setData({focusedField:''},()=>this.setData({focusedField:this._focusedField}))
+    },
     keyboard(e) {
       // Use the viewport captured before focus; native keyboard events can arrive after resize.
       const info=this._windowInfo||{windowHeight:680,windowWidth:375},bounds=sheetLayout.frame(info,e.detail.height)
       this.setData(Object.assign(bounds,{contentHeight:0}),()=>this.measureLayout())
+    },
+    resize(e) {
+      // Ignore a keyboard-only resize; rotation/width changes need a fresh viewport.
+      const size=e.size||{},previous=this._windowInfo||{}
+      if(this.data.keyboardHeight && size.windowWidth===previous.windowWidth)return
+      this._windowInfo=Object.assign({},previous,size)
+      this.keyboard({detail:{height:this.data.keyboardHeight}})
     },
     measureLayout() {
       if(!this.createSelectorQuery || this._detached)return
@@ -121,7 +137,12 @@ Component({
           if(this._detached || revision!==this._layoutRevision)return
           const gap=8*((this._windowInfo||{}).windowWidth||375)/375
           const bounds=sheetLayout.contentBounds(rects[0],rects[1],rects[2],gap)
-          if(bounds)this.setData(bounds)
+          if(bounds)this.setData(bounds,()=>{
+            this.revealFocusedField()
+            // Child labels may have first measured while the scroll-view width was zero.
+            const refresh=()=>{if(!this._detached && revision===this._layoutRevision && this.selectAllComponents)this.selectAllComponents('aw-vehicle-label').forEach(label=>label.measureLayout())}
+            if(wx.nextTick)wx.nextTick(refresh);else refresh()
+          })
         })
       }
       if(wx.nextTick)wx.nextTick(measure);else measure()
@@ -129,7 +150,19 @@ Component({
     reward(e) { if(this.data.saving)return;const {id,state}=e.currentTarget.dataset;if(this.data.statusIndex&&state!=='unearned'){this.setData({fieldError:'先登记为已拥有，再记录满经验或已领取'});return}this.setData({tokenRewards:this.data.tokenRewards.map(r=>Object.assign({},r,r.id===id?{state}:{})),fieldError:''}) },
     acquisition(e) { if(this.data.saving)return;this.setData({tokenAcquisition:e.currentTarget.dataset.value,unlockPathId:e.currentTarget.dataset.value==='token'?this.data.unlockPathId:'',fieldError:''}) },
     unlockPath(e) { if(!this.data.saving)this.setData({unlockPathId:e.currentTarget.dataset.id}) },
-    cancel() { if(!this.data.saving){updates.release(this);this.triggerEvent('cancel')} },
+    vehicleDraft() {
+      const d=this.data
+      return JSON.stringify({statusIndex:d.statusIndex,note:d.note,tokenRewards:d.tokenRewards,tokenAcquisition:d.tokenAcquisition,unlockPathId:d.unlockPathId,roles:d.rows.filter(r=>r.index).map(r=>({id:r.id,index:r.index,targets:r.targets.filter(t=>t.checked).map(t=>t.id).sort()})).sort((a,b)=>a.id.localeCompare(b.id)),identityName:d.identityName,memberCode:d.memberCode})
+    },
+    discardDraft(action,roleOnly=false) {
+      if(this.data.saving || this.data.identityBusy || this._discarding)return
+      const roleDirty=this.data.roleForm && JSON.stringify(this.data.roleForm)!==this._roleBaseline
+      const vehicleDirty=!roleOnly && this._vehicleBaseline && this.vehicleDraft()!==this._vehicleBaseline
+      if(!roleDirty && !vehicleDirty){action();return}
+      this._discarding=true
+      wx.showModal({title:'放弃未保存草稿？',content:roleOnly?'当前职责修改尚未保存，放弃后返回车辆草稿。':'车辆或职责修改尚未保存，关闭将放弃这些草稿。已单独保存的职责会保留。',confirmText:'放弃草稿',cancelText:'继续编辑',confirmColor:'#1c1a1e',success:r=>{if(r.confirm && !this._detached && !this.data.saving)action()},complete:()=>{this._discarding=false}})
+    },
+    cancel() { this.discardDraft(()=>{updates.release(this);this.triggerEvent('cancel')}) },
     manage() { updates.release(this);this.triggerEvent('cancel'); navigation.visit('pages/aw-fleet/index',{tab:'players'}) },
     removed() { updates.release(this);this.triggerEvent('saved');wx.showToast({title:store.syncInfo().ready?'已取消并同步':'已取消登记',icon:'success'}) },
     async remove() {
@@ -140,7 +173,7 @@ Component({
         if(!store.canEdit(memberId))throw new Error('只能取消自己的车辆登记')
         const asset=fleet.getAsset(store.load(),memberId,vehicleId)
         if(!asset || !asset.explicit)return
-        const confirmed=await new Promise(resolve=>wx.showModal({title:asset.status==='owned'?'取消已获取登记？':'取消车辆计划？',content:'移除这台车的登记、备注、手工职责、前置配置及 Token 奖励和实际消耗记录。其他计划仍需要它时，会保留自动前置。',confirmText:'确认取消',success:r=>resolve(!!r.confirm),fail:()=>resolve(false)}))
+        const confirmed=await new Promise(resolve=>wx.showModal({title:asset.status==='owned'?'取消已获取登记？':'取消车辆计划？',content:'移除“'+this.data.vehicleName+'”的登记、备注、手工职责、前置配置及 Token 奖励和实际消耗记录。其他计划仍需要它时，会保留自动前置。',confirmText:'确认取消',success:r=>resolve(!!r.confirm),fail:()=>resolve(false)}))
         if(!confirmed)return
         if(this.data.memberId!==memberId || this.properties.vehicleId!==vehicleId)throw new Error('当前车辆或身份已切换，请重新操作')
         if(!store.canEdit(memberId))throw new Error('只能取消自己的车辆登记')
@@ -149,7 +182,7 @@ Component({
         await store.saveAndSync(next)
         this.removed()
       } catch(e) {
-        if(e.localSaved){this.loadPlayer();this.setData({pendingRemoval:true,syncError:'已取消登记，尚未同步：'+e.message})}
+        if(e.localSaved){this.loadPlayer();this._vehicleBaseline=this.vehicleDraft();this.setData({pendingRemoval:true,syncError:'已取消登记，尚未同步：'+e.message})}
         else this.setData({fieldError:e.message})
       } finally { this.setData({saving:false}) }
     },
@@ -169,7 +202,7 @@ Component({
         tokenPlan.setUnlock(asset,this.data.tokenAcquisition,this.data.unlockPathId)
         this.setData({saving:true});await store.saveAndSync(next)
         store.setCurrentMember(m.id); updates.release(this);this.triggerEvent('saved'); wx.showToast({ title: store.syncInfo().ready?'已保存并同步':'已保存本地', icon: 'success' })
-      } catch (e) { this.setData({fieldError:e.localSaved?'':e.message,syncError:e.localSaved?'已保存本地，同步未完成：'+e.message:''}) }
+      } catch (e) { if(e.localSaved)this._vehicleBaseline=this.vehicleDraft();this.setData({fieldError:e.localSaved?'':e.message,syncError:e.localSaved?'已保存本地，同步未完成：'+e.message:''}) }
       finally{this.setData({saving:false})}
     }
   }

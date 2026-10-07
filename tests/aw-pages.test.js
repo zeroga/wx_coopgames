@@ -2,7 +2,7 @@ const {test} = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('node:fs'), path = require('node:path')
 const memory = new Map(), messages=[]
-global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>memory.set(k,JSON.parse(JSON.stringify(v))),removeStorageSync:k=>memory.delete(k),showToast:r=>messages.push(r),showModal:r=>messages.push(r),setNavigationBarTitle(){},navigateTo(){},setClipboardData(){},pageScrollTo(){}}
+global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>memory.set(k,JSON.parse(JSON.stringify(v))),removeStorageSync:k=>memory.delete(k),showToast:r=>messages.push(r),showModal:r=>{messages.push(r);if(r.title==='放弃未保存草稿？'){r.success({confirm:true});r.complete()}},setNavigationBarTitle(){},navigateTo(){},setClipboardData(){},pageScrollTo(){}}
 function hydrate(def, component=false) {
   const p=Object.assign({},component?def.methods:def)
   p.data=JSON.parse(JSON.stringify(def.data));p.properties={vehicleId:'',memberId:''};p.setData=function(update,cb){for(const [key,v] of Object.entries(update)){const parts=key.split('.');let at=this.data;for(const field of parts.slice(0,-1)){if(!at[field])at[field]={};at=at[field]}at[parts[parts.length-1]]=v}if(cb)cb()};p.triggerEvent=()=>{};return p
